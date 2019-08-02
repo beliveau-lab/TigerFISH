@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-
+"""
+Robin Aguilar
+Beliveau and Noble labs
+Dependencies: Biopython
+Purpose: To design probes against multi-lined fasta files
+Takes a string of DNA Sequence, generates a DF of probes
+"""
 # Specific script name.
 scriptName = 'refactoredBlockparse'
 
