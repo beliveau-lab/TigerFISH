@@ -110,84 +110,68 @@ def map_coords(fa_file,jf_file):
     fa_seq = list(SeqIO.parse(open(fa_file),'fasta'))
     for fasta in fa_seq:
         sequence=str(fasta.seq).lower()
-        #print(sequence)
+        print(sequence)
 
     #will return the length in characters of the fasta-seq
+    k_mer=[]
+    count=[]
     with open(jf_file, "r") as jf:
-         kmer=OrderedDict(line.replace(" ","\t").split() for line in jf)
-
-    #makes lists of just the kmer and the counts
-    jellyfish_kmers=list(kmer.keys())
-    jellyfish_count=list(kmer.values())
-
-    #makes a list of all successes based on the values in the count list
+        for line in jf:
+            k_mer.append(line.replace(" ","\t").split()[0])
+            count.append(line.replace(" ","\t").split()[1])
+            
+        print(count)
+  
     success_list=[]
-    for i in jellyfish_count:
+    for i in count:
         if int(i)>=THRESHOLD:
             success_list.append(1)
         else:
             success_list.append(0)
-
+            
+    print(success_list)
+    
+    #make a list that will store the indices of each k-mer count
+    indexList = []
+    for i in range(0, (len(count))):
+        indexList.append(i)
+    print(indexList)
+    
     #Contain an array of where all the successes are located
     iter_data = np.array(success_list)
+    print(len(iter_data))
 
     #iterate through each of the successes in a sum fashion
     iter_vals_convolve=np.convolve(iter_data,np.ones(SPAN,dtype=int),'valid')
-
-    #converts each of the iterative values into a list that can then be accessed as a dataframe
+    print(len(iter_vals_convolve))
+    
     iter_list=[]
     [iter_list.append(float(element)) for element in iter_vals_convolve]
-
-    #make the list into a dataframe and give it a column name
+    
     iterative_sum=pd.DataFrame(list(iter_list),columns=['iter_sum'])
-
-    #adds dataframe columns with the length of the dataframe
+    
     iterative_sum['row_span_start']=np.arange(len(iterative_sum))
-
-    #adds dataframe column with the span of the threshold window
+    
     iterative_sum['row_span_end']=iterative_sum['row_span_start']+SPAN-1
 
-    #returns the indices in the dataframe where we know the success > 0.5
+    print(iterative_sum)
+    
     passing_range_iter = iterative_sum.loc[(iterative_sum['iter_sum']/SPAN>=COMPOSITION)]
+    
+    print(passing_range_iter)
 
     #make two lists to take the min ranges and max ranges
     min_ranges=[]
     max_ranges=[]
-
+    
     #write a loop that will split the dataframe into continuous chunks 
     for k,g in passing_range_iter.groupby(passing_range_iter['row_span_start'] - np.arange(passing_range_iter.shape[0])):
-            min_ranges.append(min(g['row_span_start']))
-            max_ranges.append(max(g['row_span_end']))
+            min_ranges.append(min(g['row_span_start']) + START)
+            max_ranges.append(max(g['row_span_end'])+len(k_mer[0]) + START)
 
     #add these two values into an dataframe where we can scan the indices of jellyfishmcount
-    indices_to_parse = pd.DataFrame(list(zip(min_ranges, max_ranges)), columns =['start_index_range', 'end_index_range'])
-
-    #now you need to return the nucleotide slice at which the ranges start and end
-    sequence_start=[]
-    sequence_end=[]
-
-    #this will find the indices of that specific kmer that you're looking for (i.e the start and end)
-    kmer_start_seq=[]
-    start_list=[]
-    for item in indices_to_parse['start_index_range']:
-        start=jellyfish_kmers[item]
-        kmer_start_seq.append(start)
-    for item in kmer_start_seq:
-        start_list.append(sequence.lower().find(str(item).lower()))
-    print(start_list)
-    
-    #do the same for the end indices as you did above
-    kmer_end_seq=[]
-    end_list=[]
-    for item in indices_to_parse['end_index_range']:
-        end=jellyfish_kmers[item]
-        kmer_end_seq.append(end)
-    for item in kmer_end_seq:
-        end_list.append(sequence.lower().find(str(item).lower()))
-    print(end_list)
-
-    #zip the two lists together and this should get you the start and end nucleotides of where that 18mer pattern was
-    nucleotide_range = pd.DataFrame(list(zip(start_list, end_list)), columns =['start', 'end'])
+    nucleotide_range = pd.DataFrame(list(zip(min_ranges, max_ranges)), columns =['start', 'end'])
+    print(nucleotide_range)
 
     #let's add a column to the dataframe that will contain the chromosome information
     nucleotide_range['chr']=chrom
@@ -199,7 +183,7 @@ def map_coords(fa_file,jf_file):
     #collapsed_nucleotide_range.columns=["chr","start","end"]
     collapsed_nucleotide_range=collapsed_nucleotide_range[["chr","start","end"]]
 
-    #then clean everything to generate a .bed file 
+    #then clean everything and have it run as 
     print(collapsed_nucleotide_range)
     collapsed_nucleotide_range.to_csv(bed_file, header=None, index=None, sep='\t')
 
