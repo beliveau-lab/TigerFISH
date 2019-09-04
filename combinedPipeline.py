@@ -1,6 +1,8 @@
 """
-Robin Aguilar
-Beliveau and Noble Labs, 08/2/2019
+Author: Robin Aguilar
+Create date: 07/06/2019, Python3.7
+Date last modified: 08/15/2019
+Beliveau and Noble Labs
 Dependencies: Jellyfish, Bedtools
 Input: Fasta for region of interest, JF index of genome of interest
 Output: A .bed file of the elevated kmer regions, a .fa of said regions,
@@ -23,6 +25,10 @@ import numpy as np
 import pandas as pd
 import glob
 import os
+from collections import OrderedDict
+import collections
+
+#modules needed to run refactoredBlockParse
 import refactoredBlockparse as bp
 from Bio.SeqUtils import MeltingTemp as mt
 from Bio.Seq import Seq
@@ -32,14 +38,12 @@ from Bio import SeqIO
 from itertools import groupby
 from Bio.Alphabet import generic_dna, generic_protein
 from scipy import signal
-import time
-from collections import OrderedDict
-import collections
 
 #declare a timer
 start_time=time.time()
 
-#write arguments so users can specify the commands they would like for each variable
+
+#define command line usage
 userInput = argparse.ArgumentParser(description=\
         '%Requires a FASTA file as input. And Jellyfish Index file of genome '
         'single-entry or multi-lined FASTA files are supported.  Returns a dataframe which '
@@ -78,31 +82,22 @@ chrom= args.chr_name
 SPAN = args.span_length
 THRESHOLD = args.threshold
 COMPOSITION = args.composition_score
-    
-#the names of output files to be generated
-chr_name_jf_out=chrom+"_jf_temp.txt"
-bed_file=chrom + "_regions.bed"
-out_fasta=chrom + "_regions.fa"
 
-#a list for the regions and scaffold sequences 
-name_list=[]
-sequence_list=[]
-zipped_list=[]
+########################################################################################################################
 
 """
-Write a function that will run jellyfish and then will later remove the query file after the script is run to save memory
+Write a function that will run jellyfish and then will later remove the query file after the script is run
 """
-
-#this function reads the jellyfish index file and the fasta sequence to query 
-#subprocess is called on the query
+#this function reads the jellyfish index file (hg38_index) and the fasta sequence to query 
 
 def jf_query(jf_index,fa_query):
-    query_file=subprocess.call(['jellyfish', 'query', jf_index, '-s', 
+    query_file=subprocess.call(['jellyfish', 'query', jf_index, '-s',
                      fa_query, '-o', chr_name_jf_out], stderr=None, shell=False)
     return chr_name_jf_out
 
+########################################################################################################################
 """
-Write a function that will handle the jellyfish and fasta processing to find map repeat coordinates.
+Write a function that will handle the jellyfish and fasta processing to find map repeat coordinates. 
 """
 
 #the jf query file from the jf_query function in addition to the fasta being queried is used in this function
@@ -110,68 +105,86 @@ def map_coords(fa_file,jf_file):
     fa_seq = list(SeqIO.parse(open(fa_file),'fasta'))
     for fasta in fa_seq:
         sequence=str(fasta.seq).lower()
-        print(sequence)
-
-    #will return the length in characters of the fasta-seq
+        
+    #will append the k_mers and the corresponding counts to seperate lists
     k_mer=[]
     count=[]
     with open(jf_file, "r") as jf:
         for line in jf:
             k_mer.append(line.replace(" ","\t").split()[0])
             count.append(line.replace(" ","\t").split()[1])
-            
-        print(count)
-  
+
+    #create a list that is dependent on the values in count according to the threshold
     success_list=[]
     for i in count:
         if int(i)>=THRESHOLD:
             success_list.append(1)
         else:
             success_list.append(0)
-            
-    print(success_list)
-    
+
+
     #make a list that will store the indices of each k-mer count
     indexList = []
     for i in range(0, (len(count))):
         indexList.append(i)
-    print(indexList)
-    
+
     #Contain an array of where all the successes are located
     iter_data = np.array(success_list)
-    print(len(iter_data))
 
-    #iterate through each of the successes in a sum fashion
+    #iterate through each of the successes in a sum fashion using convolve, used to identify elevated k-mer enrich. regions
     iter_vals_convolve=np.convolve(iter_data,np.ones(SPAN,dtype=int),'valid')
-    print(len(iter_vals_convolve))
-    
+
     iter_list=[]
     [iter_list.append(float(element)) for element in iter_vals_convolve]
-    
+
+    #creates a DF from the convolve function and calls the column iter_sum (to represent the convolve iterative sum)
     iterative_sum=pd.DataFrame(list(iter_list),columns=['iter_sum'])
-    
+
+    #keeps track of the span of where the k-mer starts
     iterative_sum['row_span_start']=np.arange(len(iterative_sum))
-    
+
+    #keeps track of where the k-mer stops
     iterative_sum['row_span_end']=iterative_sum['row_span_start']+SPAN-1
 
-    print(iterative_sum)
-    
+    #keeps track of elevated sums that match the composition criteria
     passing_range_iter = iterative_sum.loc[(iterative_sum['iter_sum']/SPAN>=COMPOSITION)]
-    
-    print(passing_range_iter)
 
     #make two lists to take the min ranges and max ranges
     min_ranges=[]
     max_ranges=[]
-    
-    #write a loop that will split the dataframe into continuous chunks 
-    for k,g in passing_range_iter.groupby(passing_range_iter['row_span_start'] - np.arange(passing_range_iter.shape[0])):
-            min_ranges.append(min(g['row_span_start']) + START)
-            max_ranges.append(max(g['row_span_end'])+len(k_mer[0]) + START)
 
-    #add these two values into an dataframe where we can scan the indices of jellyfishmcount
-    nucleotide_range = pd.DataFrame(list(zip(min_ranges, max_ranges)), columns =['start', 'end'])
-    print(nucleotide_range)
+    #collapse continuous regions by their indices
+    for k,g in passing_range_iter.groupby(passing_range_iter['row_span_start'] - np.arange(passing_range_iter.shape[0])):
+            min_ranges.append(min(g['row_span_start']))
+            max_ranges.append(max(g['row_span_end']))
+
+    #condenses dataframe into continuous index regions
+    indices_to_parse = pd.DataFrame(list(zip(min_ranges, max_ranges)), columns =['start_index_range', 'end_index_range'])
+
+    #now you need to return the nucleotide slice at which the ranges start and end
+    sequence_start=[]
+    sequence_end=[]
+
+    #this will find the indices of that specific kmer that you're looking for (i.e the start and end)
+    kmer_start_seq=[]
+    start_list=[]
+    for item in indices_to_parse['start_index_range']:
+        start=k_mer[item]
+        kmer_start_seq.append(start)
+    for item in kmer_start_seq:
+        start_list.append(sequence.lower().find(str(item).lower()))
+
+    #do the same for the end indices as you did above
+    kmer_end_seq=[]
+    end_list=[]
+    for item in indices_to_parse['end_index_range']:
+        end=k_mer[item]
+        kmer_end_seq.append(end)
+    for item in kmer_end_seq:
+        end_list.append(sequence.lower().rfind(str(item).lower())+len(k_mer[0]))
+
+    #zip the two lists together and this should get you the start and end nucleotides of where that 18mer pattern was
+    nucleotide_range = pd.DataFrame(list(zip(start_list, end_list)), columns =['start', 'end'])
 
     #let's add a column to the dataframe that will contain the chromosome information
     nucleotide_range['chr']=chrom
@@ -180,11 +193,8 @@ def map_coords(fa_file,jf_file):
     collapsed_nucleotide_range=nucleotide_range.groupby((nucleotide_range.end.shift() - nucleotide_range.start).lt(0).cumsum()).agg(
         {'start': 'first','chr': 'first', 'end': 'last'})
 
-    #collapsed_nucleotide_range.columns=["chr","start","end"]
     collapsed_nucleotide_range=collapsed_nucleotide_range[["chr","start","end"]]
 
-    #then clean everything and have it run as 
-    print(collapsed_nucleotide_range)
     collapsed_nucleotide_range.to_csv(bed_file, header=None, index=None, sep='\t')
 
     #call bedtools to generate a fasta from the sequence you have generated
@@ -192,6 +202,7 @@ def map_coords(fa_file,jf_file):
 
     return out_fasta
 
+########################################################################################################################
 """
 Write a function that will now run blockParse as a module to output the df of probes designed against the regions.
 """
@@ -213,18 +224,31 @@ def blockParse_run(output_fasta):
                                       42, 47, 'AAAAA,TTTTT,CCCCC,GGGGG', 390, 50, 0,25, 
                                       25, None, True ,False, False,True, False, False))
             
+########################################################################################################################
+# MAIN
+########################################################################################################################
 
 def main():    
+    global USAGE
     
     returned_jf_file = jf_query(index,test_fasta)  
-    
+        
+    #the names of output files to be generated
+    chr_name_jf_out=chrom+"_jf_temp.txt"
+    bed_file=chrom + "_regions.bed"
+    out_fasta=chrom + "_regions.fa"
+
+    #a list for the regions and scaffold sequences 
+    name_list=[]
+    sequence_list=[]
+    zipped_list=[]
+ 
     mapped_fasta=map_coords(test_fasta,returned_jf_file)
     
     blockParse_run(mapped_fasta)
     
     print("---%s seconds ---"%(time.time()-start_time))
-    #map_coords(test_fasta,test_bed)
-    
+
     print("Done")
     
 if __name__== "__main__":
