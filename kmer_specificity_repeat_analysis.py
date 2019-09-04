@@ -57,6 +57,7 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
             id_file.write(">"+ str(id) + "\n" + str(seq))
             id_file.close()
 
+    print("---%s seconds ---"%(time.time()-start_time))
 ########################################################################################################################
 
     #in dataframe, group by region
@@ -74,7 +75,8 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
                 tmp.write('>' + str(key) + "\n" + str(i) + "\n")
                 seqList.append(i)
             tmp.close()
-     
+            
+         print("---%s seconds ---"%(time.time()-start_time))
     #make a file, that stores the indices of each probe when broken into 18mers for that region
     #this becomes useful for appending the correct k-mer enrichment score to a particular probe in a given region
     
@@ -89,7 +91,8 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
         for item in indexList:
             index_file.write("%s\n" % item)
         index_file.close()
- 
+        
+    print("---%s seconds ---"%(time.time()-start_time))
 ########################################################################################################################
 
     #generate a list the k-mer enriched fasta regions
@@ -115,7 +118,8 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
     for (jf, fasta) in zip(jf_name,repeat_fasta):
         print(jf,fasta)
         subprocess.call(['jellyfish','count','-s', '3300M', '-m', '18','-o', jf, '-L', '2', str(fasta)],stderr=None,shell=False)
-
+        
+    print("---%s seconds ---"%(time.time()-start_time))
 ########################################################################################################################
 
     #generate names for the probe_repeat_query performed with jf query
@@ -131,6 +135,7 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
         print(probes,jf,name)
         subprocess.call(['jellyfish', 'query', str(jf), '-s', str(probes), '-o', str(name)], stderr=None, shell=False)
         
+    print("---%s seconds ---"%(time.time()-start_time))
 ########################################################################################################################
     
     #generate names for the genome_wide query performed with jf query
@@ -145,6 +150,8 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
     for (probes,hg) in zip(repeat_probes,hg_name):
         print(probes,hg)
         subprocess.call(['jellyfish','query',hg38_jf,'-s',str(probes), '-o', str(hg)])
+        
+    print("---%s seconds ---"%(time.time()-start_time))
         
 ########################################################################################################################
     
@@ -194,7 +201,9 @@ def parse_probe(probe_file,hg38_jf,probe_fa):
         for name in id_regions:
             merged_max['region']=name
         merged_max.to_csv('indices_loc.txt', mode='a', header=False, index=False, sep="\t")
-
+        
+        print("---%s seconds ---"%(time.time()-start_time))
+        
         index_file='indices_loc.txt'
         index_data=pd.read_csv(index_file,delimiter="\t",names=['repeat_count','hg_count','region'])
         
