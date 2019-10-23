@@ -1,8 +1,8 @@
 """
 Robin Aguilar
 Beliveau and Noble Labs, 10/14/2019
-Dependencies: Jellyfish, Bedtools
-Input: Probe file
+Dependencies: N/A
+Input: Probe file, Jellyfish file, index file
 Output: A .bed file of probes that pass probe binding score in the form of a DF 
 """
 
