@@ -1,11 +1,5 @@
 #!/usr/bin/env python
-"""
-Robin Aguilar
-Beliveau and Noble labs
-Dependencies: Biopython
-Purpose: To design probes against multi-lined fasta files
-Takes a string of DNA Sequence, generates a DF of probes
-"""
+
 # Specific script name.
 scriptName = 'refactoredBlockparse'
 
@@ -36,7 +30,7 @@ from Bio.Alphabet import generic_dna
 import re
 
 class SequenceCrawler:
-    def __init__(self, input_string,fasta_scaffold, l, L, gcPercent, GCPercent, nn_table, tm, TM,
+    def __init__(self, input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM,
                  X, sal, form, sp, conc1, conc2, headerVal, bedVal,
                  OverlapModeVal, verbocity, reportVal, debugVal, metaVal):
         """Initializes a SequenceCrawler, which is used to efficiently scan a
@@ -45,6 +39,7 @@ class SequenceCrawler:
         """Change into an input_string"""
         self.input_string = input_string
         self.fasta_scaffold=fasta_scaffold
+        self.chr_name=chr_name
 
         self.l = l
         self.L = L
@@ -513,8 +508,9 @@ class SequenceCrawler:
          if self.headerVal is None:
              headerParse = (self.fasta_scaffold).split(':')
              #print(headerParse)
-             if len(headerParse) == 1:
-                 chrom = headerParse.split('>')[1].split('\n')[0]
+             chrom=headerParse[0]
+             if len(headerParse) != 1:
+                 #chrom = headerParse.split('>')[1].split('\n')[0]
                  #print(chrom)
                  self.start = 1
                  stop = len(self.block)
@@ -526,7 +522,6 @@ class SequenceCrawler:
 
              else:
                  chrom = 'chrom'
-                 print(chrom)
                  self.start = 1
                  stop = len(self.block)
          else:
@@ -562,7 +557,6 @@ class SequenceCrawler:
          # Skip to first sequence without an unknown base.
          ncheckval = self.Ncheckopt(self.block[i:i + self.l])
          while ncheckval != -1:
-             print(self.start)
              i += ncheckval + 1
              ncheckval = self.Ncheckopt(self.block[i:i + self.l])
              if self.reportVal:
@@ -581,8 +575,8 @@ class SequenceCrawler:
          # Iterate over input sequence, vetting candidate probe sequences.
          while i < int(blockLen) - int(self.l):
              # Print status to terminal.
-             if i % 100000 == 0:
-                 print ('%d of %d' % (i, blockLen))
+             #if i % 100000 == 0:
+             #    print ('%d of %d' % (i, blockLen))
 
              # Find next sequence without an unknown base.
              ncheckval = self.Ncheckopt(self.block[i:i + self.l])
@@ -636,16 +630,17 @@ class SequenceCrawler:
              else:
                  i += 1
 
-         #print(cands)
-
          outList=[]
 
          for i, (start, end, seq) in enumerate(cands):
-                 outList.append('%s\t%s\t%s\t%s\t%s' % (chrom, start, end, seq,
-                                                        self.BedprobeTm(seq)))
+                 outList.append('%s\t%s\t%s\t%s\t%s\t%s' % (chrom, start, end, seq,
+                                                        self.BedprobeTm(seq),self.fasta_scaffold))
+
          output_df = pd.DataFrame([sub.split("\t") for sub in outList])
-         #output_df=pd.DataFrame(outList,columns=['chrom','start','end','seq','Tm'])
-         print(output_df)
+
+         with open("designed_probes_out/"+ str(self.chr_name)+"_blockParse_probe_df.bed", 'a+') as f:
+                 output_df.to_csv(f, sep='\t',header=None, index=False)
+         
         # Print info about the results to terminal.
          probeNum = len(cands)
          if probeNum == 0:
@@ -738,10 +733,10 @@ class SequenceCrawler:
              reportOut.close()
 
 
-def runSequenceCrawler(input_string,fasta_scaffold, l, L, gcPercent, GCPercent, nn_table, tm, TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,OverlapModeVal, verbocity, reportVal, debugVal, metaVal):
+def runSequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,OverlapModeVal, verbocity, reportVal, debugVal, metaVal):
     """Creates and runs a SequenceCrawler instance."""
 
-    sc = SequenceCrawler(input_string,fasta_scaffold, l, L, gcPercent, GCPercent, nn_table, tm,
+    sc = SequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm,
                            TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,
                            OverlapModeVal, verbocity, reportVal, debugVal,metaVal)
     sc.run()
@@ -762,6 +757,8 @@ def main():
                                type=int,
                                help='The minimum allowed probe length; default is '
                                     '36')
+    requiredNamed.add_argument('-chr', '--chr_name', action='store', required=True,
+                                   help='The chromosome name')
     userInput.add_argument('-L', '--maxLength', action='store', default=41,
                                type=int,
                                help='The maximum allowed probe length, default is '
