@@ -54,9 +54,19 @@ requiredNamed.add_argument('-f', '--fasta_file', action='store', required=True,
                                help='The FASTA file to find probes in')
 requiredNamed.add_argument('-chr', '--chr_name', action='store', required=True,
                                help='The chromosome corresponding to the probes being generated')
+requiredNamed.add_argument('-win', '--window', action='store', required=True,
+                               help='The chromosome corresponding to the probes being generated')
+requiredNamed.add_argument('-thresh', '--threshold', action='store', required=True,
+                               help='The chromosome corresponding to the probes being generated')
+requiredNamed.add_argument('-comp', '--composition_score', action='store', required=True,
+                               help='The chromosome corresponding to the probes being generated')
+
 args = userInput.parse_args()
 test_fasta = args.fasta_file
 test_chr=args.chr_name
+win = args.window
+thresh = args.threshold
+comp = args.composition_score
 
 name_list=[]
 sequence_list=[]
@@ -76,7 +86,7 @@ def blockParse_run(output_fasta):
     for names,sequences in dict_name_seq.items():
         probes=(bp.runSequenceCrawler(sequences,names,test_chr, 36, 41, 20, 80,mt.DNA_NN3,
                                       42, 47, 'AAAAA,TTTTT,CCCCC,GGGGG', 390, 50, 0,25,
-                                      25, None, True ,False, False,False, False, False))
+                                      25, None, True ,False, False,False, False, False,win,thresh,comp))
     return probes
 
 def main():

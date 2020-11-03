@@ -32,7 +32,7 @@ import re
 class SequenceCrawler:
     def __init__(self, input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM,
                  X, sal, form, sp, conc1, conc2, headerVal, bedVal,
-                 OverlapModeVal, verbocity, reportVal, debugVal, metaVal):
+                 OverlapModeVal, verbocity, reportVal, debugVal, metaVal, win, thresh, comp):
         """Initializes a SequenceCrawler, which is used to efficiently scan a
         large sequence for satisfactory probe sequences."""
 
@@ -61,6 +61,9 @@ class SequenceCrawler:
         self.reportVal = reportVal
         self.debugVal = debugVal
         self.metaVal = metaVal
+        self.win = win
+        self.thresh = thresh
+        self.comp = comp
 
         # Build the variables required for efficient melting temperature
         # checking. For melting temperature calculations, the nearest neighbor
@@ -638,7 +641,7 @@ class SequenceCrawler:
 
          output_df = pd.DataFrame([sub.split("\t") for sub in outList])
 
-         with open("designed_probes_out/"+ str(self.chr_name)+"_blockParse_probe_df.bed", 'a+') as f:
+         with open("results/designed_probes_out/" + "w" + str(self.win) + "_t" + str(self.thresh) + "_c" + str(self.comp) + "/"  + str(self.chr_name)+"_blockParse_probe_df.bed", 'a+') as f:
                  output_df.to_csv(f, sep='\t',header=None, index=False)
          
         # Print info about the results to terminal.
@@ -733,12 +736,12 @@ class SequenceCrawler:
              reportOut.close()
 
 
-def runSequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,OverlapModeVal, verbocity, reportVal, debugVal, metaVal):
+def runSequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,OverlapModeVal, verbocity, reportVal, debugVal, metaVal, win, thresh, comp):
     """Creates and runs a SequenceCrawler instance."""
 
     sc = SequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm,
                            TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,
-                           OverlapModeVal, verbocity, reportVal, debugVal,metaVal)
+                           OverlapModeVal, verbocity, reportVal, debugVal,metaVal, win, thresh, comp)
     sc.run()
 
 def main():
@@ -846,6 +849,19 @@ def main():
                                     '<tab> candidates discovered <tab> span in kb '
                                     'covered by candidate probes <tab> candidate '
                                     'probes per kb')
+
+    requiredNamed.add_argument('-win', '--window', action='store', required = True, default=3000,
+                           type=int,
+                           help='The length of the scanning window for kmer enriched regions; default is '
+                                '3000')
+    requiredNamed.add_argument('-thresh', '--threshold', action='store', required = True, default=10,
+                           type=int,
+                           help='The minimum number of counts that defines a kmer enriched region; default is '
+                                '10')
+    requiredNamed.add_argument('-comp', '--composition_score', action='store', required = True, default=0.5,
+                           type=float,
+                           help='The minimum percentage of kmers that pass threshold in window; default is '
+                                '0.5')
     """
     userInput.add_argument('-o', '--output', action='store', default=None,
                                type=str, help='Specify the stem of the output '
@@ -873,6 +889,9 @@ def main():
     reportVal = args.Report
     debugVal = args.Debug
     metaVal = args.Meta
+    win = args.window
+    thresh = args.threshold
+    comp = args.composition_score
 
     # Assign concentration variables based on magnitude.
     if args.dnac1 >= args.dnac2:
@@ -890,7 +909,7 @@ def main():
         
     runSequenceCrawler(input_string,fasta_scaffold, l, L, gcPercent, GCPercent, nn_table, tm, TM,
                            X, sal, form, sp, conc1, conc2, headerVal, bedVal,
-                           OverlapModeVal, verbocity, reportVal, debugVal, metaVal)
+                           OverlapModeVal, verbocity, reportVal, debugVal, metaVal, win, thresh, comp)
 
     # Print wall-clock runtime to terminal.
     print ('Program took %f seconds' % (timeit.default_timer() - startTime))

@@ -105,8 +105,8 @@ def jf_query(jf_index,fa_query):
     """
     Runs jellyfish to generate a query file from the jellyfish index provided
     """
-    query_file=subprocess.call(['jellyfish', 'query', jf_index, '-s',
-                     fa_query, '-o', chr_name_jf_out], stderr=None, shell=False)
+    query_file=subprocess.call(['jellyfish', 'query', jf_index, '-s', fa_query, '-o', chr_name_jf_out], stderr=None, shell=False)
+
     return chr_name_jf_out
 
 #these are lists that will be used to find the indices of the regions that contain N's and non-N bases 
