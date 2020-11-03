@@ -1,0 +1,114 @@
+configfile: "config.yml"
+
+rule all:
+    input:
+        expand("results/kmer_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_global_kept.txt", sample=config["samples"], window=config["sliding_window"], threshold=config["threshold"], composition=config["composition"],enrich_score=config["enrich_score"], copy_num = config["copy_num"], local_val = config["local_val"], global_val = config["global_val"])
+
+rule repeat_ID:
+    input:
+        fasta_file = "../../../../../../reference/Assemblies/hg38_bp_noheader/{sample}.fa",
+        jf = config["jf_file"],
+        chr_path = config["chr_path"] + "{sample}.fa"
+
+    conda:
+        'envs/tigerfish_pipeline.yml'
+
+    params:
+        window = "{window}",
+        threshold = "{threshold}",
+        composition = "{composition}",
+        file_start = config["file_start"],
+        mfree="60G",
+        h_rt="10:0:0"
+
+    benchmark:
+        "results/benchmarks/repeat_ID/w{window}_t{threshold}_c{composition}/{sample}_log.log"
+
+    output:
+        "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_index.txt"
+        "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.bed"
+        "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.fa"
+        "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_jf_temp.txt"
+
+    shell:
+        "python ../bin/refactor_repeatID.py -f {input.fasta_file} -w {params.window} -t {params.threshold} -c {params.composition} -chr {sample} -j {input.jf} -st {params.file_start} -schr {input.chr_path}"
+
+rule design_probes:
+    input:
+        region_fa = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.fa"
+
+    output:
+        "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_blockParse_probe_df.bed"
+
+    conda:
+        'envs/tigerfish_pipeline.yml'
+
+    params:
+        mfree="80G",
+        h_rt="60:0:0",
+        window = "{window}",
+        threshold = "{threshold}",
+        composition = "{composition}"
+        
+    benchmark:
+        "results/benchmarks/design_probes/w{window}_t{threshold}_c{composition}/{sample}_log.log"
+    
+    shell:
+        "python ../bin/design_probes.py -f {input.region_fa} -chr {sample} -win {params.window} -thresh {params.threshold} -comp {params.composition}"
+
+rule specificity:
+    input:
+        idx = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_index.txt",
+        jf = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_jf_temp.txt",
+        probes = "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_blockParse_probe_df.bed",
+        region_fa = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.fa"
+
+    conda:
+        'envs/tigerfish_pipeline.yml'
+
+    params:
+        mfree="80G",
+        h_rt="60:0:0",
+        merlength = config["merlength"],
+        enrich_score = "{enrich_score}",
+        copy_num = "{copy_num}",
+        window = "{window}",
+        threshold = "{threshold}",
+        composition = "{composition}"
+
+    benchmark:
+        "results/benchmarks/specificity/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_log.log"
+
+    output:
+        "results/initial_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt"
+
+    shell:
+        "python ../bin/specificity_mod.py -p {input.probes} -j {input.jf} -k {input.idx} -c {sample} -f {input.region_fa}  -w {params.window} -t {params.threshold} -c {params.composition} -m {params.merlength} -e {params.enrich_score} -cn {params.copy_num}"
+
+rule kmer_specificity:
+    input:
+        filtered_probes = "results/initial_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_probes_final_score.txt"
+
+    conda:
+       'envs/tigerfish_pipeline.yml'
+
+    params:
+        local_val = "{local_val}",
+        global_val = "{global_val}",
+        mfree="80G",
+        h_rt="100:0:0",
+        enrich_score = "{enrich_score}",
+        copy_num = "{copy_num}",
+        window = "{window}",
+        threshold = "{threshold}",
+        composition = "{composition}"
+
+    benchmark:
+        "results/benchmarks/kmer_specificity/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_log.log"
+
+    output:
+        "results/kmer_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_global_kept.txt"
+
+    shell:
+        "python ../bin/bt2_allvall.py -f {input.filtered_probes} -o {sample}_global_kept.txt  -w {params.window} -t {params.threshold} -c {params.composition} -e {params.enrich_score} -cn {params.copy_num} -t_l {params.local_val} -t_g {params.global_val}"
+
