@@ -1,10 +1,10 @@
-#path to the jellyfish file
-jf_file: "../../../../tigerfish_jf/hg38_tigerfish_18.jf"
+#path to jellyfish file
+jf_file: "../../../tigerfish_jf/chm13_tigerfish_18.jf"
 
-#path to the entire chromosome
-chr_path: "../../../../../../../reference/Assemblies/hg38_bp_noheader/"
+#path to chr
+chr_path: "../../../../../../reference/Assemblies/chm13/"
 
-samples: 
+samples:
     - "chr1"
     - "chr2"
     - "chr3"
@@ -28,43 +28,32 @@ samples:
     - "chr21"
     - "chr22"
     - "chrX"
-    - "chrY"
-
-#all of the default parameters for the first script in the pipeline, repeat_ID
-sliding_window:
+window:
     - 3000
     - 4000
     - 5000
-
 threshold: 
     - 5
     - 8
     - 10
-
-composition: 
-    - 0.20
+composition:
+    - 0.25
     - 0.35
     - 0.50
-
+    - 0.75
 file_start:
-    - 0 
-
-#parameters in the specificity script
+    - 0
 merlength:
     - 18
-
 enrich_score:
     - 0.75
     - 0.80
     - 0.90
     - 0.95
-
 copy_num:
     - 5
     - 10
-
 local_val:
-    - 2
-
+    - 0
 global_val:
-    - 2 
+    - 0

@@ -109,9 +109,7 @@ def probe_df(probe_f):
     #cast the coordinates for region starts and stops as integers
     probe_data['r_start']=probe_data['r_start'].astype(int)
     probe_data['r_end']=probe_data['r_end'].astype(int)
-
-    probe_data = probe_data.drop_duplicates(subset=['probe_seq'], keep='first')
-
+    
     #here you put all the probe sequences into a list
     probe_seqs = probe_data['probe_seq'].tolist()
         
@@ -187,7 +185,6 @@ def append_probe_windows(probe_data_df,merWindows_lengths,k_index_file):
 ##############################################################################
 
 def get_max_hg_repeat(jf_file,probe_data_df,probe_start,probe_end):
-
     """
     This function will iterate through the probe_data list items and get the max count for probes in the hg and in the repeat
     """
@@ -205,7 +202,7 @@ def get_max_hg_repeat(jf_file,probe_data_df,probe_start,probe_end):
         
     #parse the counts and obtain the max count for each probe in the whole genome
     probe_kmers_all=[max(float_count[int(p_start)-1:int(p_end)-1]) for p_start,p_end in zip(probe_start,probe_end)]
-
+    
     return k_mer,float_count,probe_kmers_all, probe_data_df
 
 ##############################################################################
@@ -230,7 +227,6 @@ def build_kmers(sequence,k_size):
 ##############################################################################
 
 def get_max_repeat(fasta_file,probe_data_df):
-
     """
     This function will return a list of the occurence of each probes k-mer within a given repeat region.
     From this list, the max (highest count kmer) is computed for each probe and that value is added to the dataframe.
@@ -252,7 +248,7 @@ def get_max_repeat(fasta_file,probe_data_df):
         region_kmers.append(Counter(region_mers))
         
     #iterate over the grouped regions
-    grouped_regions = probe_data_df.groupby(['region'],sort = False)
+    grouped_regions = probe_data_df.groupby(['region_start_idx','region_end_idx'])
     
     #add all probes withing each repeat region to a list that can be iterated over with the counter
     all_probe_seqs=[]

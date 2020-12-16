@@ -7,3 +7,4 @@ source activate snakemake-tigerfish
 PATH=$PATH:/net/beliveau/vol1/home/eaguil/miniconda3/envs/snakemake-tigerfish
 
 snakemake --configfile config.yml --use-conda --conda-prefix envs --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -R y -e ./log -o ./log" --jobs 10 --latency-wait 180
+

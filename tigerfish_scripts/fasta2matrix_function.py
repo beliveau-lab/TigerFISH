@@ -227,12 +227,12 @@ def fasta2matrix(k,my_sequences):
         vector_list.append(vector)
 
     #append total list into dataframe
-    vector_dataframe=pd.DataFrame(vector_list)
+    vector_array = np.asarray(vector_list, dtype=np.float32)
 
     #column headers are the corresponding kmers in lexico. order
-    vector_dataframe.columns=kmer_list
+    #vector_array.columns=kmer_list
 
-    return(vector_dataframe)
+    return(vector_array)
 
 
 ##############################################################################
@@ -294,7 +294,7 @@ def main():
     upto = k_values
 
     #Generate vector of specified k and list of sequences
-    vector_dataframe=fasta2matrix(k_val,sequences)
+    vector_array=fasta2matrix(k_val,sequences)
 
 if __name__== "__main__":
     main()

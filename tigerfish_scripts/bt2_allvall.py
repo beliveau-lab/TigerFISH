@@ -60,26 +60,6 @@ userInput.add_argument('-t_l', '--threshold_local', action='store', default = 0,
 
 userInput.add_argument('-t_g', '--threshold_global', action='store', default = 0, type = int,
                                help='parameter to filter in clf predict probas, default=3')
-userInput.add_argument('-w', '--span_length', action='store', default=3000,
-                           type=int,
-                           help='The length of the scanning window for kmer enriched regions; default is '
-                                '3000')
-userInput.add_argument('-t', '--threshold', action='store', default=10,
-                           type=int,
-                           help='The minimum number of counts that defines a kmer enriched region; default is '
-                                '10')
-userInput.add_argument('-c', '--composition_score', action='store', default=0.5,
-                           type=float,
-                           help='The minimum percentage of kmers that pass threshold in window; default is '
-                                '0.5')
-userInput.add_argument('-e', '--enrich_score', action='store', default=0.50,
-                           type=float,
-                           help='The max # of times a given k-mer is found in a repeat region/entire HG, default is '
-                                '0.50')
-userInput.add_argument('-cn', '--copy_num', action='store', default=10,
-                           type=int,
-                           help='The minimum allowed number of times a k-mer is identified to be added to the final probe list, default is '
-                                '10')
 
 ###################################################################################
 """
@@ -91,13 +71,7 @@ p_file = args.probe_file
 o_file=args.out_file
 threshold_l=args.threshold_local
 threshold_g=args.threshold_global
-ENRICH=args.enrich_score
-COPY_NUM=args.copy_num
-SPAN = args.span_length
-THRESHOLD = args.threshold
-COMPOSITION = args.composition_score
 
-global_k_out="results/lda_specificity_out/" + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "_e" + str(ENRICH) + "_cn" + str(COPY_NUM) + "_l" + str(threshold_l) + "_g" + str(threshold_g) + "/"+str(o_file)
 start_time=time.time()
 
 #changed to test if job gets killed
@@ -114,11 +88,6 @@ sequence_list=[]
 max_scores_list=[]
 seq_names_list=[]
 
-probe_set=set()
-probe_set_non=set()
-
-all_probe_set=set()
-all_probe_set_non=set()
 
 ###################################################################################
 """
@@ -153,12 +122,9 @@ def generate_ordered_df(probe_filter):
 
     #make the probes into a list
     probes_list=probe_filter['probe'].tolist()
-    idx_list=list(probe_filter.index)
+    probe_filter['index_col'] = probe_filter.index
 
-    #make dictionary of probe idxs
-    idx_probe_dict = dict(zip(idx_list, probes_list))
-
-    return probe_filter,probes_list,idx_probe_dict
+    return probe_filter,probes_list
 
 ###################################################################################
 """
@@ -184,9 +150,6 @@ file output, then that key gets a value of a 0.
 def all_v_all_lookup_table(scaffold_list,read_id_list,probe_idx_list):
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        #make an idx for each probe
-        #probe_idx_list=[i for i in range(len(probe_list))]
-
         #make the list of fasta seqs to build an alignment index
         fasta_file = tmpdir + '/all_v_all.fa'
         with open(fasta_file, 'w') as f:
@@ -212,21 +175,27 @@ def all_v_all_lookup_table(scaffold_list,read_id_list,probe_idx_list):
 
         subprocess.call(['bowtie2', '-x', index_stem, '-U', fastq_file, bowtie_string, '-S', sam_file, '--no-hd', '--quiet'])
 
-        sam_score=[]
-        #write a list that will store the read_id and scaffold_id
-        read_scaffold_pair = []
+        cols = ['read_id', 'col2', 'scaffold_id', 'col4', 'col5', 'col6', 'col7', 'col8', 'col9', 'col10', 
+            'col11', 'AS', 'col13', 'col14', 'col15', 'col16', 'col17', 'col18', 'col19','col20']
 
-        with open(sam_file,'r') as sam_read:
-            for line in sam_read:
-                read_id = (line.split('\t')[0])
-                scaffold_id = (line.split('\t')[2])
-                sam_score.append(line.split('\t')[11].split(':')[2])
-                read_scaffold_pair.append(read_id + "_" + scaffold_id)
+        sam_chunk = pd.read_csv(sam_file, header = None, sep = '\t', names=cols ,chunksize=1000000)
 
-        combos_dict={}
-        for key,val in zip(read_scaffold_pair,sam_score):
-            if key not in combos_dict:
-                combos_dict[key]=val
+        combos_dict = {}
+        for chunk in sam_chunk:
+            chunk = chunk.drop(columns = ['col2','col4', 'col5', 'col6', 'col7', 'col8', 'col9', 'col10','col11','col13','col14', 'col15', 'col16', 'col17', 'col18', 'col19','col20'])
+            read_id_list = chunk['read_id'].tolist()
+            scaffold_id_list = chunk['scaffold_id'].tolist()
+            sam_scores_list = chunk['AS'].tolist()
+            sam_scores_list = [(int(string.split(':')[2])) for string in sam_scores_list]
+            read_scaffold_key = []
+            sam_score_val = []
+            for read_id,scaffold_id,sam_scores in zip(read_id_list,scaffold_id_list,sam_scores_list):
+                if read_id != scaffold_id:
+                    read_scaffold_key.append(str(read_id) + "_" + str(scaffold_id))
+                    sam_score_val.append(sam_scores)
+            for key,val in zip(read_scaffold_key,sam_score_val):
+                if key not in combos_dict:
+                    combos_dict[key]=val
 
         return combos_dict
 
@@ -426,266 +395,230 @@ def load_clf():
 
 ###################################################################################
 
-"""
-This function will filter out probes according to the lda model.
-"""
-
 def repeat_region_filter(probe_filter,clf):
 
-    probes_list=probe_filter['probe'].tolist()
-    probe_idx_list=[i for i in range(len(probes_list))]
+    probes_all = probe_filter['probe'].tolist()
+    index_all = probe_filter['index_col'].tolist()    
+    scores_dict = all_v_all_lookup_table(probes_all,probes_all,index_all)
 
-    #add a column that is the index of each probe in the list
-    probe_filter['index_col'] = probe_filter.index
-
-    #add these indices to a list
-    probe_idx_list = probe_filter['index_col'].tolist()
-
-    #generate the dictionary of test scores
-    scores_dict = all_v_all_lookup_table(probes_list,probes_list,probe_idx_list)
-
-    #setup a groupby for loop
     grouped_probes=probe_filter.groupby('region')
+
+    idx_df_dict = {}
+
+    rm_set = set()
 
     #iterate over the groups
     for name,group in grouped_probes:
-        
-        #make a list of the probes within in each grouped region
-        list_of_probes=group['probe'].tolist()
-        list_of_idx=group['index_col'].tolist()
-        
-        #for the length of the while loop
-        while len(list_of_probes)!=0:
 
-            #obtain the probe and it's index for the lookup table
-            head_probe=list_of_probes[0]
-            head_probe_index=list_of_idx[0]
+        group_probe_list=group['probe'].tolist()
+        group_idx_list=group['index_col'].tolist()
+
+        #scores_dict = all_v_all_lookup_table(group_probe_list,group_probe_list,group_idx_list)
+           
+        while len(group_probe_list) and len(group_idx_list) > 1:
+
+           idx_key = []
+           seq_RC_list = []
+           seq_AS = []
+
+           #set up head_probe_list
+           head_probe = group_probe_list[0]
+           head_probe_l = [head_probe for i in range(1,len(group_probe_list))]
             
-            #generate lists for pairs of probes to iterate through
-            head_probe_list=[head_probe for i in range(1,len(list_of_probes))]
-            compare_probes_list = list_of_probes[1:]
+           #set up head probe idx
+           head_probe_idx = group_idx_list[0]
+           head_probe_idx_l = [head_probe_idx for idx in range(1,len(group_idx_list))]
+            
+           #set up compare probe list
+           compare_probe_l = group_probe_list[1:]
 
-            #generate lists for pairs od idxs to iterate through
-            head_probe_idx_list = [head_probe_index for i in range(1,len(list_of_idx))]
-            compare_probe_idx_list = list_of_idx[1:]
+           #return seq_RC for each probe to compare
+           seq_RC_list = [make_seq_RC(cp) for cp in compare_probe_l]
 
-            #while these lists are not empty
-            if head_probe_list and compare_probes_list:
-                #generate a list for each of these values
-                seq_AS = []
-                seq_RC_list = []
-                lookup_idx_val_list = []
+           #set up the idx for compare idx
+           compare_probe_idx_l = group_idx_list[1:]
+            
+           #make the seq_AS list
+           idx_key = [str(hpi) + "_" + str(cpi) for hpi,cpi in zip(head_probe_idx_l, compare_probe_idx_l)]
 
-                #iterate over head probe, compare probe, head probe index, and compare probe index together
-                for hp, cp, hi, ci in zip(head_probe_list, compare_probes_list, head_probe_idx_list, compare_probe_idx_list):
-
-                    #add the probe idxs to look up in the table for the AS score
-
-                    lookup_idx_val_list.append(str(hi) + "_" + str(ci))
-                    #generate the RC for the probe to compare
-                    seq_RC = make_seq_RC(cp)
-                    seq_RC_list.append(seq_RC)
-
-                #identify the AS from the lookup table and append AS
-                for idx in lookup_idx_val_list:
-                   if idx in scores_dict:
-                       seq_AS.append(scores_dict[idx])
-                   else:
-                       scores_dict[idx]=0
-                       seq_AS.append(scores_dict[idx])
-
-                head_probe_df = f_matrix.fasta2matrix(4,head_probe_list)
-                compare_probes_df = f_matrix.fasta2matrix(4,seq_RC_list)
-                head_pair_concat = pd.concat([head_probe_df,compare_probes_df],axis=1)
-                head_pair_concat['AS'] = seq_AS
-
-                head_pair_np = np.asarray(head_pair_concat)
-                df_result = clf.decision_function(head_pair_np)
-                df_result_list = df_result.tolist()
-
-                idx_store_rm = []
-                for idx,val in enumerate(df_result_list):
-                    if val >= float(threshold_l):
-                        idx_store_rm.append(idx+1)
-
-                for idx,probe in enumerate(list_of_probes):
-                    if idx in idx_store_rm:
-                        probe_set_non.add(probe)
-
-                list_of_probes = [probe for idx,probe in enumerate(list_of_probes) if idx not in idx_store_rm]
-
-                if len(list_of_probes) == 2:
-                    for probe in list_of_probes:
-                        probe_set.add(probe)
-
-                probe_set.add(head_probe)
-
-            list_of_probes.pop(0)
-
-    return probe_set,probe_set_non,scores_dict         
-
-###################################################################################
-"""
-
-"""
-
-def parse_probe_sets(probe_set,probe_set_non,idx_probe_dict):
-
-    kept_probe_df_idx=[]
-    rm_probe_df_idx=[]
-
-    #identify which indices correspond to what probe
-    for key,val in idx_probe_dict.items():
-        if val in probe_set:
-            kept_probe_df_idx.append(key)
-
-    for key,val in idx_probe_dict.items():
-        if val in probe_set_non:
-            rm_probe_df_idx.append(key)
-
-    return kept_probe_df_idx, rm_probe_df_idx
-
-###################################################################################
-
-
-def subset_df_rows(probe_filter,kept_probe_df_idx,rm_probe_df_idx):
-
-    #generate probe dataframes according to kept and discarded
-
-    kept_probe_df=probe_filter.loc[kept_probe_df_idx,:]
-    rm_probe_df=probe_filter.loc[rm_probe_df_idx,:]
-
-    return kept_probe_df,rm_probe_df
-
-###################################################################################
-
-
-def write_local_df(kept_probe_df,rm_probe_df):
-    
-
-    print("hi")
-    #kept_probe_df.to_csv(local_k_out, sep='\t',index=False,header=False)
-
-    #rm_probe_df.to_csv(local_f_out, sep='\t',index=False,header=False)
-
-
-###################################################################################
-
-def filter_between_rr(kept_probe_df,clf,scores_dict):
-
-    #lists of the probes and their idxs
-    all_probe_list = kept_probe_df['probe'].tolist()
-    all_probe_idx_list = kept_probe_df['index_col'].tolist()
-
-    #as long as the probe list isn't empty:
-    while len(all_probe_list) != 0:
-
-        #the head probe is the top of the list and so is the idx
-        head_probe = all_probe_list[0]
-        head_probe_index = all_probe_idx_list[0]
-
-        #make the head_probe_list as long as the 
-        head_probe_list = [head_probe for i in range(1,len(all_probe_list))]
-        head_probe_idx_list = [head_probe_index for i in range(1,len(all_probe_idx_list))]
-
-        #the probes to compare are always after the head probe
-        compare_probes_list = all_probe_list[1:]
-        compare_probes_idx_list = all_probe_idx_list[1:]
-
-        score_list = []
-
-        if head_probe_list and compare_probes_list:
-            seq_AS = []
-            seq_RC_list = []
-            lookup_idx_val_list=[]
-            for hp, cp, hi, ci in zip(head_probe_list,compare_probes_list,head_probe_idx_list,compare_probes_idx_list):
-                lookup_idx_val_list.append(str(hi) + "_" + str(ci))
-                seq_RC = make_seq_RC(cp)
-                seq_RC_list.append(seq_RC)
-
-            for idx in lookup_idx_val_list:
+           #add the seq_AS score
+           for idx in idx_key:
                if idx in scores_dict:
                    seq_AS.append(scores_dict[idx])
                else:
-                   scores_dict[idx]=0
-                   seq_AS.append(scores_dict[idx])
+                   seq_AS.append(0)
 
-            head_probe_df = f_matrix.fasta2matrix(4,head_probe_list)
-            compare_probes_df = f_matrix.fasta2matrix(4,seq_RC_list)
-            head_pair_concat = pd.concat([head_probe_df,compare_probes_df],axis=1)
-            head_pair_concat['AS'] = seq_AS
+           #make this loop go through so that anything with a 0 can be removed
+           for hp,cp,cp_rc,cpi,idxs,as_score in zip(head_probe_l,
+                                                            compare_probe_l,
+                                                            seq_RC_list,
+                                                            compare_probe_idx_l,
+                                                            idx_key,seq_AS):
+            
+               if as_score != 0:
+                
+                   df_hp_list = []
+                   df_cp_list = []
+                   df_cp_rc_list = []
+                   df_idx_key_list = []
+                   df_cpi_list = []
+                   df_seq_AS = []
+                
+                   df_hp_list.append(hp)
+                   df_cp_list.append(cp)
+                   df_cp_rc_list.append(cp_rc)
+                   df_cpi_list.append(cpi)
+                   df_seq_AS.append(as_score)       
+                   df_idx_key_list.append(idxs)
 
-            head_pair_np = np.asarray(head_pair_concat)
-            df_result = clf.decision_function(head_pair_np)
-            df_result_list = df_result.tolist()
+                   seq_AS_l = [float(i) for i in df_seq_AS]
+                   seq_as_arr = np.asarray(seq_AS_l)
+                   seq_as_arr = seq_as_arr.reshape(seq_as_arr.shape[0],-1)
 
-            idx_store_rm=[]
+                   head_probe_arr = f_matrix.fasta2matrix(4,df_hp_list)
+                   compare_probes_arr = f_matrix.fasta2matrix(4,df_cp_rc_list)
+            
+                   head_pair_concat = np.hstack((head_probe_arr,compare_probes_arr))
+                   head_pair_np = np.append(head_pair_concat,seq_as_arr,1)
+                   df_result = clf.decision_function(head_pair_np)
+                   df_result_list = df_result.tolist()
 
-            for idx,val in enumerate(df_result_list):
-                if val >= float(threshold_g):
-                    idx_store_rm.append(idx+1)
+                   idx_key_dict = dict(zip(df_idx_key_list,df_result_list))
+                   idx_df_dict.update(idx_key_dict)
+                       
+                   #probe_df = pd.DataFrame(list(zip(df_hpi_list,
+                   #                df_cpi_list, df_result_list)), 
+                   #columns =['hpi','cpi','df']) 
 
-            for idx,probe in enumerate(all_probe_list):
-                if idx in idx_store_rm:
-                    all_probe_set_non.add(probe)
+                   for cpi,cp,df in zip(df_cpi_list,df_cp_list,
+                                            df_result_list):
+                       if df >= float(threshold_l):
+                           rm_set.add(cpi)
+                           group_idx_list.remove(cpi)
+                           group_probe_list.remove(cp)
+                       
 
-            all_probe_list=[probe for idx,probe in enumerate(all_probe_list) if idx not in idx_store_rm]
+           group_probe_list.pop(0)
+           group_idx_list.pop(0)
+               
+    #conver sets to list
+    rm_list = list(rm_set)
 
-            if len(all_probe_list)==2:
-                for probe in all_probe_list:
-                    all_probe_set.add(probe)
+    idx_df_dict = {key:val for key, val in idx_df_dict.items() if val < threshold_l}
 
-            all_probe_set.add(head_probe)
+    #in probe filter remove the probes to remove
+    probe_filter = probe_filter.loc[~probe_filter['index_col'].isin(rm_list)]
 
-        all_probe_list.pop(0)
-
-    return all_probe_set,all_probe_set_non
-
-###################################################################################
-
-def parse_probe_sets_global(all_probe_set,all_probe_set_non,idx_probe_dict):
-
-    #generate the indices of the remaining seperated groups
-    kept_probe_df_idx_global,rm_probe_df_idx_global=parse_probe_sets(all_probe_set,all_probe_set_non,idx_probe_dict)
-
-    return kept_probe_df_idx_global,rm_probe_df_idx_global
-
-###################################################################################
-
-def subset_row_df_global(probe_filter,kept_probe_df_idx_global,rm_probe_df_idx_global):
-
-    #generate the dataframes with remaining information
-
-    all_kept_probe_df,all_rm_probe_df=subset_df_rows(probe_filter,kept_probe_df_idx_global,rm_probe_df_idx_global)
-
-    return all_kept_probe_df,all_rm_probe_df
-
-###################################################################################
-
-def write_probe_sets(all_kept_probe_df,all_rm_probe_df, rm_probe_df):
-
-    all_kept_probe_df.to_csv(global_k_out, sep='\t',index=False,header=False)
-
-    #concatenate the probes that are going to be removed at this step
-
-    #all_rm_probe_df = pd.concat([all_rm_probe_df, rm_probe_df], ignore_index=True)
-
-    #all_rm_probe_df.to_csv(global_f_out, sep='\t',index=False,header=False)
-
-
-###################################################################################
-"""
-This function will take the index list and generate all possible combos 
-for the lookup table.
-"""
-
-def generate_combinations(index_list):
-
-    #index_product = product(index_list, repeat=2)
-
-    index_product = combinations(index_list, 2)
+    all_probes = probe_filter['probe'].tolist()
+    all_idx = probe_filter['index_col'].tolist()
     
-    return index_product
+    #print(len(probe_filter))
+
+    #print(probe_filter)
+
+    return probe_filter,all_probes,all_idx,idx_df_dict,scores_dict
+
+###################################################################################
+
+def filter_all(probe_filter,clf,all_probes,all_idx,idx_df_dict,scores_dict):
+
+    rm_set = set()
+
+    #scores_dict = all_v_all_lookup_table(all_probes,all_probes,all_idx)
+    
+    while len(all_probes) and len(all_idx) > 1:
+
+        idx_key = []
+        seq_RC_list = []
+        seq_AS = []
+        
+        #set up head_probe_list
+        head_probe = all_probes[0]
+        head_probe_l = [head_probe for i in range(1,len(all_probes))]
+            
+        #set up head probe idx
+        head_probe_idx = all_idx[0]
+        head_probe_idx_l = [head_probe_idx for idx in range(1,len(all_idx))]
+            
+        #set up compare probe list
+        compare_probe_l = all_probes[1:]
+        seq_RC_list = [make_seq_RC(cp) for cp in compare_probe_l]
+        
+        compare_probe_idx_l = all_idx[1:]
+            
+        #make the seq_AS list
+        idx_key = [str(hpi) + "_" + str(cpi) for hpi,cpi in zip(head_probe_idx_l,
+                   compare_probe_idx_l)]
+           
+        for idx in idx_key:
+            if idx in scores_dict:
+                seq_AS.append(scores_dict[idx])
+            else:
+                seq_AS.append(0)
+                
+        #make this loop go through so that anything with a 0 can be removed
+        for hp,cp,cp_rc,cpi,idxs,as_score in zip(head_probe_l,compare_probe_l,seq_RC_list,
+                                         compare_probe_idx_l,idx_key,
+                                         seq_AS):
+            
+            if as_score != 0 and idxs not in idx_df_dict:
+                
+                df_hp_list = []
+                df_cp_list = []
+                df_cp_rc_list = []
+                df_cpi_list = []
+                df_seq_AS = []
+                
+                df_hp_list.append(hp)
+                df_cp_list.append(cp)
+                df_cp_rc_list.append(cp_rc)
+                df_cpi_list.append(cpi)
+                df_seq_AS.append(as_score)
+                
+                
+                #make lists to use of each item
+                seq_AS_l = [float(i) for i in df_seq_AS]
+                seq_as_arr = np.asarray(seq_AS_l)
+                seq_as_arr = seq_as_arr.reshape(seq_as_arr.shape[0],-1)
+
+                head_probe_arr = f_matrix.fasta2matrix(4,df_hp_list)
+                compare_probes_arr = f_matrix.fasta2matrix(4,df_cp_rc_list)
+            
+                head_pair_concat = np.hstack((head_probe_arr,compare_probes_arr))
+                head_pair_np = np.append(head_pair_concat,seq_as_arr,1)
+            
+                df_result = clf.decision_function(head_pair_np)
+                df_result_list = df_result.tolist()           
+
+                #probe_df = pd.DataFrame(list(zip(df_hpi_list,
+                #      df_cpi_list, df_result_list)), 
+                #       columns =['hpi','cpi','df']) 
+
+                for cp, cpi, df in zip(df_cp_list,df_cpi_list,
+                                    df_result_list):
+                    if df >= float(threshold_g):
+                        rm_set.add(cpi)
+                        all_idx.remove(cpi)
+                        all_probes.remove(cp)
+            
+        all_probes.pop(0)
+        all_idx.pop(0)
+    
+    #conver sets to list
+    rm_list = list(rm_set)
+    #print(rm_list)
+    #in probe filter remove the probes to remove
+    probe_filter = probe_filter.loc[~probe_filter['index_col'].isin(rm_list)]
+
+    #print(probe_filter)
+
+    return probe_filter
+
+###################################################################################
+
+def write_probe_sets(probe_filter):
+
+    probe_filter.to_csv(str(o_file), sep='\t',index=False,header=False)
 
 ###################################################################################
 
@@ -695,7 +628,7 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    probe_filter,probes_list,idx_probe_dict = generate_ordered_df(probe_filter)
+    probe_filter,probes_list = generate_ordered_df(probe_filter)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
@@ -703,35 +636,15 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    probe_set,probe_set_non,scores_dict = repeat_region_filter(probe_filter,clf)
+    probe_filter,all_probes,all_idx,idx_df_dict,scores_dict = repeat_region_filter(probe_filter,clf)
+
+    print("---%s seconds ---"%(time.time()-start_time))
+    
+    probe_filter = filter_all(probe_filter,clf,all_probes,all_idx,idx_df_dict,scores_dict)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    kept_probe_df_idx, rm_probe_df_idx = parse_probe_sets(probe_set,probe_set_non,idx_probe_dict)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    kept_probe_df,rm_probe_df = subset_df_rows(probe_filter,kept_probe_df_idx, rm_probe_df_idx)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    write_local_df(kept_probe_df,rm_probe_df)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    filter_between_rr(kept_probe_df,clf,scores_dict)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    kept_probe_df_idx_global,rm_probe_df_idx_global=parse_probe_sets_global(all_probe_set,all_probe_set_non,idx_probe_dict)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    all_kept_probe_df,all_rm_probe_df=subset_row_df_global(probe_filter,kept_probe_df_idx_global,rm_probe_df_idx_global)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    write_probe_sets(all_kept_probe_df,all_rm_probe_df,rm_probe_df)
+    write_probe_sets(probe_filter)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

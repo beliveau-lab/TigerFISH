@@ -10,3 +10,4 @@
 source activate snakemake-tigerfish
 
 qsub -cwd -l mfree=8G -l h_rt=72:0:0 -e ./log -o ./log snake_batch.sge
+

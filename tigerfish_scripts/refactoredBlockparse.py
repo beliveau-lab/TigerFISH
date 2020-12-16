@@ -644,16 +644,6 @@ class SequenceCrawler:
          with open("results/designed_probes_out/" + "w" + str(self.win) + "_t" + str(self.thresh) + "_c" + str(self.comp) + "/"  + str(self.chr_name)+"_blockParse_probe_df.bed", 'a+') as f:
                  output_df.to_csv(f, sep='\t',header=None, index=False)
          
-        # Print info about the results to terminal.
-         probeNum = len(cands)
-         if probeNum == 0:
-             print ('No candidate probes discovered')
-         else:
-             probeWindow = float((int(cands[-1][1]) - int(cands[0][0]))) / 1000
-             probeDensity = float((float(probeNum) / probeWindow))
-             print ('%d candidate probes identified in %0.2f kb yielding %0.2f '
-                    'candidates/kb' % (probeNum, probeWindow, probeDensity))
-
          # Write meta information to a .txt file if desired.
          if self.metaVal:
              metaText = open('%s_blockParse_meta.txt' % chrom, 'w')

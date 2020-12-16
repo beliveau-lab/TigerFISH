@@ -171,13 +171,9 @@ def append_probe_df(probe_data,all_max_repeat_counts,all_max_hg_counts):
 
     probe_data.to_csv('results/initial_specificity_out/pre_filter/' + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "_e" + str(ENRICH) + "_cn" + str(COPY_NUM) + "/" + str(chr_name)+'_probes_final_score.txt', header= False, index=False, sep="\t")
 
-    probe_data['k_score']=probe_data['k_score'].astype(float)
+    file_path = "results/initial_specificity_out/pre_filter/" + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "_e" + str(ENRICH) + "_cn" + str(COPY_NUM) + "/"
 
-    probe_data=probe_data[(probe_data['k_score'] >= float(ENRICH)) & (probe_data['r_count'] >= int(COPY_NUM))]
-
-    probe_data = probe_data.drop_duplicates(subset=['probe'], keep='first')
-
-    probe_data.to_csv('results/initial_specificity_out/post_filter/' + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "_e" + str(ENRICH) + "_cn" + str(COPY_NUM) + "/" + str(chr_name)+'_probes_final_score.txt', header=False, index=False, sep="\t")
+    return file_path
 
 ##############################################################################
 
@@ -195,9 +191,9 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
     
-    append_probe_df(probe_data,all_max_repeat_counts,all_max_genome_counts)
+    file_path = append_probe_df(probe_data,all_max_repeat_counts,all_max_genome_counts)
 
     print("---%s seconds ---"%(time.time()-start_time))
-    
+
 if __name__== "__main__":
     main()

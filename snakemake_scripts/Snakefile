@@ -1,24 +1,33 @@
 configfile: "config.yml"
 
+SAMPLES = config["samples"]
+WINDOW = config["window"]
+THRESH = config["threshold"]
+COMPOS = config["composition"]
+COPY_N = config["copy_num"]
+ENRICH = config["enrich_score"]
+LOCAL = config["local_val"]
+GLOBAL = config["global_val"]
+
 rule all:
     input:
-        expand("results/lda_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_global_kept.txt", sample=config["samples"], window=config["sliding_window"], threshold=config["threshold"], composition=config["composition"],enrich_score=config["enrich_score"], copy_num = config["copy_num"], local_val = config["local_val"], global_val = config["global_val"])
+        filtered_files = expand("results/lda_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}_probes.bed", local_val = LOCAL, global_val = GLOBAL,sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, copy_num = COPY_N, enrich_score = ENRICH)
 
 rule generate_jf_idx:
     input:
-        fasta_file = "../../../../../../../reference/Assemblies/hg38_bp_noheader/{sample}.fa",
+        fasta_file = "../../../../../../reference/Assemblies/chm13/{sample}.fa",
         jf = config["jf_file"],
         chr_path = config["chr_path"] + "{sample}.fa"
 
     conda:
-        'envs/tigerfish_pipeline.yml'
+        "envs/tigerfish_pipeline.yml"
 
     params:
         chrom_name = "{sample}",
         file_start = config["file_start"],
-        mfree="100G",
-        h_rt="120:0:0"
-
+        mfree = "60G",
+        h_rt = "200:0:0"
+    threads: 3
     benchmark:
         "results/benchmarks/generate_jf_idx/{sample}_log.log"
 
@@ -44,9 +53,9 @@ rule repeat_ID:
         composition = "{composition}",
         file_start = config["file_start"],
         chrom_name = "{sample}",
-        mfree="100G",
-        h_rt="120:0:0"
-
+        mfree="50G",
+        h_rt="200:0:0"
+    threads: 3
     benchmark:
         "results/benchmarks/repeat_ID/w{window}_t{threshold}_c{composition}/{sample}_log.log"
 
@@ -68,13 +77,13 @@ rule design_probes:
         'envs/tigerfish_pipeline.yml'
 
     params:
-        mfree="100G",
-        h_rt="120:0:0",
+        mfree="40G",
+        h_rt="200:0:0",
         window = "{window}",
         threshold = "{threshold}",
         composition = "{composition}",
         chrom_name = "{sample}"
-
+    threads: 3
     benchmark:
         "results/benchmarks/design_probes/w{window}_t{threshold}_c{composition}/{sample}_log.log"
 
@@ -91,8 +100,8 @@ rule specificity:
         'envs/tigerfish_pipeline.yml'
 
     params:
-        mfree="100G",
-        h_rt="120:0:0",
+        mfree="40G",
+        h_rt="200:0:0",
         merlength = config["merlength"],
         enrich_score = "{enrich_score}",
         copy_num = "{copy_num}",
@@ -100,42 +109,60 @@ rule specificity:
         threshold = "{threshold}",
         composition = "{composition}",
         chrom_name = "{sample}"
-
+    threads: 3
     benchmark:
         "results/benchmarks/specificity/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_log.log"
 
     output:
-        "results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt",
-        "results/initial_specificity_out/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt"
-
+        "results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt"
     shell:
         "python ../../bin/kmer_filter.py -p {input.probes} -j {input.jf} -ch {params.chrom_name} -f {input.region_fa}  -w {params.window} -t {params.threshold} -c {params.composition} -m {params.merlength} -e {params.enrich_score} -cn {params.copy_num}"
 
+def aggregate_files(wildcards):
+    files = expand('results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt', sample = SAMPLES, window = wildcards.window, threshold = wildcards.threshold, composition = wildcards.composition, enrich_score = wildcards.enrich_score, copy_num = wildcards.copy_num)
+    return files
+
+rule merge_specificity_input:
+    input:
+        aggregate_files
+    output:
+        'results/initial_specificity_out/concat/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_concat.bed'
+    conda:
+        'envs/tigerfish_pipeline.yml'
+    params:
+        mfree="20G",
+        h_rt="200:0:0"
+    threads: 3
+    shell:
+        'cat {input} > {output}'
+
+rule filter_spec:
+    input:
+        merged_files = "results/initial_specificity_out/concat/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_concat.bed"
+    output:
+        filtered_files = "results/initial_specificity_out/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_filtered.bed"
+    conda:
+        'envs/tigerfish_pipeline.yml'
+    params:
+        mfree="20G",
+        h_rt="200:0:0",
+        enrich_score = "{enrich_score}",
+        copy_num = "{copy_num}"
+    threads: 3
+    shell:
+        "python ../../bin/probes_filter.py -f {input.merged_files} -o {output.filtered_files} -e {params.enrich_score} -cn {params.copy_num}"
+
 rule lda_specificity:
     input:
-        filtered_probes = "results/initial_specificity_out/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt",
-        pre_filtered_probes = "results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_final_score.txt"
-
-    conda:
-       'envs/tigerfish_pipeline.yml'
-
-    params:
-        local_val = "{local_val}",
-        global_val = "{global_val}",
-        mfree="80G",
-        h_rt="120:0:0",
-        enrich_score = "{enrich_score}",
-        copy_num = "{copy_num}",
-        window = "{window}",
-        threshold = "{threshold}",
-        composition = "{composition}",
-        chrom_name = "{sample}"
-
-    benchmark:
-        "results/benchmarks/lda_specificity/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_log.log"
-
+        pre_filter = "results/initial_specificity_out/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_filtered.bed"
     output:
-        "results/lda_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}/{sample}_global_kept.txt"
-
+        post_filter = "results/lda_specificity_out/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_l{local_val}_g{global_val}_probes.bed"
+    conda:
+        'envs/tigerfish_pipeline.yml'
+    params:
+        mfree="80G",
+        h_rt="200:0:0",
+        local_val = "{local_val}",
+        global_val = "{global_val}"
     shell:
-        "python ../../bin/bt2_allvall.py -f {input.filtered_probes} -o {params.chrom_name}_global_kept.txt  -w {params.window} -t {params.threshold} -c {params.composition} -e {params.enrich_score} -cn {params.copy_num} -t_l {params.local_val} -t_g {params.global_val}"
+        "python ../../bin/bt2_allvall.py -f {input.pre_filter} -o {output.post_filter} -t_l {params.local_val} -t_g {params.global_val}"
