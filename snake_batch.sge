@@ -1,0 +1,12 @@
+#!/bin/bash
+#$ -cwd 
+
+if [[ -e /etc/profile.d/modules.sh ]]; then
+        source /etc/profile.d/modules.sh
+        module load modules modules-init modules-gs
+        module load bedtools/latest
+fi
+
+PATH=$PATH:/net/beliveau/vol1/home/eaguil/anaconda3/envs/snakemake_tutorial/bin
+
+snakemake --configfile config.yaml --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -R y -e ./log -o ./log" --jobs 10 --latency-wait 180

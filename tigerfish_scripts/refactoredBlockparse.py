@@ -640,6 +640,22 @@ class SequenceCrawler:
                                                         self.BedprobeTm(seq),self.fasta_scaffold))
 
          output_df = pd.DataFrame([sub.split("\t") for sub in outList])
+<<<<<<< HEAD:tigerfish_scripts/refactoredBlockparse.py
+=======
+
+         with open("designed_probes_out/"+ str(self.chr_name)+"_blockParse_probe_df.bed", 'a+') as f:
+                 output_df.to_csv(f, sep='\t',header=None, index=False)
+         
+        # Print info about the results to terminal.
+         probeNum = len(cands)
+         if probeNum == 0:
+             print ('No candidate probes discovered')
+         else:
+             probeWindow = float((int(cands[-1][1]) - int(cands[0][0]))) / 1000
+             probeDensity = float((float(probeNum) / probeWindow))
+             print ('%d candidate probes identified in %0.2f kb yielding %0.2f '
+                    'candidates/kb' % (probeNum, probeWindow, probeDensity))
+>>>>>>> 3cf8f492c95eb7872b8f0a50bce0b01d8534151d:refactoredBlockparse.py
 
          with open("results/designed_probes_out/" + "w" + str(self.win) + "_t" + str(self.thresh) + "_c" + str(self.comp) + "/"  + str(self.chr_name)+"_blockParse_probe_df.bed", 'a+') as f:
                  output_df.to_csv(f, sep='\t',header=None, index=False)
@@ -726,7 +742,11 @@ class SequenceCrawler:
              reportOut.close()
 
 
+<<<<<<< HEAD:tigerfish_scripts/refactoredBlockparse.py
 def runSequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,OverlapModeVal, verbocity, reportVal, debugVal, metaVal, win, thresh, comp):
+=======
+def runSequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm, TM, X, sal, form, sp, conc1, conc2, headerVal, bedVal,OverlapModeVal, verbocity, reportVal, debugVal, metaVal):
+>>>>>>> 3cf8f492c95eb7872b8f0a50bce0b01d8534151d:refactoredBlockparse.py
     """Creates and runs a SequenceCrawler instance."""
 
     sc = SequenceCrawler(input_string,fasta_scaffold,chr_name, l, L, gcPercent, GCPercent, nn_table, tm,
