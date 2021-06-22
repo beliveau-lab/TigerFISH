@@ -48,20 +48,52 @@ start_time=time.time()
 def read_region(file_path):
     
     #read in the file with the appropriate column names
-    colnames = ["chrom","p_start","p_end","probe","Tm","region","r_count","h_count","max_mer","k_score"]
+    colnames = ["chrom","p_start","p_end","probe","Tm","region","r_count_total","h_count_total","k_score","k_norm"]
     
     #read as a dataframe
     region_df = pd.read_csv(file_path, delimiter = '\t', names = colnames)
         
     region_df['k_score']=region_df['k_score'].astype(float)
 
-    region_df=region_df[(region_df['k_score'] >= float(ENRICH)) & (region_df['r_count'] >= int(COPY_NUM))]
-
-    region_df = region_df.drop_duplicates(subset=['probe'], keep='first')
+    region_df=region_df[(region_df['k_score'] >= float(ENRICH)) & (region_df['r_count_total'] >= int(COPY_NUM))]
     
-    region_df=region_df.sort_values(by='r_count', ascending=False)
+    region_df=region_df.sort_values(by='k_norm', ascending=False)
 
     return region_df
+
+###################################################################################
+
+def split_mers(region_df):
+
+    probe_list = region_df['probe'].tolist()
+
+    all_mers_list = []
+    for probe in probe_list:
+        mer_list = generate_kmers(probe,18)
+        all_mers_list.append(mer_list)
+
+    region_df['mers_list'] = all_mers_list
+
+    return region_df
+
+###################################################################################
+
+def generate_kmers(sequence,k_size):
+
+    #make a list to store the kmers
+    kmers = []
+
+    #compute size of kmer window
+    n_kmers = len(sequence) - int(k_size) + 1
+
+    #generate kmer within window
+    for i in range(n_kmers):
+        kmer = sequence[i:i + int(k_size)]
+        kmers.append(kmer)
+
+    return kmers
+
+##############################################################################
 
 def rm_shared_mer_probes(region_df):
             
@@ -74,8 +106,7 @@ def rm_shared_mer_probes(region_df):
         if len(group) > 1:
             
             #gets a list of all max_mers
-            max_mers_list = group['max_mer'].tolist()
-            max_mers_list = [i[1 : -1].split(', ') for i in max_mers_list]
+            max_mers_list = group['mers_list'].tolist()
     
             #define your top ranking "keep set of 18-mers"
             keep_mers_set = set(max_mers_list[0])
@@ -98,7 +129,7 @@ def rm_shared_mer_probes(region_df):
         
                 #take the lengh of the given max_mer_list[i]
                 list_len = len(max_mers_list[i])
-        
+
                 #compute proportion of shared 18-mers
                 #if proportion is >= cutoff, then you want to cull
                 if float(in_count/list_len) >= MER_CUTOFF:
@@ -106,16 +137,26 @@ def rm_shared_mer_probes(region_df):
     
     #remove rows of the dataframe that have probes that should be filtered
     region_df = region_df[~region_df['probe'].isin(probe_to_remove)]
+
+    #drop the mers column
+    region_df.drop(['mers_list'], axis=1, inplace=True)
             
     return region_df
+
+###################################################################################
                     
 def write_file(region_df):
 
     region_df.to_csv(str(out_path), header=False, index=False, sep="\t")
 
+###################################################################################
+
 def main():
     
     region_df = read_region(file_path)
+    print("---%s seconds ---"%(time.time()-start_time))
+
+    region_df = split_mers(region_df)
     print("---%s seconds ---"%(time.time()-start_time))
 
     region_df = rm_shared_mer_probes(region_df)

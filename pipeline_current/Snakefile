@@ -1,114 +1,78 @@
 configfile: "config.yml"
 
-BOWTIE2_DIR = "/net/beliveau/vol1/home/eaguil/tigerfish/bt2_indices/t2t/t2t"
-
 SAMPLES = config["samples"]
 WINDOW = config["window"]
 THRESH = config["threshold"]
 COMPOS = config["composition"]
 COPY_N = config["copy_num"]
 ENRICH = config["enrich_score"]
+C1 = config["c1_val"]
+C2 = config["c2_val"]
 
 rule all:
     input:
-        nupack = expand("results/alignment_check/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_tigerfish_set.csv", sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, enrich_score = ENRICH, copy_num = COPY_N)
+        nupack = expand("results/alignment_check/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_tigerfish_set.csv", sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, enrich_score = ENRICH, copy_num = COPY_N,c1 = C1,c2 = C2)
 
-rule generate_jf_idx:
+rule satellite_bed:
     input:
-        fasta_file = "../../../../../reference/Assemblies/chm13/{sample}.fa",
-        jf = config["jf_file"],
-        chr_path = config["chr_path"] + "{sample}.fa"
+        probe_bed = "../snakemake_all_05_24/results/repeat_id_out/w4000_t5_c0.25/{sample}_regions.bed",
+        repeatmasker = "../../../../repeat_masker/chm13_hg38Y_satellites.bed"
     conda:
         "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
     params:
-        chrom_name = "{sample}",
-        file_start = config["file_start"],
-        mfree="60G",
+        mfree="20G",
         h_rt = "20:0:0"
-    threads: 3
     benchmark:
-        "results/benchmarks/generate_jf_idx/{sample}_log.log"
+        "results/benchmarks/generate_sat_bed/{sample}_log.log"
     output:
-        jf_count = "results/jf_index_files/{sample}_jf_temp.txt",
-        chrom_idx = "results/jf_index_files/{sample}_index.txt"
+        "results/satellite_beds/{sample}_satellite.bed"
     shell:
-        "python ../bin/generate_jf_idxs.py -f {input.fasta_file} -j {input.jf} -chr {params.chrom_name} -schr {input.chr_path} -st {params.file_start}"
-
-rule repeat_ID:
-    input:
-        jf_count = rules.generate_jf_idx.output.jf_count,
-        chrom_index = rules.generate_jf_idx.output.chrom_idx,
-        chr_path = rules.generate_jf_idx.input.chr_path
-    conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
-    params:
-        window = config["window"],
-        threshold = config["threshold"],
-        composition = config["composition"],
-        file_start = config["file_start"],
-        chrom_name = "{sample}",
-        mfree="85G",
-        h_rt="200:0:0"
-    benchmark:
-        "results/benchmarks/repeat_ID/w{window}_t{threshold}_c{composition}/{sample}_log.log"
-    output:
-        out_bed = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.bed",
-        out_fasta = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.fa"
-    shell:
-        "python ../bin/refactor_repeatID.py -j {input.jf_count} -i {input.chrom_index} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -schr {input.chr_path} -o_b {output.out_bed} -o_f {output.out_fasta}"
-
+        "python ../../scripts/subset_satellites.py -p {input.probe_bed} -r {input.repeatmasker} -b {output}"
 
 rule design_probes:
     input:
-        region_fa = rules.repeat_ID.output.out_fasta
+        region_bed = rules.satellite_bed.output,
+        genome_fa = "../snakemake_all_05_24/results/jf_index_files/fasta/{sample}.fa"
     output:
-        designed_probes = "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_blockParse_probe_df.bed"
+        designed_probes = "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_blockParse_probe_df.bed",
+        probe_fa = "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_probe_regions.fa"
     conda:
         "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
     params:
         mfree="60G",
         h_rt="200:0:0",
-        window = config["window"],
-        threshold = config["threshold"],
-        composition = config["composition"],
         chrom_name = "{sample}"
     benchmark:
         "results/benchmarks/design_probes/w{window}_t{threshold}_c{composition}/{sample}_log.log"
-
     shell:
-        "python ../bin/design_probes.py -f {input.region_fa} -chr {params.chrom_name} -win {params.window} -thresh {params.threshold} -comp {params.composition}"
+        "python ../../scripts/design_probes.py -b {input.region_bed} -f {input.genome_fa} -p_o {output.designed_probes} -r_f {output.probe_fa}"
 
 rule specificity:
     input:
-        jf = rules.generate_jf_idx.output.jf_count,
+        jf = "../snakemake_all_05_24/results/jf_index_files/{sample}_jf_temp.txt",
         probes = rules.design_probes.output.designed_probes,
-        region_fa = rules.repeat_ID.output.out_fasta
+        region_fa = rules.design_probes.output.probe_fa
     conda:
         "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
     params:
         mfree="50G",
         h_rt="200:0:0",
-        merlength = config["merlength"],
-        enrich_score = config["enrich_score"],
-        copy_num = config["copy_num"],
-        window = config["window"],
-        threshold = config["threshold"],
-        composition = config["composition"],
-        chrom_name = "{sample}"
+        mer = config["mer_val"],
+        chrom_name = "{sample}",
+        c1 = "{c1}",
+        c2 = "{c2}"
     benchmark:
-        "results/benchmarks/specificity/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_log.log"
-
+        "results/benchmarks/specificity/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
     output:
-       "results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_probes_pre_filter.txt"
-
+       "results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_probes_pre_filter.txt"
     shell:
-        "python ../bin/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -ch {params.chrom_name} -f {input.region_fa}  -w {params.window} -t {params.threshold} -c {params.composition} -m {params.merlength} -e {params.enrich_score} -cn {params.copy_num}"
+        "python ../../scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -ch {params.chrom_name} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2}"
 
 rule filter_spec:
     input:
         rules.specificity.output
     output:
-        filtered_files = "results/initial_specificity_out/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_mer_filtered.csv"
+        filtered_files = "results/initial_specificity_out/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_mer_filtered.csv"
     conda:
         "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
     params:
@@ -116,21 +80,26 @@ rule filter_spec:
         h_rt="20:0:0",
         enrich_score = config['enrich_score'],
         copy_num = config["copy_num"]
+    benchmark:
+        "results/benchmarks/specificity/post_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
     shell:
-        "python ../bin/probes_filter_refactor_mer.py -f {input} -o {output.filtered_files} -e {params.enrich_score} -cn {params.copy_num}"
+        "python ../../scripts/probes_filter_refactor_mer.py -f {input} -o {output.filtered_files} -e {params.enrich_score} -cn {params.copy_num}"
 
 rule alignment_filter:
     input:
         rules.filter_spec.output
     output:
-        filtered_files = "results/alignment_check/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}/{sample}_tigerfish_set.csv"
+        filtered_files = "results/alignment_check/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_tigerfish_set.csv"
     conda:
         "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
     params:
         mfree="60G",
         h_rt="200:0:0",
-        enrich_score = config['enrich_score'],
-        copy_num = config["copy_num"]
+        pdups = config["pdups"],
+        target_sum = config['target_sum'],
+        probe_count = config['probe_count']
+    benchmark:
+        "results/benchmarks/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
     shell:
-        "python ../bin/alignment_nupack_filter.py -f {input} -o {output}"
+        "python ../../scripts/alignment_nupack_filter.py -f {input} -o {output} -p {params.pdups} -c {params.probe_count} -r {params.target_sum}"
 

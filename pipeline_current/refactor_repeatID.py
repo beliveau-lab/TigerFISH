@@ -78,8 +78,6 @@ requiredNamed.add_argument('-schr', '--scaffold_fasta', action='store',required=
 
 requiredNamed.add_argument('-o_b', '--bed_file', action='store',required=True,
                            help='Used to generate fasta file of kmer rich regions; default is ')
-requiredNamed.add_argument('-o_f', '--out_fasta', action='store',required=True,
-                           help='Used to generate fasta file of kmer rich regions; default is ')
 
 #Import user-specified command line values.
 args = userInput.parse_args()
@@ -92,11 +90,6 @@ THRESHOLD = args.threshold
 COMPOSITION = args.composition_score
 START=args.start
 bed_file = args.bed_file
-out_fasta = args.out_fasta
-
-#the names of output files to be generated
-#bed_file="results/repeat_id_out/" + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "/" + chrom + "_regions.bed"
-#out_fasta="results/repeat_id_out/" + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "/" + chrom + "_regions.fa"
 
 #a list for the regions and scaffold sequences 
 name_list=[]
@@ -293,17 +286,6 @@ def nucleotide_range(start_l,end_l,start_index_l,end_index_l,bed_file):
     return repeat_indices
 
 ##############################################################################
-
-def generate_fasta(bed_file,scaffold_fasta):
-    """
-    This function will take the dataframe generated about as a bed file and
-    then generate a fasta from those coords
-    """
-
-    #call bedtools to generate a fasta from the sequence you have generated
-    subprocess.call(['bedtools', 'getfasta', '-fi', scaffold_fasta, '-bed', bed_file, '-fo', out_fasta], stderr=None, shell=False)
-
-##############################################################################
 # MAIN
 ##############################################################################
 
@@ -312,9 +294,6 @@ def main():
     global USAGE 
 
     #the names of output files to be generated
-    #bed_file="results/repeat_id_out/" + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "/" + chrom + "_regions.bed"
-    
-    #out_fasta="results/repeat_id_out/" + "w" + str(SPAN) + "_t" + str(THRESHOLD) + "_c" + str(COMPOSITION) + "/" + chrom + "_regions.fa"
     
     kmer_indices=open_index_file(index_file)
     
@@ -341,10 +320,6 @@ def main():
     print("---%s seconds ---"%(time.time()-start_time))
 
     repeat_indices=nucleotide_range(kmer_start_seq,kmer_end_seq,true_index_start,true_index_end,bed_file)
-
-    print("---%s seconds ---"%(time.time()-start_time))
-
-    generate_fasta(bed_file,scaffold_fasta)
 
     print("---%s seconds ---"%(time.time()-start_time))
     

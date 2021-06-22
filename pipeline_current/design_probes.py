@@ -10,19 +10,10 @@ regions.
 
 #import all functions/modules needed
 import time
-import io
-import sys
-import re
-import csv
 import argparse
-from collections import defaultdict
-from itertools import islice
-from operator import itemgetter, attrgetter
 import subprocess
 import numpy as np
 import pandas as pd
-import glob
-import os
 import refactoredBlockparse as bp
 from Bio.SeqUtils import MeltingTemp as mt
 from Bio.Seq import Seq
@@ -31,15 +22,9 @@ from Bio.SeqUtils import GC
 from Bio import SeqIO
 from itertools import groupby
 from Bio.Alphabet import generic_dna, generic_protein
-from scipy import signal
-import time
-from collections import OrderedDict
-import collections
-from operator import itemgetter
-from itertools import groupby
-import collections
-from collections import Counter
-import itertools
+import tempfile
+
+##############################################################################
 
 #declare a timer
 start_time=time.time()
@@ -50,30 +35,38 @@ userInput = argparse.ArgumentParser(description=\
         'can be used for further parsing with probe information.')
 
 requiredNamed = userInput.add_argument_group('required arguments')
-requiredNamed.add_argument('-f', '--fasta_file', action='store', required=True,
-                               help='The FASTA file to find probes in')
-requiredNamed.add_argument('-chr', '--chr_name', action='store', required=True,
+requiredNamed.add_argument('-b', '--bed_name', action='store', required=True,
                                help='The chromosome corresponding to the probes being generated')
-requiredNamed.add_argument('-win', '--window', action='store', required=True,
+requiredNamed.add_argument('-r_o', '--region_out', action='store', required=True,
                                help='The chromosome corresponding to the probes being generated')
-requiredNamed.add_argument('-thresh', '--threshold', action='store', required=True,
+requiredNamed.add_argument('-p_o', '--probes_out', action='store', required=True,
                                help='The chromosome corresponding to the probes being generated')
-requiredNamed.add_argument('-comp', '--composition_score', action='store', required=True,
+requiredNamed.add_argument('-g', '--genome_fasta', action='store', required=True,
                                help='The chromosome corresponding to the probes being generated')
-
+requiredNamed.add_argument('-c', '--chrom_name', action='store', required=True,
+                               help='The chromosome corresponding to the probes being generated')
 args = userInput.parse_args()
-test_fasta = args.fasta_file
-test_chr=args.chr_name
-win = args.window
-thresh = args.threshold
-comp = args.composition_score
+bed = args.bed_name
+region_fa = args.region_out
+probe_out = args.probes_out
+genome_fa = args.genome_fasta
+name = args.chrom_name
 
-name_list=[]
-sequence_list=[]
+##############################################################################
+
+def make_fasta_from_bed(bed,region_fa):
+
+    subprocess.call(['bedtools', 'getfasta', '-fi', genome_fa, '-bed', bed, '-fo', region_fa], stderr=None, shell=False)
+
+##############################################################################
 
 #this function takes the fasta that you returned from the last function
-def blockParse_run(output_fasta):
-    fasta_sequences = list(SeqIO.parse(open(output_fasta),'fasta'))
+def blockParse_run(region_fa,name):
+
+    name_list = []
+    sequence_list = []
+
+    fasta_sequences = list(SeqIO.parse(open(region_fa),'fasta'))
     #you want to parse each fasta sequence as a string and append to a sequence list
     for fasta in fasta_sequences:
         name_list.append(fasta.id)
@@ -84,19 +77,21 @@ def blockParse_run(output_fasta):
     dict_name_seq=dict(zipped_list)
     #then run each item in the dict into the refactored blockParse script which can now handle multi-lined fastas
     for names,sequences in dict_name_seq.items():
-        probes=(bp.runSequenceCrawler(sequences,names,test_chr, 36, 41, 20, 80,mt.DNA_NN3,
-                                      42, 47, 'AAAAA,TTTTT,CCCCC,GGGGG', 390, 50, 0,25,
-                                      25, None, True ,False, False,False, False, False,win,thresh,comp))
-    return probes
+        probes=bp.runSequenceCrawler(sequences,names,name, 36, 41, 20, 80,mt.DNA_NN3,42, 47, 'AAAAA,TTTTT,CCCCC,GGGGG', 390, 50, 0,25, 25, None, True ,False, False,False, False, False,(str(probe_out)))
+
+##############################################################################
 
 def main():
 
-    blockParse_run(test_fasta)
+    make_fasta_from_bed(bed,region_fa)
 
+    print("---%s seconds ---"%(time.time()-start_time))
+
+    blockParse_run(region_fa,name)
+    
     print("---%s seconds ---"%(time.time()-start_time))
 
     print("Done")
 
 if __name__== "__main__":
     main()
-

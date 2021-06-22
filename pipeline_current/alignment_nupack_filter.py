@@ -39,11 +39,25 @@ requiredNamed.add_argument('-f', '--probe_file', action='store', required=True,
                                help='The filtered probe file that contains all sequences and regions')
 requiredNamed.add_argument('-o', '--out_file', action='store', required=True,
                                help='The filtered probe file that contains all sequences and regions')
+userInput.add_argument('-r', '--region_threshold', action='store',default=5000,
+                           type=int,
+                           help='The total on-target binding sum to reach by repeat region')
+userInput.add_argument('-p', '--pdups_prop', action='store',default=0.95,
+                           type=float,
+                           help='The on target proportion cutoff to keep a probe')
+userInput.add_argument('-c', '--probe_count_mode', action='store',default=0,
+                           type=int,
+                           help='Option to return  requested number of probes/repeat region instead')
+
 args = userInput.parse_args()
 p_file = args.probe_file
 o_file = args.out_file
+r_thresh = args.region_threshold
+pdups_p = args.pdups_prop
+probe_count = args.probe_count_mode
 
 bowtie_string = "--local -N 1 -L 20 -R 3 -D 20 -i C,4 --score-min G,1,4"
+
 bt2_idx = "/net/beliveau/vol1/home/eaguil/tigerfish/bt2_indices/t2t/t2t"
 
 # configure nupack
@@ -54,13 +68,8 @@ NUPACK_MODEL = nupack.Model(
     magnesium = 0.0,
     ensemble = 'stacking')
 
-strand_conc_a = 1e-6
-strand_conc_b = 1e-12
-
-region_threshold = 5000
-
-#default will be 0.95
-pdups_prop = 0.95
+strand_conc_a=1e-6
+strand_conc_b=1e-12
 
 start_time=time.time()
 
@@ -69,7 +78,7 @@ start_time=time.time()
 def read_probe_filter(p_file):
     
     #read in the file with the appropriate column names
-    colnames = ["chrom","p_start","p_end","probe","Tm","region","r_count","h_count","max_mer","k_score"]
+    colnames = ["chrom","p_start","p_end","probe","Tm","region","r_count","h_count","k_score","k_norm"]
     
     #read as a dataframe
     probe_df = pd.read_csv(p_file, delimiter = '\t', names = colnames)
@@ -84,7 +93,7 @@ def read_probe_filter(p_file):
     probe_df[['r_start','r_end']] = probe_df[['r_start',
                 'r_end']].astype(int)
 
-    #make a column for chrom:start-stop that matches true genomic coords
+    # column for chrom:start-stop that matches true genomic coords
     probe_df['start'] = probe_df['p_start'] + probe_df['r_start']
     probe_df['end'] = probe_df['p_end'] + probe_df['r_start']
 
@@ -111,17 +120,90 @@ def read_probe_filter(p_file):
     probe_df['region'] = r_coords_list
 
     #cull columns
-    columns = ['chrom','p_start','p_end','r_start','r_end','start','end','max_mer']
+    columns = ['chrom','p_start','p_end','r_start','r_end','start','end']
     probe_df = probe_df.drop(columns,axis=1)
 
     #rearrange cols
-    probe_df = probe_df[['probe_coords','region','probe','Tm','r_count','h_count','k_score']]
+    probe_df = probe_df[['probe_coords','region','probe','Tm','r_count','h_count','k_score','k_norm']]
 
     return probe_df
 
 ###################################################################################
 
-def filter_by_region(probe_df):
+def filter_by_region_count(probe_df,probe_count):
+
+    #need to make lists to store the probe names, on target, off target, prop
+    keep_probe_names_list = []
+    keep_on_target_list = []
+    keep_off_target_list = []
+    keep_probe_prop_list = []
+    keep_probe_seq = []
+
+    #initiate groupby
+    grouped_region=probe_df.groupby('region',sort=False)
+
+    for name,group in grouped_region:
+
+        #this takes into account single instances of probe in repeat
+        probe_list = group['probe'].tolist()
+        probe_coords_list = group['probe_coords'].tolist()
+
+        #make a list of the repeat regions
+        probe_regions_list = group['region'].tolist()
+
+        probe_region_dict = dict(zip(probe_coords_list,probe_regions_list))
+
+        item_count = 0
+
+        threshold_count_list = []
+
+        while (len(threshold_count_list) != probe_count and len(probe_list) >= 1):
+
+            #make the call for the top probe to get the pairwise df
+            top_probe_pairwise = generate_pairwise_df(probe_list[0],probe_coords_list[0])
+
+            #compute the on target sum for the top probe
+            total_prop_dict,total_on_target_dict,total_off_target_dict = target_nupack_sum(top_probe_pairwise,probe_region_dict)
+
+            for key,val in total_prop_dict.items():
+                if (val >= pdups_p and total_off_target_dict[key] <= 100 and len(keep_probe_names_list) == 0):
+
+                    keep_probe_names_list.append(key)
+                    keep_on_target_list.append(total_on_target_dict[key])
+                    keep_off_target_list.append(total_off_target_dict[key])
+                    keep_probe_prop_list.append(total_prop_dict[key])
+                    keep_probe_seq.append(probe_list[0])
+
+                    threshold_count_list.append(total_on_target_dict[key])
+
+                if val >= pdups_p and total_off_target_dict[key] <= 100 and len(keep_probe_names_list) >= 1:
+                    pdups_track_list = []
+                    for probe in keep_probe_seq:
+                        pdups_compare = pdups(probe_list[0],probe)
+                        pdups_track_list.append(pdups_compare)
+
+                    if max(pdups_track_list) <= 0.95:
+
+                        keep_probe_names_list.append(key)
+                        keep_on_target_list.append(total_on_target_dict[key])
+                        keep_off_target_list.append(total_off_target_dict[key])
+                        keep_probe_prop_list.append(total_prop_dict[key])
+                        keep_probe_seq.append(probe_list[0])
+                        threshold_count_list.append(total_on_target_dict[key])
+
+            probe_list.pop(0)
+            probe_coords_list.pop(0)
+
+    #make dictionaries of the on target, off target, prop
+    on_target_dict = dict(zip(keep_probe_names_list,keep_on_target_list))
+    off_target_dict = dict(zip(keep_probe_names_list,keep_off_target_list))
+    prop_target_dict = dict(zip(keep_probe_names_list,keep_probe_prop_list))
+
+    return on_target_dict,off_target_dict,prop_target_dict
+
+###################################################################################
+
+def filter_by_region_threshold(probe_df):
 
     #need to make lists to store the probe names, on target, off target, prop
     keep_probe_names_list = []
@@ -145,8 +227,8 @@ def filter_by_region(probe_df):
         probe_region_dict = dict(zip(probe_coords_list,probe_regions_list))
 
         threshold_count = 0
-         
-        while threshold_count <= region_threshold and len(probe_list) >= 1:
+
+        while (threshold_count <= r_thresh and len(probe_list) >= 1):
 
             #make the call for the top probe to get the pairwise df
             top_probe_pairwise = generate_pairwise_df(probe_list[0],probe_coords_list[0])
@@ -155,7 +237,7 @@ def filter_by_region(probe_df):
             total_prop_dict,total_on_target_dict,total_off_target_dict = target_nupack_sum(top_probe_pairwise,probe_region_dict)
 
             for key,val in total_prop_dict.items():
-                if val >= pdups_prop and len(keep_probe_names_list) == 0:
+                if (val >= pdups_p and total_off_target_dict[key] <= 100 and len(keep_probe_names_list) == 0):
 
                     keep_probe_names_list.append(key)
                     keep_on_target_list.append(total_on_target_dict[key])
@@ -165,13 +247,13 @@ def filter_by_region(probe_df):
                     
                     threshold_count += total_on_target_dict[key]
 
-                if val >= pdups_prop and len(keep_probe_names_list) >= 1:
+                if val >= pdups_p and total_off_target_dict[key] <= 100 and len(keep_probe_names_list) >= 1:
                     pdups_track_list = []
                     for probe in keep_probe_seq:
                         pdups_compare = pdups(probe_list[0],probe)
                         pdups_track_list.append(pdups_compare)
 
-                    if max(pdups_track_list) <= 0.25:
+                    if max(pdups_track_list) <= 0.95:
 
                         keep_probe_names_list.append(key)
                         keep_on_target_list.append(total_on_target_dict[key])
@@ -228,7 +310,7 @@ def generate_pairwise_df(probe_seq,probe_coords):
 
             #now you want to take the fastq and I think run bt2
             sam_file = tmpdir + '/derived.sam'
-            sam_file = bt2_call(fastq_filename,sam_file,200000)
+            sam_file = bt2_call(fastq_filename,sam_file,300000)
 
             bam_file = tmpdir + '/derived.bam'
             bam_file = samtools_call(sam_file,bam_file)
@@ -459,7 +541,11 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    on_target_dict,off_target_dict,prop_target_dict = filter_by_region(probe_df)
+    if probe_count == 0:
+        on_target_dict,off_target_dict,prop_target_dict = filter_by_region_threshold(probe_df)
+
+    else:
+        on_target_dict,off_target_dict,prop_target_dict = filter_by_region_count(probe_df,probe_count)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

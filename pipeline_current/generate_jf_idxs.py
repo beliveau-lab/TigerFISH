@@ -41,42 +41,57 @@ userInput = argparse.ArgumentParser(description=\
 
 requiredNamed = userInput.add_argument_group('required arguments')
 requiredNamed.add_argument('-f', '--fasta_file', action='store', required=True,
-                               help='The FASTA file to find probes in')
+                               help='The genomic fasta file')
 requiredNamed.add_argument('-j', '--jf_indexfile', action='store', required=True,
                                help='The jf file of a given genome')
-requiredNamed.add_argument('-chr', '--chr_name', action='store', required=True,
+requiredNamed.add_argument('-c', '--chr_name', action='store', required=True,
                                help='Define the scaffold being queried')
-requiredNamed.add_argument('-schr', '--scaffold_fasta', action='store',required=True,
-                           help='Used to generate fasta file of kmer rich regions; default is ')
-requiredNamed.add_argument('-st','--start',action='store',required=True,
-                           help='The start sequence of the fasta region if not starting at beginning of scaffold; default is ' '0')
-
+requiredNamed.add_argument('-f_o', '--scaffold_fa_out', action='store', required=True,
+                               help='scaffold fasta output file')
+requiredNamed.add_argument('-j_o', '--jf_out', action='store', required=True,
+                               help='jellyfish query file output')
+requiredNamed.add_argument('-i', '--j_index_out', action='store', required=True,
+                               help='jellyfish index output file')
+requiredNamed.add_argument('-m', '--mer_val', action='store', required=True,
+                               help='jellyfish index output file')
 args = userInput.parse_args()
-fasta_file = args.fasta_file
-scaffold_fasta=args.scaffold_fasta
-jf_indexfile = args.jf_indexfile
+
+fa_file = args.fasta_file
+jf_idx = args.jf_indexfile
 chrom= args.chr_name
-START=args.start
-MERLENGTH = 18
-#the names of output files to be generated
-chr_name_jf_out="results/jf_index_files/" + chrom + "_jf_temp.txt"
-out_index="results/jf_index_files/" + chrom + "_index.txt"
+scaffold_fa = args.scaffold_fa_out
+jf_out = args.jf_out
+index_out = args.j_index_out
+mer_l = args.mer_val
+
+MERLENGTH = mer_l
 
 ##############################################################################
 
-def jf_query(jf_indexfile,fasta_file):
+def find_scaffold(fa_file,chrom):
+
+    fasta_sequences = SeqIO.parse(open(fa_file),'fasta')
+    for fasta in fasta_sequences:
+        if chrom == fasta.id:
+            SeqIO.write(fasta,scaffold_fa,"fasta")
+
+    return scaffold_fa 
+
+##############################################################################
+
+def jf_query(jf_idx,scaffold_fa):
     
     """
     Runs jellyfish to generate a query file from the jellyfish index provided
     """
-    query_file=subprocess.call(['jellyfish', 'query', jf_indexfile, '-s',
-                     fasta_file, '-o', chr_name_jf_out], stderr=None, shell=False)
+    query_file=subprocess.call(['jellyfish', 'query', jf_idx, '-s',
+                     scaffold_fa, '-o', jf_out], stderr=None, shell=False)
     
-    return chr_name_jf_out
+    return jf_out
 
 ##############################################################################
     
-def map_coords(fa_file):
+def map_coords(scaffold_fa):
     
     """
     This function will take a the fasta file you pass it and identify where all N and non-N bases are located
@@ -85,12 +100,12 @@ def map_coords(fa_file):
     bases_dist_start=[]
     n_bases_start=[]
     
-    fa_seq = list(SeqIO.parse(open(fa_file),'fasta'))
+    fa_seq = list(SeqIO.parse(open(scaffold_fa),'fasta'))
     for fasta in fa_seq:
         sequence=str(fasta.seq).lower()
         #first you need to find where all of the regular bases are located
         for match in re.finditer('[atcg]',sequence):
-            bases_dist_start.append(int(match.start())+int(START))
+            bases_dist_start.append(int(match.start()))
         #now you need to find where all of the N bases are located 
         for match in re.finditer('[n]', sequence):
             n_bases_start.append(int(match.start()))
@@ -216,23 +231,25 @@ tten out as a file
         for x in range (start, end+1):
             kmer_indices.append(x)
 
-    with open(out_index,"w") as k_file:
+    with open(index_out,"w") as k_file:
         for i in kmer_indices:
             k_file.write(str(i) + "\n")
-
-    return out_index,kmer_indices
 
 ##############################################################################
     
 def main():
     
-    global USAGE 
-    
-    chr_name_jf_out = jf_query(jf_indexfile,fasta_file)
+    global USAGE
+
+    scaffold_fa = find_scaffold(fa_file,chrom)
+
+    print("---%s seconds ---"%(time.time()-start_time))
+
+    jf_out = jf_query(jf_idx,scaffold_fa)
     
     print("---%s seconds ---"%(time.time()-start_time))
 
-    bases_dist_start,n_bases_start = map_coords(fasta_file)
+    bases_dist_start,n_bases_start = map_coords(scaffold_fa)
 
     print("---%s seconds ---"%(time.time()-start_time))
     
@@ -248,7 +265,7 @@ def main():
     
     print("---%s seconds ---"%(time.time()-start_time))
 
-    out_index,kmer_indices=generate_index_file(normal_ranges)
+    kmer_indices=generate_index_file(normal_ranges)
     
     print("---%s seconds ---"%(time.time()-start_time))
     
