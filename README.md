@@ -5,6 +5,7 @@
 
 # TigerFISH Pipeline
 
+[![Snakemake](./docs/img/snakemake.svg)](https://snakemake.readthedocs.io)
 
 ## Overview
 
