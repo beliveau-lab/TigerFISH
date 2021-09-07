@@ -71,5 +71,9 @@ If you have questions or issues, please open an issue on GitHub
 
 ## Citation
 
+For usage of the pipeline, please cite according to citation.bib
+
 ## License
+
+We provide this open source software without any warranty under the MIT license.
 
