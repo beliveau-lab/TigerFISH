@@ -5,6 +5,9 @@
 
 # TigerFISH Pipeline
 
+
+## Overview
+
 Tigerfish is a technology and software tool that enables users to design oligonucleotide FISH experiments specific for satellite DNA and repetitive DNA families at the scale of genomes. Tigerfish is comprised of the following resources for repetitive probe design:
 
 1. A pipeline that allows for repetitive probe discovery and design. Users may provide a particular region of interest for oligo probe design, or provide a genomics scaffold for repeat discovery and probe design.
@@ -13,29 +16,58 @@ Tigerfish is a technology and software tool that enables users to design oligonu
 
 3. An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2022).  
 
-## Overview
+## Installation
 
 1. Install [conda](https://docs.conda.io/en/latest/miniconda.html) as needed for your system.
 
 2. Proceed with installing Mamba to assist with snakemake installation, as recommended in the [Snakemake installation tutorial](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda-mamba).
 
 ```
-$ conda install -n base -c conda-forge mamba`
+$ conda install -n base -c conda-forge mamba
 ```
 
 3. Clone this repo, and create and activate the provide environment for implementing Snakemake for Tigerfish:
 
 ```
-git clone 
+$ git clone https://github.com/beliveau-lab/TigerFISH.git \
+    && cd Tigerfish_pipeline/ \
+    && mamba env create -f environment.yml \
+    && conda activate tigerfish_snakemake
 ```
-
-## Installation
 
 ## Running the pipeline
 
+A full tutorial for running Tigerfish using both repeat discovery and probe design from user provided bed coordinates in included to test the pipeline installation. To run the pipeline using both cases on sample files:
+
+When repeat coordinates are provided:
+
+```
+$ cd example_run/defined_coords/ && ./run_pipeline.sh
+```
+
+When repeat discovery is initiated:
+
+```
+$ cd example_run/repeat_discovery/ && ./run_pipeline.sh
+```
+
+When these examples are run, expected outputs may be compared here.
+
+To deploy Tigerfish on your own data,  update the file paths in config.yml with the paths to your genome assembly. For more information on input and output files, please read further documentation here.
+
+This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html), and distributed according to [best practices](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html). If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started. 
+
 ## Documentation
 
+Additional information is available in the docs for:
+
+* Input file specification
+* Output file specification
+* Description of pipeline steps
+
 ## Questions
+
+If you have questions or issues, please open an issue on GitHub
 
 ## Citation
 
