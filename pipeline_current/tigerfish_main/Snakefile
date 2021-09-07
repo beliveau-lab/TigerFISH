@@ -173,7 +173,7 @@ if config['repeat_discovery'] == 'TRUE':
         benchmark:
             "results/benchmarks/split_regions/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
         output:
-            directory("results/split_regions/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/")
+            chrom_dir = directory("results/split_regions/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/")
         shell:
             "python ../scripts/split_filter.py -f {input} -o {output}"
 
@@ -199,25 +199,37 @@ if config['repeat_discovery'] == 'TRUE':
         shell:
             "python ../scripts/alignment_filter.py -f {input.probe_files} -b {params.bt2} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
 
+    # aggregate paths to dynamically created files
     def aggregate_input(wildcards):
-        checkpoint_output = checkpoints.gather_repeat_regions.get(**wildcards).output[0]
-        region, = glob_wildcards(checkpoint_output + "{region}.txt")
-        return expand("results/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/{region}_alignment.txt",region = region,sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, enrich_score = ENRICH, copy_num = COPY_N, c1 = C1, c2 = C2)
 
+        # construct wild card path to checkpoint output files
+        wildcard_path = os.path.join(
+            checkpoints.gather_repeat_regions.get(**wildcards).output.chrom_dir, 
+            '{region}.txt'
+        )
+
+        # construct paths to downstream files to be aggregated
+        file_paths = expand("results/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{{sample}}/{region}_alignment.txt",region=glob_wildcards(wildcard_path).region,sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, enrich_score = ENRICH, copy_num = COPY_N, c1 = C1, c2 = C2)
+
+        # success
+        return(file_paths)
+
+
+    # merge the individually-flattened chromosome annotation files
     rule merge_alignment_filter:
         input:
             aggregate_input
         output:
-            'results/concat_alignment/{sample}/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_align_filter_concat.txt',
-        conda:
-            "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+            'results/concat_alignment/{sample}/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_align_filter_concat.txt'
         params:
-            mfree="20G",
-            h_rt="200:0:0"
-        benchmark:
-            "results/benchmarks/concat_alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_align_filter_concat.txt"
-        shell:
-            'cat {input} > {output}'
+            mfree='20G',
+            h_rt='3:0:0'
+        run:
+            with open(output[0], 'w') as outfile:
+                for fname in input:
+                    with open(fname) as infile:
+                        for line in infile:
+                            outfile.write(line)
 
 def input_for_summary(wildcards):
     # requires a config containing switches for the whole workflow
