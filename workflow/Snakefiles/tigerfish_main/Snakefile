@@ -1,0 +1,265 @@
+configfile: "config.yml"
+
+SAMPLES = config["samples"]
+WINDOW = config["window"]
+THRESH = config["threshold"]
+COMPOS = config["composition"]
+COPY_N = config["copy_num"]
+ENRICH = config["enrich_score"]
+C1 = config["c1_val"]
+C2 = config["c2_val"]
+
+rule all:
+    input:
+        expand("results/finished/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c1_{c1}_c2_{c2}/DONE_{sample}.txt", sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, enrich_score = ENRICH, copy_num = COPY_N, c1 = C1, c2 = C2)
+
+rule generate_jf_idx:
+    input:
+        fasta_file = config["fasta_file"],
+        jf = config["jf_file"]
+    conda:
+        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+    params:
+        chrom_name = "{sample}",
+        mer = config["mer_val"],
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'results/benchmarks/generate_jf_idx/{sample}_log.log'
+    output:
+        jf_count = 'results/jf_index_files/{sample}_jf_temp.txt',
+        chrom_idx = 'results/jf_index_files/{sample}_index.txt',
+        chrom_fa = 'results/jf_index_files/fasta/{sample}.fa'
+    shell:
+        "python ../scripts/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
+
+if config['defined_coords'] == 'TRUE':
+    rule split_bed:
+        input:
+            bed_file = config["bed_file"]
+        conda:
+            "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        params:
+            chrom_name = "{sample}",
+            mfree="10G",
+            h_rt = "3:0:0"
+        benchmark:
+            'results/benchmarks/split_bed/w{window}_t{threshold}_c{composition}/{sample}_log.log'
+        output:
+            chrom_region = 'results/split_bed/w{window}_t{threshold}_c{composition}/{sample}_regions.bed'
+        shell:
+            "python ../scripts/split_bed.py -b {input.bed_file} -c {params.chrom_name} -o {output.chrom_region}"
+
+if config['repeat_discovery'] == 'TRUE':
+    rule repeat_ID:
+        input:
+            jf_count = rules.generate_jf_idx.output.jf_count,
+            chrom_index = rules.generate_jf_idx.output.chrom_idx,
+            chr_path = rules.generate_jf_idx.output.chrom_fa
+        conda:
+            "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        params:
+            window = "{window}",
+            threshold = "{threshold}",
+            composition = "{composition}",
+            file_start = config["file_start"],
+            chrom_name = "{sample}",
+            mfree="85G",
+            h_rt="200:0:0"
+        benchmark:
+            "results/benchmarks/repeat_ID/w{window}_t{threshold}_c{composition}/{sample}_log.log"
+        output:
+            out_bed = "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.bed",
+        shell:
+            "python ../scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
+
+def input_for_design_probes(wildcards):
+    # requires a config containing switches for the whole workflow
+    if config["defined_coords"]=='TRUE':
+        return "results/split_bed/w{window}_t{threshold}_c{composition}/{sample}_regions.bed"
+    elif config["repeat_discovery"]=='TRUE':
+        return "results/repeat_id_out/w{window}_t{threshold}_c{composition}/{sample}_regions.bed"
+
+rule design_probes:
+    input:
+        region_bed = input_for_design_probes,
+        chr_path = rules.generate_jf_idx.output.chrom_fa
+    conda:
+        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+    params:
+        mfree="60G",
+        h_rt="200:0:0",
+        chrom_name = "{sample}"
+    benchmark:
+        "results/benchmarks/design_probes/w{window}_t{threshold}_c{composition}/{sample}_log.log"
+    output:
+        designed_probes = "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_blockParse_probe_df.bed",
+        probe_fa = "results/designed_probes_out/w{window}_t{threshold}_c{composition}/{sample}_probe_regions.fa"
+    shell:
+        "python ../scripts/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa}"
+
+rule kmer_filter:
+    input:
+        jf = rules.generate_jf_idx.output.jf_count,
+        probes = rules.design_probes.output.designed_probes,
+        region_fa = rules.design_probes.output.probe_fa
+    conda:
+        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+    params:
+        mfree="50G",
+        h_rt="200:0:0",
+        mer = config["mer_val"],
+        chrom_name = "{sample}",
+        c1 = "{c1}",
+        c2 = "{c2}"
+    benchmark:
+        "results/benchmarks/specificity/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
+    output:
+        "results/initial_specificity_out/pre_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_probes_pre_filter.txt"
+    shell:
+        "python ../scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2}"
+
+rule probe_mer_filter:
+    input:
+        probes = rules.kmer_filter.output
+    conda:
+        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+    params:
+        mfree="50G",
+        h_rt="200:0:0",
+        mer = config["mer_val"],
+        enrich = "{enrich_score}",
+        copy_num = "{copy_num}",
+        mer_cutoff = config["mer_cutoff"]
+    benchmark:
+        "results/benchmarks/specificity/post_mer_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
+    output:
+        "results/initial_specificity_out/post_mer_filter/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_probes_mer_filter.txt"
+    shell:
+        "python ../scripts/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
+
+if config['defined_coords'] == 'TRUE':
+    rule alignment_filter:
+        input:
+            probe_files = rules.probe_mer_filter.output
+        conda:
+            "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        params:
+            mfree="50G",
+            h_rt="200:0:0",
+            region_thresh = config['target_sum'],
+            pdups_prop = config['pdups'],
+            probe_count = config['probe_count'],
+            bt2 = config['bowtie_index'],
+            k_val = config['bt2_alignments'],
+            max_off_target = config['max_off_target'],
+            max_pdups_binding = config['max_pdups_binding']
+        benchmark:
+            "results/benchmarks/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}.log"
+        output:
+            "results/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_alignment.txt"
+        shell:
+            "python ../scripts/alignment_filter.py -f {input.probe_files} -b {params.bt2} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
+
+if config['repeat_discovery'] == 'TRUE':
+    checkpoint gather_repeat_regions:
+        input:
+            rules.probe_mer_filter.output
+        conda:
+            "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        params:
+            mfree="50G",
+            h_rt="200:0:0"
+        benchmark:
+            "results/benchmarks/split_regions/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_log.log"
+        output:
+            chrom_dir = directory("results/split_regions/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/")
+        shell:
+            "python ../scripts/split_filter.py -f {input} -o {output}"
+
+    rule alignment_filter:
+        input:
+            probe_files = "results/split_regions/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/{region}.txt"
+        conda:
+            "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        params:
+            mfree="50G",
+            h_rt="200:0:0",
+            region_thresh = config['target_sum'], 
+            pdups_prop = config['pdups'], 
+            probe_count = config['probe_count'],
+            bt2 = config['bowtie_index'],
+            k_val = config['bt2_alignments'],
+            max_off_target = config['max_off_target'],
+            max_pdups_binding = config['max_pdups_binding']
+        benchmark:
+            "results/benchmarks/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/{region}.log"
+        output:
+            "results/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}/{region}_alignment.txt"
+        shell:
+            "python ../scripts/alignment_filter.py -f {input.probe_files} -b {params.bt2} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
+
+    # aggregate paths to dynamically created files
+    def aggregate_input(wildcards):
+
+        # construct wild card path to checkpoint output files
+        wildcard_path = os.path.join(
+            checkpoints.gather_repeat_regions.get(**wildcards).output.chrom_dir, 
+            '{region}.txt'
+        )
+
+        # construct paths to downstream files to be aggregated
+        file_paths = expand("results/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{{sample}}/{region}_alignment.txt",region=glob_wildcards(wildcard_path).region,sample = SAMPLES, window = WINDOW, threshold = THRESH, composition = COMPOS, enrich_score = ENRICH, copy_num = COPY_N, c1 = C1, c2 = C2)
+
+        # success
+        return(file_paths)
+
+
+    # merge the individually-flattened chromosome annotation files
+    rule merge_alignment_filter:
+        input:
+            aggregate_input
+        output:
+            'results/concat_alignment/{sample}/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_align_filter_concat.txt'
+        params:
+            mfree='20G',
+            h_rt='3:0:0'
+        run:
+            with open(output[0], 'w') as outfile:
+                for fname in input:
+                    with open(fname) as infile:
+                        for line in infile:
+                            outfile.write(line)
+
+def input_for_summary(wildcards):
+    # requires a config containing switches for the whole workflow
+    if config["defined_coords"]=='TRUE':
+        return "results/alignment/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_alignment.txt"
+    elif config["repeat_discovery"]=='TRUE':
+        return "results/concat_alignment/{sample}/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_align_filter_concat.txt"
+
+rule summary:
+    input:
+        input_for_summary
+    output:
+        "results/final_summary/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_probe_summary.txt"
+    conda:
+        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt="200:0:0"
+    benchmark:
+        "results/benchmarks/final_summary/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c{c1}_c{c2}/{sample}_probe_summary.txt"
+    shell:
+        "python ../scripts/finish_summary.py -f {input} -o {output}"
+
+rule finish:
+    input:
+        rules.summary.output
+    output:
+        'results/finished/w{window}_t{threshold}_c{composition}_e{enrich_score}_cn{copy_num}_c1_{c1}_c2_{c2}/DONE_{sample}.txt'
+    params:
+        mfree = '10G',
+        h_rt = '3:0:0'
+    shell:
+        'touch {output}'

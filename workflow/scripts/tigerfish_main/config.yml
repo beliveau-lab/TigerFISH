@@ -1,0 +1,60 @@
+#path to jellyfish file
+jf_file: ../../../../tigerfish_jf/chm13_tigerfish_18.jf
+
+#path to genome fasta
+fasta_file: "../../../../../../../reference/Assemblies/chm13/supp_resources/chm13.draft_v1.0.fasta"
+
+#option for probe design that directs pipeline implementation
+defined_coords: "FALSE"
+repeat_discovery: "TRUE"
+
+#if coordinates are provided for probe design, file goes here
+bed_file: "../test_files/chr21_2_region.bed"
+
+#all chromosomes present in bed file or required for probe discovery are listed here
+samples:
+#    - "chr17"
+#    - "chr20"
+    - "chr21"
+
+#parameters for repeat_ID step
+window:
+    - 4000
+threshold: 
+    - 5
+composition:
+    - 0.25
+file_start:
+    - 0
+
+#parameters for kmer_filter script
+mer_val:
+    - 18
+c1_val:
+    - 5
+c2_val:
+    - 1
+
+#parameters used for probe_mer_filter script
+enrich_score:
+    - 0.50
+copy_num:
+    - 50
+
+#parameters used in alignment_filter script
+bowtie_index: "/net/beliveau/vol1/home/eaguil/tigerfish/bt2_indices/t2t/t2t"
+pdups:
+    - 0.95
+probe_count:
+    - 0
+target_sum:
+    - 5000
+mer_cutoff:
+    - 0.95
+bt2_alignments:
+    - 300000
+max_off_target:
+    - 100
+max_pdups_binding:
+    - 0.60
+
