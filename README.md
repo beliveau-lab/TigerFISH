@@ -1,6 +1,43 @@
-# TigerFISH
 
-The 3D organization of DNA within the nucleus influences key aspects of genomic functions including gene expression, epigenetic state, and DNA replication timing. However, our understanding of genome organization is incomplete, in large part because regions of the genome that contain the same repeat hundreds of times (i.e. satellite DNA) are challenging to study using sequencing-based methods. Furthermore, the organization of satellite DNA is shown to play a critical role in genome stability and in human diseases such as Huntington’s disease and cancer. Imaging techniques are a powerful alternative to sequencing-based methods for studying genome organization by visualizing the location and distribution of genomic regions. 
+<p align="center">
+  <img width="300" height="300" src="https://user-images.githubusercontent.com/46250421/132409143-8072bc08-c21f-407d-bc58-9019701a0c7f.png">
+</p>
 
-Here, I propose to develop a versatile software tool (Tigerfish) that will enable single cell satellite DNA visualization using fluorescently labeled oligonucleotide (oligo) probes to better understand its role in genomic stability. Oligo probes are bioinformatically designed DNA sequences that can target DNA or RNA with high specificity for microscopy applications. I will also create resources to design Tigerfish probes against emerging genomes from long read sequencing data and established genomes for the study of satellite DNA organization in model organisms. These tools will be broadly useful for the field of genomics towards studying chromosome rearrangements and for resolving the 3D genome organization of repetitive DNA.
+# TigerFISH Pipeline
+
+Tigerfish is a technology and software tool that enables users to design oligonucleotide FISH experiments specific for satellite DNA and repetitive DNA families at the scale of genomes. Tigerfish is comprised of the following resources for repetitive probe design:
+
+1. A pipeline that allows for repetitive probe discovery and design. Users may provide a particular region of interest for oligo probe design, or provide a genomics scaffold for repeat discovery and probe design.
+
+2. A post processing pipeline, where users may perform analysis on probes of interest to determine on and off target probe specificity in silico and generate karyoplots using ChromoMaps.
+
+3. An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2022).  
+
+## Overview
+
+1. Install [conda](https://docs.conda.io/en/latest/miniconda.html) as needed for your system.
+
+2. Proceed with installing Mamba to assist with snakemake installation, as recommended in the [Snakemake installation tutorial](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda-mamba).
+
+```
+$ conda install -n base -c conda-forge mamba`
+```
+
+3. Clone this repo, and create and activate the provide environment for implementing Snakemake for Tigerfish:
+
+```
+git clone 
+```
+
+## Installation
+
+## Running the pipeline
+
+## Documentation
+
+## Questions
+
+## Citation
+
+## License
 
