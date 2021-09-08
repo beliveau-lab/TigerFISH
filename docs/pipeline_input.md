@@ -21,15 +21,15 @@ The [config.yml](../example_run/config.yml) file sets all the pipeline parameter
 
 **Required parameters for `defined_coords` implementation:**
 
-*`bed_file` is the path to the bed file containing the repeat coordinates of interest for probe design e.g. `dxz4.bed`
-*`samples` is the name of the scaffold that the bed coordinates corresponds to and is provided as a string e.g. `chrX`. This can also include a list of samples for multiple genome scaffolds.
-*`fasta_file` is the path to the genome sequence file e.g. `chm13v_1_1.fa`
+* `bed_file` is the path to the bed file containing the repeat coordinates of interest for probe design e.g. `dxz4.bed`
+* `samples` is the name of the scaffold that the bed coordinates corresponds to and is provided as a string e.g. `chrX`. This can also include a list of samples for multiple genome scaffolds.
+* `fasta_file` is the path to the genome sequence file e.g. `chm13v_1_1.fa`
 
 
 **Required parameters for `repeat_discovery` implementation:**
 
-*`samples` is the name of the scaffold that the bed coordinates corresponds to and is provided as a string e.g. `chrX`. This can also include a list of samples for multiple genome scaffolds.
-*`fasta_file` is the path to the genome sequence file e.g. `chm13v_1_1.fa`
+* `samples` is the name of the scaffold that the bed coordinates corresponds to and is provided as a string e.g. `chrX`. This can also include a list of samples for multiple genome scaffolds.
+* `fasta_file` is the path to the genome sequence file e.g. `chm13v_1_1.fa`
 
 
 **Default parameters described for `repeat_discovery` and `defined_coords` implementations:**
