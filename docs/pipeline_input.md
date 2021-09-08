@@ -13,7 +13,7 @@ In the [config.yml](../example_run/config.yml), there are two options for pipeli
 
 ### Config file
 
-The paths to the files is specified in the [config.yml](../example_run/config.yml). Sample files to run the Tigerfish using both implementation cases are included in the provided [example genome assembly](../example_run/data/).
+The paths to the files is specified in the [config.yml](../example_run/config.yml). Sample files to run the Tigerfish using both implementation cases are included in the provided [example directory](../example_run/data/).
 
 For example, to run this pipeline on the chm13 human genome assembly, the [chm13v1.1](https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz) fasta file was downloaded from [this page](https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz) and decompressed.
 
@@ -32,5 +32,103 @@ The [config.yml](../example_run/config.yml) file sets all the pipeline parameter
 * `fasta_file` is the path to the genome sequence file e.g. `chm13v_1_1.fa`
 
 
-**Default parameters described for `repeat_discovery` and `defined_coords` implementations:**
+### Default parameters described for `repeat_discovery` and `defined_coords`
+
+The following table summarizes which parameters provided in the [config.yml](../example_run/config.yml) are used in each implementation of the pipeline.
+
+<div align="center">
+    <table>
+        <thead>
+            <tr>
+                <th align="center">Parameters</th>
+                <th align="center">Used in `repeat_discovery`</th>
+                <th align="center">Used in `defined_coords`</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td align="center">window</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:x:</td>
+            </tr>
+            <tr>
+                <td align="center">threshold</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:x:</td>
+            </tr>
+            <tr>
+                <td align="center">composition</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:x:</td>
+            </tr>
+            <tr>
+                <td align="center">file_start</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:x:</td>
+            </tr>
+            <tr>
+                <td align="center">mer_val</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">c1_val</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">c2_val</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">enrich_score</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">copy_num</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">p_dups</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">probe_count</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">target_sum</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">mer_cutoff</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">bt2_alignments</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">max_off_target</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+            <tr>
+                <td align="center">max_pdups_binding</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+**Default parameter descriptions:**
 
