@@ -43,6 +43,7 @@ The following table summarizes which parameters provided in the [config.yml](../
                 <th align="center">Parameters</th>
                 <th align="center">Used in `repeat_discovery`</th>
                 <th align="center">Used in `defined_coords`</th>
+                <th align="center">pipeline step</th>
             </tr>
         </thead>
         <tbody>
@@ -50,85 +51,148 @@ The following table summarizes which parameters provided in the [config.yml](../
                 <td align="center">window</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:x:</td>
+                <th align="center">repeat_identification</th>
             </tr>
             <tr>
                 <td align="center">threshold</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:x:</td>
+                <th align="center">repeat_identification</th>
             </tr>
             <tr>
                 <td align="center">composition</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:x:</td>
+                <th align="center">repeat_identification</th>
             </tr>
             <tr>
                 <td align="center">file_start</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:x:</td>
+                <th align="center">repeat_identification</th>
             </tr>
             <tr>
                 <td align="center">mer_val</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">kmer_filter</th>
             </tr>
             <tr>
                 <td align="center">c1_val</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">kmer_filter</th>
             </tr>
             <tr>
                 <td align="center">c2_val</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">kmer_filter</th>
             </tr>
             <tr>
                 <td align="center">enrich_score</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">probe_mer_filter</th>
             </tr>
             <tr>
                 <td align="center">copy_num</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
-            </tr>
-            <tr>
-                <td align="center">p_dups</td>
-                <td align="center">:heavy_check_mark:</td>
-                <td align="center">:heavy_check_mark:</td>
-            </tr>
-            <tr>
-                <td align="center">probe_count</td>
-                <td align="center">:heavy_check_mark:</td>
-                <td align="center">:heavy_check_mark:</td>
-            </tr>
-            <tr>
-                <td align="center">target_sum</td>
-                <td align="center">:heavy_check_mark:</td>
-                <td align="center">:heavy_check_mark:</td>
+                <th align="center">probe_mer_filter</th>
             </tr>
             <tr>
                 <td align="center">mer_cutoff</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">probe_mer_filter</th>
+            </tr>
+            <tr>
+                <td align="center">p_dups</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
+            </tr>
+            <tr>
+                <td align="center">probe_count</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
+
+            </tr>
+            <tr>
+                <td align="center">target_sum</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
+            </tr>
+            <tr>
+                <td align="center">mer_cutoff</td>
+                <td align="center">:heavy_check_mark:</td>
+                <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
             </tr>
             <tr>
                 <td align="center">bt2_alignments</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
             </tr>
             <tr>
                 <td align="center">max_off_target</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
             </tr>
             <tr>
                 <td align="center">max_pdups_binding</td>
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
+                <th align="center">alignment_filter</th>
             </tr>
         </tbody>
     </table>
 </div>
 
 **Default parameter descriptions:**
+
+Here, default parameters for window, threshold, and composition were determined to identify the largest number of repeat regions possible.
+
+**Parameters used in repeat identification**
+
+* `window`:
+
+* `threshold`:
+
+* `composition`:
+
+* `file_start`:
+
+**Parameters used in first probe filter; k-mer filter**
+
+* `mer_val`:
+
+* `c1_val`:
+
+* `c2_val`:
+
+* `enrich_score`:
+
+* `copy_num`:
+
+**Parameters used in second probe binding specificity filter**
+
+* `p_dups`:
+
+* `probe_count`:
+
+* `target_sum`:
+
+* `mer_cutoff`:
+
+* `bt2_alignments`:
+
+* `max_off_target`:
+
+* `max_pdups_binding`:
 
