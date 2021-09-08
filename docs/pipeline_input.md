@@ -118,7 +118,6 @@ The following table summarizes which parameters provided in the [config.yml](../
                 <td align="center">:heavy_check_mark:</td>
                 <td align="center">:heavy_check_mark:</td>
                 <th align="center">alignment_filter</th>
-
             </tr>
             <tr>
                 <td align="center">target_sum</td>
