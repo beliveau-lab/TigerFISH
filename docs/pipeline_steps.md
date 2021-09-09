@@ -63,7 +63,7 @@ Remaining probes then proceed with a filtering approach that independently imple
 
 ## 6. Output and postprocessing
 
-Lastly, Tigerfish provides a summary of probes found within each repeat region surveyed, along with aggregate on target and off target binding sums based on thermodynamic prediction for all probes found within each repeat region. If repeat identification is implemented over a scaffold, a final output file contains all candidate probes that have satisfied specificity filtering. Candidates from this file may then be taken to downstream postprocessing.
+Lastly, Tigerfish provides a file of probes found within each repeat region surveyed in a .tsv format, along with aggregate on target and off target binding sums based on thermodynamic prediction for all probes found within each repeat region. If repeat identification is implemented over a scaffold, a final output file contains all candidate probes that have satisfied specificity filtering. Candidates from this file may then be taken to downstream postprocessing.
 
 In the postprocessing pipeline, users may select particular probes of interest and generate further information regarding in-silico binding predictions as well as chromomaps where anticipated target probes are likely to be imaged using metaphase spreads when conducting FISH. Further documentation about the postprocessing pipeline may be found here.
 
