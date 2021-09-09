@@ -31,7 +31,7 @@ Description of workflow for the Tigerfish pipeline.
 ## 5. Alignment based filtering
 
 <div align="center">
-  <a href="#alignment_filtering"><img src="./img/tigerfish_4.png" width="400"></a>
+  <a href="#alignment_filtering"><img src="./img/tigerfish_4.png" width="800"></a>
 <div>
 
 ## 6. Output and postprocessing
