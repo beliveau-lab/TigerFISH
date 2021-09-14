@@ -43,3 +43,6 @@ $ snakemake --snakefile path/to/Snakefile --configfile path/to/config.yml --repo
 
 An example report is available [here](). For a visualization of the pipeline DAG structure, see: [pipeline.pdf](defined_coords/pipeline.pdf) or [pipeline.svg](defined_coords/pipeline.svg)
 
+<div align="center">
+    <a href="#Reporting"><img src="defined_coords/pipeline.svg"></a>
+</div>
