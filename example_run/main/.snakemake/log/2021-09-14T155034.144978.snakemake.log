@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 75 of /net/beliveau/vol1/home/eaguil/tigerfish/github_home/TigerFISH/workflow/Snakefiles/tigerfish_main/Snakefile:
+Missing input files for rule split_bed:
+../test_files/dxz4/dxz4.bed

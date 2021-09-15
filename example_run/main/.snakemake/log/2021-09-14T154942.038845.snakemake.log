@@ -1,0 +1,3 @@
+WorkflowError in line 1 of /net/beliveau/vol1/home/eaguil/tigerfish/github_home/TigerFISH/workflow/Snakefiles/tigerfish_main/Snakefile:
+Config file ../../../example_run/main/config.yml not found.
+  File "/net/beliveau/vol1/home/eaguil/tigerfish/github_home/TigerFISH/workflow/Snakefiles/tigerfish_main/Snakefile", line 1, in <module>
