@@ -1,3 +1,0 @@
-KeyError in line 19 of /net/beliveau/vol1/home/eaguil/tigerfish/github_home/TigerFISH/workflow/Snakefiles/tigerfish_main/Snakefile:
-'jf_file'
-  File "/net/beliveau/vol1/home/eaguil/tigerfish/github_home/TigerFISH/workflow/Snakefiles/tigerfish_main/Snakefile", line 19, in <module>
