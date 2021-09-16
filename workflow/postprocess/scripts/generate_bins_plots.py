@@ -91,13 +91,10 @@ def map_columns(pairs_pdups,chr_overlap):
     #overlap pairs_pdups to chr_overlap on o_chrom, o_start, o_stop
         
     pairs_pdups = pd.merge(pairs_pdups,chr_overlap, on='start')
-    print(pairs_pdups)
 
     bin_sums = pairs_pdups.groupby(['chrom_b','start_b',
                            'stop_b'])['pDups'].sum().reset_index()
     
-    print(bin_sums)
-
     #sort columns in ascending order
     bin_sums = bin_sums.sort_values(by=['chrom_b','start_b','stop_b'])
     

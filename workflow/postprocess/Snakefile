@@ -1,113 +1,114 @@
 
 #the config file reading in params
-configfile: "config.yml"
+configfile: "../../example_run/postprocess/config.yml"
 
 #the scaffold samples being called
 SAMPLES = config["samples"]
+ASSEMBLY = config["assembly"]
 
 #final pipeline output
 rule all:
     input:
-        expand("results/final/{sample}_done.txt",sample = SAMPLES),
-        "results/bin_genome/genome_1MB_bins.bed"
+        expand("pipeline_output/final/{sample}_done.txt",sample = SAMPLES),
+        "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
 
 rule bin_genome:
     input:
         windows = config["genome_windows"]
     output:
-        "results/bin_genome/genome_1MB_bins.bed"
+        "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0",
-        genome = config['genome_name']
+        genome = config['assembly']
     benchmark:
-        "results/benchmark/bin_genome/genome_bins.txt"
+        "pipeline_output/benchmark/01_reference_files/01_bin_genome/genome_bins.txt"
     shell:
         'bedtools makewindows -g {input} -w 1000000 > {output}'
 
+BOWTIE2_DIR = f'../../example_run/main/expected_pipeline_output/defined_coords/01_reference_files/02_bt2_idx/{ASSEMBLY}'
 rule make_probe_beds:
     input:
         config["probe_file"]
     output:
-        probe_bed = "results/probe_beds/{sample}_probe_coords.bed",
-        probe_repeat = "results/probe_beds/{sample}_probe_repeat_coords.txt"
+        probe_bed = "pipeline_output/02_intermediate_files/01_probe_beds/{sample}_probe_coords.bed",
+        probe_repeat = "pipeline_output/02_intermediate_files/01_probe_beds/{sample}_probe_repeat_coords.txt"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "results/benchmark/probe_beds/{sample}_probe_beds.txt"
+        "pipeline_output/benchmark/02_intermediate_files/01_probe_beds/{sample}_probe_beds.txt"
     shell:
-        "python ../scripts/post_process/make_probe_beds.py -f {input} -o_b {output.probe_bed} -o_r {output.probe_repeat}"
+        "python ../../workflow/postprocess/scripts/make_probe_beds.py -f {input} -o_b {output.probe_bed} -o_r {output.probe_repeat}"
 
 checkpoint split_probes:
     input:
         rules.make_probe_beds.output.probe_repeat
     output:
-        directory("results/split_regions/{sample}/")
+        directory("pipeline_output/02_intermediate_files/02_split_regions/{sample}/")
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "results/benchmark/split_probes/{sample}_split_probe_regions.txt"
+        "pipeline_output/benchmark/02_intermediate_files/02_split_probes/{sample}_split_probe_regions.txt"
     shell:
-        "python ../scripts/post_process/split_probe_beds.py -f {input} -o {output}"
+        "python ../../workflow/postprocess/scripts/split_probe_beds.py -f {input} -o {output}"
 
 rule align_probes:
     input:
-        "results/split_regions/{sample}/{probe_coords}.bed"
+        "pipeline_output/02_intermediate_files/02_split_regions/{sample}/{probe_coords}.bed"
     output:
-        "results/alignment/{sample}/{probe_coords}_alignment.txt"
+        "pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0",
-        bowtie_idx = config["bowtie_idx"],
         k_val = config["bt2_alignments"]
     benchmark:
-        "results/benchmark/alignment/{sample}/{probe_coords}_alignment.txt"
+        "pipeline_output/benchmark/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
     shell:
-        "python ../scripts/post_process/pairwise_alignment.py -f {input} -o {output} -b {params.bowtie_idx} -k {params.k_val}"
+        'python ../../workflow/postprocess/scripts/pairwise_alignment.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val}'
 
 def aggregate_input(wildcards):
     checkpoint_output = checkpoints.split_probes.get(**wildcards).output[0]
     probe_coords, = glob_wildcards(checkpoint_output + "{probe_coords}.bed")
-    return expand("results/plot_alignment/{sample}/{probe_coords}_plot.png", probe_coords = probe_coords, sample = SAMPLES)
+    return expand("pipeline_output/03_output_files/01_plot_alignment/{sample}/{probe_coords}_plot.png", probe_coords = probe_coords, sample = SAMPLES)
 
 rule derived_beds:
     input:
-        "results/alignment/{sample}/{probe_coords}_alignment.txt"
+        "pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
     output:
-        "results/derived_beds/{sample}/{probe_coords}_derived.bed"
+        "pipeline_output/02_intermediate_files/04_derived_beds/{sample}/{probe_coords}_derived.bed"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "results/benchmark/derived_beds/{sample}/{probe_coords}_derived.txt"
+        "pipeline_output/benchmark/02_intermediate_probes/04_derived_beds/{sample}/{probe_coords}_derived.txt"
     shell:
-        "python ../scripts/post_process/make_derived_bed.py -f {input} -o {output}"
+        "python ../../workflow/postprocess/scripts/make_derived_bed.py -f {input} -o {output}"
 
 rule bedtools_intersect:
     input:
         derived_bed = rules.derived_beds.output,
         genome_bin = rules.bin_genome.output
     output:
-        "results/bedtools_intersect/{sample}/{probe_coords}_intersect.txt"
+        "pipeline_output/02_intermediate_files/05_bedtools_intersect/{sample}/{probe_coords}_intersect.txt"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "results/benchmark/bedtools_intersect/{sample}/{probe_coords}_derived.txt"
+        "pipeline_output/benchmark/02_intermediate_probes/05_bedtools_intersect/{sample}/{probe_coords}_derived.txt"
     shell:
         "bedtools intersect -wa -wb -a {input.derived_bed} -b {input.genome_bin} > {output}"
 
@@ -117,24 +118,24 @@ rule generate_plots:
         bedtools_out = rules.bedtools_intersect.output,
         pairwise_out = rules.align_probes.output
     output:
-        "results/plot_alignment/{sample}/{probe_coords}_plot.png"
+        "pipeline_output/03_output_files/01_plot_alignment/{sample}/{probe_coords}_plot.png"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "results/benchmark/plots/{sample}/{probe_coords}_plots.txt"
+        "pipeline_output/benchmark/03_pipeline_output/01_plots/{sample}/{probe_coords}_plots.txt"
     shell:
-        "python ../scripts/post_process/generate_bins_plots.py -c_t {input.genome_bin} -c_o {input.bedtools_out} -p {input.pairwise_out} -pl {output}"
+        "python ../../workflow/postprocess/scripts/generate_bins_plots.py -c_t {input.genome_bin} -c_o {input.bedtools_out} -p {input.pairwise_out} -pl {output}"
 
 rule final:
     input:
         aggregate_input
     output:
-        "results/final/{sample}_done.txt"
+        "pipeline_output/final/{sample}_done.txt"
     conda:
-        "/net/beliveau/vol1/home/eaguil/envs/tigerfish.yml"
+        "envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"

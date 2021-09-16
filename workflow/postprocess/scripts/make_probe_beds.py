@@ -43,7 +43,6 @@ def read_probe_file(p_file):
     #load in file as dataframe
     probe_df = pd.read_csv(p_file, delimiter = '\t', names = colnames)
 
-    
     return probe_df
     
 ##############################################################################
