@@ -1,7 +1,7 @@
 
 # configure file paths
 CONFIG_FILE='config.yml'
-SNAKE_FILE='../../../workflow/main/Snakefile'
+SNAKE_FILE='../../../workflow/main/defined_coords/Snakefile'
 CONDA_ENVS='../../../shared_conda_envs'
 
 # activate conda environment
