@@ -27,7 +27,7 @@ rule bin_genome:
     shell:
         'bedtools makewindows -g {input} -w 1000000 > {output}'
 
-BOWTIE2_DIR = f'../../example_run/main/expected_pipeline_output/defined_coords/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+BOWTIE2_DIR = f'../../example_run/main/repeat_ID/pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
 rule make_probe_beds:
     input:
         config["probe_file"]
