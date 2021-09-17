@@ -50,9 +50,14 @@ When repeat discovery is initiated:
 $ cd example_run/main/repeat_ID/ && . run_pipeline.sh
 ```
 
-When these examples are run, expected outputs may be compared here.
+When these examples are run, expected outputs may be compared [here](example_run/main/defined_coords/expected_pipeline_output/) when coordinates are provided and [here](example_run/main/repeat_ID/expected_pipeline_output/) for repeat discovery mode.
 
-To deploy Tigerfish on your own data,  update the file paths in config.yml with the paths to your genome assembly. For more information on input and output files, please read further documentation here.
+To survey how postprocessing is done, a seperate analysis pipeline may be invoked using the command below once both items in the main implementation tutorial have been completed. 
+
+```
+$ cd example_run/postprocess/ && . run_pipeline.sh
+```
+To deploy Tigerfish on your own data, update the file paths in config.yml with the paths to your genome assembly. For more information on input and output files, please read further documentation here.
 
 This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html), and distributed according to [best practices](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html). If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started. 
 
@@ -62,9 +67,9 @@ This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/
 
 Additional information is available in the docs for:
 
-* Input file specification
-* Output file specification
-* Description of pipeline steps
+* [Input file specification](docs/main/pipeline_input.md)
+* [Output file specification](docs/main/pipeline_output.md)
+* [Description of pipeline steps](docs/main/pipeline_steps.md)
 
 ## Questions
 
