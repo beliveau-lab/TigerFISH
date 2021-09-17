@@ -3,11 +3,11 @@
 fasta_file: "data/example.fa"
 
 #if coordinates are provided for probe design, file goes here
-bed_file: "data/dxz4_synthetic.bed"
+#bed_file: "data/dxz4_synthetic.bed"
 
 #option for probe design that directs pipeline implementation
-defined_coords: "FALSE"
-repeat_discovery: "TRUE"
+defined_coords: "TRUE"
+repeat_discovery: "FALSE"
 
 assembly: "chm13"
 
