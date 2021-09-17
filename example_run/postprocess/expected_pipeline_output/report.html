@@ -40,13 +40,8 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
 
 
 </style>
-    <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.source .hll { background-color: #ffffcc }
-.source { background: #ffffff; }
+    <style>.source .hll { background-color: #ffffcc }
+.source  { background: #ffffff; }
 .source .c { color: #999988; font-style: italic } /* Comment */
 .source .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .source .k { font-weight: bold } /* Keyword */
@@ -404,8 +399,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://snakemake.readthedocs.io">Snakemake Report</a>
       <div class="nav navbar-nav navbar-center" id="brand"></div>
       <ul class="nav navbar-nav navbar-right" style="padding-right: 10px;">
-        <li class="text-white">Wed Sep 15 22:13:13 2021 PST</li>
-        <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 5.20.1</a></li>
+        <li class="text-white">Fri Sep 17 11:05:41 2021 PST</li>
+        <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 5.24.0</a></li>
       </ul>
       <!--<input id="searchbar" class="invisible form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
     </nav>
@@ -491,23 +486,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     <td>
                       <a data-toggle="collapse" role="button" href="#configfile-" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
                       <div class="collapse" id="configfile-">
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code><span class="c1">#path to genome fasta</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="source"><pre><span></span><code><span class="c1">#path to genome fasta</span>
 <span class="c1">#the input genome chrom sizes file</span>
 <span class="nt">genome_windows</span><span class="p">:</span> <span class="s">&quot;data/chm13.chrom.sizes&quot;</span>
 
@@ -629,7 +624,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools makewindows -g <span class="o">{</span>input<span class="o">}</span> -w <span class="m">1000000</span> &gt; <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools makewindows -g <span class="o">{</span>input<span class="o">}</span> -w <span class="m">1000000</span> &gt; <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -663,7 +658,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li><function aggregate_input at 0x7f48fe575c10></li>
+                            <li><function aggregate_map at 0x7fd64ac70b00></li>
                         </ul>
                       </td>
                     </tr>
@@ -712,7 +707,81 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>touch <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>touch <span class="o">{</span>output<span class="o">}</span>
+</code></pre></div>
+</td></tr></table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-rule="generate_chromomap" class="modal rule-properties" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Rule generate_chromomap</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table w-auto table-sm table-borderless ruletable">
+                  <caption>Rule properties</caption>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Jobs</th><td>1</td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Input files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>data/chm13.chrom.sizes</li>
+                            <li>pipeline_output/02_intermediate_files/02_split_regions/{sample}/{probe_coords}.bed</li>
+                            <li><function aggregate_input at 0x7fd64ac36b00></li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Output files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>pipeline_output/03_output_files/02_chromomap/{sample}/{probe_coords}_chromomap.html</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <th scope="row" colspan=2>Conda software stack</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>r-base=4.1.0</li>
+                            <li>r-tidyverse=1.3.1</li>
+                            <li>r-htmlwidgets</li>
+                            <li>r-optparse</li>
+                            <li>r-readr</li>
+                            <li>r-splitstackshape</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Code</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>Rscript --vanilla ../../workflow/postprocess/scripts/make_chromomap.R -c <span class="o">{</span>input.chrom_sizes<span class="o">}</span> -r <span class="o">{</span>input.probe_bed<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -797,7 +866,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/generate_bins_plots.py -c_t <span class="o">{</span>input.genome_bin<span class="o">}</span> -c_o <span class="o">{</span>input.bedtools_out<span class="o">}</span> -p <span class="o">{</span>input.pairwise_out<span class="o">}</span> -pl <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/generate_bins_plots.py -c_t <span class="o">{</span>input.genome_bin<span class="o">}</span> -c_o <span class="o">{</span>input.bedtools_out<span class="o">}</span> -p <span class="o">{</span>input.pairwise_out<span class="o">}</span> -pl <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -881,7 +950,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools intersect -wa -wb -a <span class="o">{</span>input.derived_bed<span class="o">}</span> -b <span class="o">{</span>input.genome_bin<span class="o">}</span> &gt; <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools intersect -wa -wb -a <span class="o">{</span>input.derived_bed<span class="o">}</span> -b <span class="o">{</span>input.genome_bin<span class="o">}</span> &gt; <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -964,7 +1033,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/pairwise_alignment.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -b <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span> -k <span class="o">{</span>params.k_val<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/pairwise_alignment.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -b <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span> -k <span class="o">{</span>params.k_val<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1047,7 +1116,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/make_derived_bed.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/make_derived_bed.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1714,7 +1783,7 @@ if (typeof module !== 'undefined') {
       var rulegraph_spec = {
         "$schema": "https://vega.github.io/schema/vega/v5.json",
         "width": 352.84000000000003,
-        "height": 398.0,
+        "height": 470.0,
         "padding": 0,
         "autosize": "none",
 
@@ -1726,11 +1795,11 @@ if (typeof module !== 'undefined') {
         "data": [
           {
             "name": "node-data",
-            "values": [{'rule': 'align_probes', 'fx': 57.845, 'fy': 18.0}, {'rule': 'all', 'fx': 214.84, 'fy': 378.0}, {'rule': 'bedtools_intersect', 'fx': 118.84, 'fy': 162.0}, {'rule': 'bin_genome', 'fx': 232.84, 'fy': 90.0}, {'rule': 'derived_beds', 'fx': 100.84, 'fy': 90.0}, {'rule': 'final', 'fx': 187.84, 'fy': 306.0}, {'rule': 'generate_plots', 'fx': 143.84, 'fy': 234.0}]
+            "values": [{'rule': 'align_probes', 'fx': 57.845, 'fy': 18.0}, {'rule': 'all', 'fx': 215.84, 'fy': 450.0}, {'rule': 'bedtools_intersect', 'fx': 118.84, 'fy': 162.0}, {'rule': 'bin_genome', 'fx': 232.84, 'fy': 90.0}, {'rule': 'derived_beds', 'fx': 100.84, 'fy': 90.0}, {'rule': 'final', 'fx': 171.84, 'fy': 378.0}, {'rule': 'generate_chromomap', 'fx': 136.84, 'fy': 306.0}, {'rule': 'generate_plots', 'fx': 124.84, 'fy': 234.0}]
           },
           {
             "name": "link-data",
-            "values": [{'target': 0, 'source': 6, 'value': 1}, {'target': 0, 'source': 4, 'value': 1}, {'target': 2, 'source': 6, 'value': 1}, {'target': 3, 'source': 1, 'value': 1}, {'target': 3, 'source': 6, 'value': 1}, {'target': 3, 'source': 2, 'value': 1}, {'target': 4, 'source': 2, 'value': 1}, {'target': 5, 'source': 1, 'value': 1}, {'target': 6, 'source': 5, 'value': 1}]
+            "values": [{'target': 0, 'source': 7, 'value': 1}, {'target': 0, 'source': 4, 'value': 1}, {'target': 2, 'source': 7, 'value': 1}, {'target': 3, 'source': 1, 'value': 1}, {'target': 3, 'source': 7, 'value': 1}, {'target': 3, 'source': 2, 'value': 1}, {'target': 4, 'source': 2, 'value': 1}, {'target': 5, 'source': 1, 'value': 1}, {'target': 6, 'source': 5, 'value': 1}, {'target': 7, 'source': 6, 'value': 1}]
           }
         ],
 
@@ -1838,7 +1907,7 @@ if (typeof module !== 'undefined') {
       var runtimes_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Runtimes of jobs.",
-        "data": {"values": [{'rule': 'align_probes', 'runtime': 3.5039000511169434}, {'rule': 'bedtools_intersect', 'runtime': 3.013803243637085}, {'rule': 'bin_genome', 'runtime': 5.323078393936157}, {'rule': 'derived_beds', 'runtime': 3.5590322017669678}, {'rule': 'final', 'runtime': 3.023808479309082}, {'rule': 'generate_plots', 'runtime': 5.2393639087677}]},
+        "data": {"values": [{'rule': 'align_probes', 'runtime': 7.820497512817383}, {'rule': 'bedtools_intersect', 'runtime': 3.000739336013794}, {'rule': 'bin_genome', 'runtime': 5.55327296257019}, {'rule': 'derived_beds', 'runtime': 3.502903938293457}, {'rule': 'final', 'runtime': 3.3985610008239746}, {'rule': 'generate_chromomap', 'runtime': 17.273869276046753}, {'rule': 'generate_plots', 'runtime': 14.711380243301392}]},
         "mark": "point",
         "encoding": {
           "x": {"field": "runtime", "type": "quantitative",
@@ -1855,7 +1924,7 @@ if (typeof module !== 'undefined') {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Timeline of jobs.",
         "data": {
-          "values": [{'rule': 'align_probes', 'starttime': '2021-09-15T22:12:53.758926', 'endtime': '2021-09-15T22:12:57.262826'}, {'rule': 'bedtools_intersect', 'starttime': '2021-09-15T22:13:00.843949', 'endtime': '2021-09-15T22:13:03.857753'}, {'rule': 'bin_genome', 'starttime': '2021-09-15T22:12:44.901248', 'endtime': '2021-09-15T22:12:50.224327'}, {'rule': 'derived_beds', 'starttime': '2021-09-15T22:12:57.267848', 'endtime': '2021-09-15T22:13:00.826881'}, {'rule': 'final', 'starttime': '2021-09-15T22:13:09.107193', 'endtime': '2021-09-15T22:13:12.131002'}, {'rule': 'generate_plots', 'starttime': '2021-09-15T22:13:03.862790', 'endtime': '2021-09-15T22:13:09.102154'}]
+          "values": [{'rule': 'align_probes', 'starttime': '2021-09-17T11:04:45.861246', 'endtime': '2021-09-17T11:04:53.681744'}, {'rule': 'bedtools_intersect', 'starttime': '2021-09-17T11:04:57.238969', 'endtime': '2021-09-17T11:05:00.239708'}, {'rule': 'bin_genome', 'starttime': '2021-09-17T11:04:12.916367', 'endtime': '2021-09-17T11:04:18.469640'}, {'rule': 'derived_beds', 'starttime': '2021-09-17T11:04:53.711932', 'endtime': '2021-09-17T11:04:57.214836'}, {'rule': 'final', 'starttime': '2021-09-17T11:05:32.347780', 'endtime': '2021-09-17T11:05:35.746341'}, {'rule': 'generate_chromomap', 'starttime': '2021-09-17T11:05:15.033643', 'endtime': '2021-09-17T11:05:32.307512'}, {'rule': 'generate_plots', 'starttime': '2021-09-17T11:05:00.262813', 'endtime': '2021-09-17T11:05:14.974193'}]
         },
         "mark": "point",
         "encoding": {

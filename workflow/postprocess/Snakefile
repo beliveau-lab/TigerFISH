@@ -1,4 +1,3 @@
-
 #the config file reading in params
 configfile: "../../example_run/postprocess/config.yml"
 
@@ -79,7 +78,12 @@ rule align_probes:
 def aggregate_input(wildcards):
     checkpoint_output = checkpoints.split_probes.get(**wildcards).output[0]
     probe_coords, = glob_wildcards(checkpoint_output + "{probe_coords}.bed")
-    return expand("pipeline_output/03_output_files/01_plot_alignment/{sample}/{probe_coords}_plot.png", probe_coords = probe_coords, sample = SAMPLES)
+    return expand("pipeline_output/03_output_files/01_plot_alignment/{{sample}}/{probe_coords}_plot.png", probe_coords = probe_coords, sample = SAMPLES)
+
+def aggregate_map(wildcards):
+    checkpoint_output = checkpoints.split_probes.get(**wildcards).output[0]
+    probe_coords, = glob_wildcards(checkpoint_output + "{probe_coords}.bed")
+    return expand("pipeline_output/03_output_files/02_chromomap/{{sample}}/{probe_coords}_chromomap.html", probe_coords = probe_coords, sample = SAMPLES)
 
 rule derived_beds:
     input:
@@ -129,9 +133,26 @@ rule generate_plots:
     shell:
         "python ../../workflow/postprocess/scripts/generate_bins_plots.py -c_t {input.genome_bin} -c_o {input.bedtools_out} -p {input.pairwise_out} -pl {output}"
 
+rule generate_chromomap:
+    input:
+        chrom_sizes = rules.bin_genome.input,
+        probe_bed = rules.align_probes.input,
+        alignment_plot = aggregate_input
+    output:
+        "pipeline_output/03_output_files/02_chromomap/{sample}/{probe_coords}_chromomap.html"
+    conda:
+        "envs/chromomap_env.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/03_pipeline_output/02_maps/{sample}/{probe_coords}_plots.txt"
+    shell:
+        "Rscript --vanilla ../../workflow/postprocess/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.probe_bed} -o {output}"
+
 rule final:
     input:
-        aggregate_input
+        aggregate_map
     output:
         "pipeline_output/final/{sample}_done.txt"
     conda:
