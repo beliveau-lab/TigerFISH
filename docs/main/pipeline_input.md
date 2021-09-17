@@ -4,20 +4,19 @@ Tigerfish pipeline input specification
 
 ### Overview
 
-In the [config.yml](../example_run/config.yml), there are two options for pipeline implementation.
+In the config.yml, there are two options for pipeline implementation that are summarized with links to appropriate config file paths.
 
-1. Defined coords - This setting may be run when a user is interested in designing oligo probes against a known and given repetitive region. To implement this setting, one must toggle the `defined_coords: "TRUE"` and `repeat_discovery: "FALSE"`.
+1. [Defined coords](../../example_run/main/defined_coords/config.yml) - This setting may be run when a user is interested in designing oligo probes against a known and given repetitive region. To implement this setting, one must toggle the `defined_coords: "TRUE"` and `repeat_discovery: "FALSE"`.
 
-
-2. Repeat discovery - This setting may be run when a user is interested in probe design on scaffolds where all identified regions with elevated k-mer counts undergo specific probe design. To implement this setting, one must toggle the `defined_coords: "FALSE"` and `repeat_discovery: "TRUE"`.
+2. [Repeat discovery](../../example_run/main/repeat_ID/config.yml) - This setting may be run when a user is interested in probe design on scaffolds where all identified regions with elevated k-mer counts undergo specific probe design. To implement this setting, one must toggle the `defined_coords: "FALSE"` and `repeat_discovery: "TRUE"`.
 
 ### Config file
 
-The paths to the files is specified in the [config.yml](../../example_run/config.yml). Sample files to run the Tigerfish using both implementation cases are included in the provided [example directory](../../example_run/data/).
+The paths to the files is specified in the config.yml for each run mode. Sample files to run the Tigerfish using both implementation cases are included in the provided in each [example directory](../../example_run/main/defined_coords/data/).
 
 For example, to run this pipeline on the chm13 human genome assembly, the [chm13v1.1](https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz) fasta file was downloaded from [this page](https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz) and decompressed.
 
-The [config.yml](../../example_run/config.yml) file sets all the pipeline parameters for a given run. A new config file should be created to accompany each pipeline run.
+The config.yml file in both forms of pipeline implementation sets all the pipeline parameters for a given run. A new config file should be created to accompany each pipeline run.
 
 **Required parameters for `defined_coords` implementation:**
 
@@ -34,7 +33,7 @@ The [config.yml](../../example_run/config.yml) file sets all the pipeline parame
 
 ### Default parameters described for `repeat_discovery` and `defined_coords`
 
-The following table summarizes which parameters provided in the [config.yml](../../example_run/config.yml) are used in each implementation of the pipeline.
+The following table summarizes which parameters provided in each config file are used in each implementation of the pipeline.
 
 <div align="center">
     <table>
@@ -157,11 +156,11 @@ The following table summarizes which parameters provided in the [config.yml](../
 
 **Parameters used in repeat identification**
 
-Here, default parameters for window, threshold, and composition were determined to identify the largest number of repeat regions possible. For more information on how each pipeline step works, please read the pipeline steps documentation.
+Here, default parameters for window, threshold, and composition were determined to identify the largest number of repeat regions possible. For more information on how each pipeline step works, please read the [pipeline steps documentation](pipeline_steps.md).
 
 * `window`: The size of this window is used to evaluate regions of elevated k-mer counts. The sum of all binarized threshold values within this window are taken in this window (default = 3000).
 
-* `threshold`: Tigerfish binarizes the integer counts produced by the Jellyfish query by applying this threshold (default = 10), where counts must be >= this value.
+* `threshold`: Tigerfish binarizes the integer counts produced by the [Jellyfish](https://github.com/gmarcais/Jellyfish) query by applying this threshold (default = 10), where counts must be >= this value.
 
 * `composition`: The summed counts within the window are divided by the length of the window variable. This value is then compared to the composision score (default = 0.50). When this proportion exceeds the defined composition value, start and end indices for regions of k-mer enriched genomic sequences are stored.
 
@@ -185,7 +184,7 @@ Here, default parameters for window, threshold, and composition were determined 
 
 **Parameters used in alignment_filter**
 
-* `p_dups`: A determined proportion based on taking each candidate probe and identifying the predicted likelihood of binding using NUPACK. This value is determined by taking the sum of all predicted duplexing (pdups) values for all on-target probe alignments within a candidate repeat region over all predicted duplexing values (default = 0.95). Here, values must be equal to or exceed default value for probes to be further evaluated in specificity.
+* `p_dups`: A determined proportion based on taking each candidate probe and identifying the predicted likelihood of binding using [NUPACK](http://www.nupack.org). This value is determined by taking the sum of all predicted duplexing (pdups) values for all on-target probe alignments within a candidate repeat region over all predicted duplexing values (default = 0.95). Here, values must be equal to or exceed default value for probes to be further evaluated in specificity.
 
 * `probe_count`: To run the `alignment_filter` step, there are two main run settings which is based on total probe count per repeat region or by aggregate target binding sum for each repeat. If one is interested in returning up to X best probes for a given repeat region, you may adjust this value accordingly (default = 0).
 

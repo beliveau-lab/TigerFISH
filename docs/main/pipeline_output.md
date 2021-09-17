@@ -4,11 +4,13 @@ Tigerfish pipeline output specification.
 
 ### Overview
 
+Here, the file paths for pipeline outputs are mirrored in both the repeat discovery and defined coordinates run settings. For demonstration purposes, file paths in this markdown provide links to the output when defined coordinates are provided to summarize file locations.
+
 | Folder        | Description                                                       |
 |---------------|-------------------------------------------------------------------|
-| [01_reference_files/](../../example_run/tigerfish_main/expected_pipeline_output/01_reference_files)   | files that may be of use in other pipelines or analyses |
-| [02_intermediate_files/](../../example_run/tigerfish_main/expected_pipeline_output/02_intermediate_files)  | large intermediate files, useful when debugging, but otherwise disposable |
-| [03_output_files/](../../example_run/tigerfish_main/expected_pipeline_output/03_output_files) | all DNA/RNA probe sets as .tsv files |
+| [01_reference_files/](../../example_run/main/defined_coords/expected_pipeline_output/01_reference_files/) | files that may be of use in other pipelines or analyses |
+| [02_intermediate_files/](../../example_run/main/defined_coords/expected_pipeline_output/02_intermediate_files/) | large intermediate files, useful when debugging, but otherwise disposable |
+| [03_output_files/](../../example_run/main/defined_coords/expected_pipeline_output/03_output_files/) | all DNA/RNA probe sets as .tsv files |
 
 All unwanted files may be safely deleted once pipeline is run and completed.
 
@@ -20,7 +22,7 @@ All unwanted files may be safely deleted once pipeline is run and completed.
 
 | Item        | Location                                                       |
 |---------------|-------------------------------------------------------------------|
-| DNA FISH probes in .tsv format | [03_output_files/01_dna_probes/](../../example_run/expected_pipeline_output/03_output_files/01_dna_probes) | 
+| DNA FISH probes in .tsv format | [03_output_files/01_dna_probes/](../../example_run/main/defined_coords/expected_pipeline_output/03_output_files/01_dna_probes) | 
 
 #### Repetitive DNA probe sets
 
@@ -60,4 +62,4 @@ An HTML report with diagnostics and detailed pipeline information can by generat
 $ snakemake --snakefile path/to/Snakefile --configfile path/to/config.yml --report pipeline_output/report.html
 ```
 
-An example report is available in the example output tutorial. For a visualization of the pipeline DAG structure, see: [pipeline.pdf](../../example_run/expected_pipeline_output/pipeline.pdf) or [pipeline.svg](../../example_run/expected_pipeline_output/pipeline.svg)
+An example report is available in the example output tutorial. For a visualization of the pipeline DAG structure, see: [pipeline.pdf](../../example_run/main/defined_coords/expected_pipeline_output/pipeline.pdf) or [pipeline.svg](../../example_run/expected_pipeline_output/pipeline.svg)
