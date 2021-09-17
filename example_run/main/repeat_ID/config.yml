@@ -6,8 +6,8 @@ fasta_file: "data/example.fa"
 #bed_file: "data/dxz4_synthetic.bed"
 
 #option for probe design that directs pipeline implementation
-defined_coords: "TRUE"
-repeat_discovery: "FALSE"
+defined_coords: "FALSE"
+repeat_discovery: "TRUE"
 
 assembly: "chm13"
 
