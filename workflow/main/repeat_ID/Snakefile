@@ -1,0 +1,296 @@
+configfile: "../../../example_run/main/repeat_ID/config.yml"
+
+SAMPLES = config["samples"]
+ASSEMBLY = config["assembly"]
+
+rule all:
+    input:
+        expand("pipeline_output/finished/DONE_{sample}.txt",sample=SAMPLES)
+
+rule generate_jf_count:
+    input:
+        fasta_file = config["fasta_file"]
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        mer = config["mer_val"],
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log'
+    output:
+        'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
+    shell:
+        "jellyfish count -s 3300M -m {params.mer} -o {output} {input.fasta_file}"
+
+BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+rule generate_bt2_indices:
+    input:
+        fasta_file = config["fasta_file"]
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log'
+    output:
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.1.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.2.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.3.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.4.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.1.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.2.bt2',
+    shell:
+        'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
+
+rule generate_jf_idx:
+    input:
+        fasta_file = config["fasta_file"],
+        jf = rules.generate_jf_count.output
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        chrom_name = "{sample}",
+        mer = config["mer_val"],
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/03_jf_idx/{sample}_log.log'
+    output:
+        jf_count = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_jf_temp.txt',
+        chrom_idx = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_index.txt',
+        chrom_fa = 'pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/{sample}.fa'
+    shell:
+        "python ../../../workflow/main/scripts/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
+
+if config['defined_coords'] == 'TRUE':
+    rule split_bed:
+        input:
+            bed_file = config["bed_file"]
+        conda:
+            "../envs/tigerfish.yml"
+        params:
+            chrom_name = "{sample}",
+            mfree="10G",
+            h_rt = "3:0:0"
+        benchmark:
+            'pipeline_output/benchmarks/02_intermediate_files/01_split_bed/{sample}_log.log'
+        output:
+            chrom_region = 'pipeline_output/02_intermediate_files/01_split_bed/{sample}_regions.bed'
+        shell:
+            "python ../../../workflow/main/scripts/split_bed.py -b {input.bed_file} -c {params.chrom_name} -o {output.chrom_region}"
+
+if config['repeat_discovery'] == 'TRUE':
+    rule repeat_ID:
+        input:
+            jf_count = rules.generate_jf_idx.output.jf_count,
+            chrom_index = rules.generate_jf_idx.output.chrom_idx,
+            chr_path = rules.generate_jf_idx.output.chrom_fa
+        conda:
+            "../envs/tigerfish.yml"
+        params:
+            window = config["window"],
+            threshold = config["threshold"],
+            composition = config["composition"],
+            file_start = config["file_start"],
+            chrom_name = "{sample}",
+            mfree="85G",
+            h_rt="200:0:0"
+        benchmark:
+            "pipeline_output/benchmarks/02_intermediate_files/01_repeat_ID/{sample}_log.log"
+        output:
+            out_bed = "pipeline_output/02_intermediate_files/01_repeat_ID/{sample}_regions.bed",
+        shell:
+            "python ../../../workflow/main/scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
+
+def input_for_design_probes(wildcards):
+    # requires a config containing switches for the whole workflow
+    if config["defined_coords"]=='TRUE':
+        return 'pipeline_output/02_intermediate_files/01_split_bed/{sample}_regions.bed'
+    elif config["repeat_discovery"]=='TRUE':
+        return 'pipeline_output/02_intermediate_files/01_repeat_ID/{sample}_regions.bed'
+
+rule design_probes:
+    input:
+        region_bed = input_for_design_probes,
+        chr_path = rules.generate_jf_idx.output.chrom_fa
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        mfree="60G",
+        h_rt="200:0:0",
+        chrom_name = "{sample}"
+    benchmark:
+        "pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/{sample}_log.log"
+    output:
+        designed_probes = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_blockParse_probe_df.bed",
+        probe_fa = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_probe_regions.fa"
+    shell:
+        "python ../../../workflow/main/scripts/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa}"
+
+rule kmer_filter:
+    input:
+        jf = rules.generate_jf_idx.output.jf_count,
+        probes = rules.design_probes.output.designed_probes,
+        region_fa = rules.design_probes.output.probe_fa
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        mfree="50G",
+        h_rt="200:0:0",
+        mer = config["mer_val"],
+        chrom_name = "{sample}",
+        c1 = config["c1_val"],
+        c2 = config["c2_val"]
+    benchmark:
+        "pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/{sample}_log.log"
+    output:
+        "pipeline_output/02_intermediate_files/03_pre_filter/{sample}_probes_pre_filter.txt"
+    shell:
+        "python ../../../workflow/main/scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2}"
+
+rule probe_mer_filter:
+    input:
+        probes = rules.kmer_filter.output
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        mfree="50G",
+        h_rt="200:0:0",
+        mer = config["mer_val"],
+        enrich = config["enrich_score"],
+        copy_num = config["copy_num"],
+        mer_cutoff = config["mer_cutoff"]
+    benchmark:
+        "pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/{sample}_log.log"
+    output:
+        "pipeline_output/02_intermediate_files/04_post_mer_filter/{sample}_probes_mer_filter.txt"
+    shell:
+        "python ../../../workflow/main/scripts/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
+
+if config['defined_coords'] == 'TRUE':
+    rule alignment_filter:
+        input:
+            probe_files = rules.probe_mer_filter.output,
+            bt2_idx = rules.generate_bt2_indices.output
+        conda:
+            "../envs/tigerfish.yml"
+        params:
+            mfree="50G",
+            h_rt="200:0:0",
+            region_thresh = config['target_sum'],
+            pdups_prop = config['pdups'],
+            probe_count = config['probe_count'],
+            k_val = config['bt2_alignments'],
+            max_off_target = config['max_off_target'],
+            max_pdups_binding = config['max_pdups_binding']
+        benchmark:
+            "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
+        output:
+            "pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv"
+        shell:
+            "python ../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
+
+if config['repeat_discovery'] == 'TRUE':
+    checkpoint gather_repeat_regions:
+        input:
+            rules.probe_mer_filter.output
+        conda:
+            "../envs/tigerfish.yml"
+        params:
+            mfree="50G",
+            h_rt="200:0:0"
+        benchmark:
+            "pipeline_output/benchmarks/02_intermediate_files/05_split_regions/{sample}_log.log"
+        output:
+            chrom_dir = directory("pipeline_output/02_intermediate_files/05_split_regions/{sample}/")
+        shell:
+            "python ../../../workflow/main/scripts/split_filter.py -f {input} -o {output}"
+
+    rule alignment_filter:
+        input:
+            probe_files = "pipeline_output/02_intermediate_files/05_split_regions/{sample}/{region}.txt",
+            bt2_idx = rules.generate_bt2_indices.output
+        conda:
+            "../envs/tigerfish.yml"
+        params:
+            mfree="50G",
+            h_rt="200:0:0",
+            region_thresh = config['target_sum'], 
+            pdups_prop = config['pdups'], 
+            probe_count = config['probe_count'],
+            k_val = config['bt2_alignments'],
+            max_off_target = config['max_off_target'],
+            max_pdups_binding = config['max_pdups_binding']
+        benchmark:
+            "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
+        output:
+            "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
+        shell:
+            "python ../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
+
+    # aggregate paths to dynamically created files
+    def aggregate_input(wildcards):
+
+        # construct wild card path to checkpoint output files
+        wildcard_path = os.path.join(
+            checkpoints.gather_repeat_regions.get(**wildcards).output.chrom_dir, 
+            '{region}.txt'
+        )
+
+        # construct paths to downstream files to be aggregated
+        file_paths = expand("pipeline_output/02_intermediate_files/06_alignment/{{sample}}/{region}_alignment.txt",region=glob_wildcards(wildcard_path).region,sample = SAMPLES)
+
+        # success
+        return(file_paths)
+
+
+    # merge the individually-flattened chromosome annotation files
+    rule merge_alignment_filter:
+        input:
+            aggregate_input
+        output:
+            'pipeline_output/03_output_files/01_all_probes/{sample}_all_probes.tsv'
+        params:
+            mfree='20G',
+            h_rt='3:0:0'
+        run:
+            with open(output[0], 'w') as outfile:
+                for fname in input:
+                    with open(fname) as infile:
+                        for line in infile:
+                            outfile.write(line)
+
+def input_for_summary(wildcards):
+    # requires a config containing switches for the whole workflow
+    if config["defined_coords"]=='TRUE':
+        return 'pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv' 
+    elif config["repeat_discovery"]=='TRUE':
+        return 'pipeline_output/03_output_files/01_all_probes/{sample}_all_probes.tsv'
+
+rule summary:
+    input:
+        input_for_summary
+    output:
+        "pipeline_output/03_output_files/02_probe_summary/{sample}_probe_summary.txt"
+    conda:
+        "../envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt="200:0:0"
+    benchmark:
+        "pipeline_output/benchmarks/03_output_files/02_probe_summary/{sample}_probe_summary.txt"
+    shell:
+        "python ../../../workflow/main/scripts/finish_summary.py -f {input} -o {output}"
+
+rule finish:
+    input:
+        rules.summary.output
+    output:
+        'pipeline_output/finished/DONE_{sample}.txt'
+    params:
+        mfree = '10G',
+        h_rt = '3:0:0'
+    shell:
+        'touch {output}'

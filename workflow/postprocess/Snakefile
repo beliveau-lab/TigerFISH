@@ -1,0 +1,164 @@
+#the config file reading in params
+configfile: "../../example_run/postprocess/config.yml"
+
+#the scaffold samples being called
+SAMPLES = config["samples"]
+ASSEMBLY = config["assembly"]
+
+#final pipeline output
+rule all:
+    input:
+        expand("pipeline_output/final/{sample}_done.txt",sample = SAMPLES),
+        "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
+
+rule bin_genome:
+    input:
+        windows = config["genome_windows"]
+    output:
+        "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0",
+        genome = config['assembly']
+    benchmark:
+        "pipeline_output/benchmark/01_reference_files/01_bin_genome/genome_bins.txt"
+    shell:
+        'bedtools makewindows -g {input} -w 1000000 > {output}'
+
+BOWTIE2_DIR = f'../../example_run/main/expected_pipeline_output/defined_coords/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+rule make_probe_beds:
+    input:
+        config["probe_file"]
+    output:
+        probe_bed = "pipeline_output/02_intermediate_files/01_probe_beds/{sample}_probe_coords.bed",
+        probe_repeat = "pipeline_output/02_intermediate_files/01_probe_beds/{sample}_probe_repeat_coords.txt"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/02_intermediate_files/01_probe_beds/{sample}_probe_beds.txt"
+    shell:
+        "python ../../workflow/postprocess/scripts/make_probe_beds.py -f {input} -o_b {output.probe_bed} -o_r {output.probe_repeat}"
+
+checkpoint split_probes:
+    input:
+        rules.make_probe_beds.output.probe_repeat
+    output:
+        directory("pipeline_output/02_intermediate_files/02_split_regions/{sample}/")
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/02_intermediate_files/02_split_probes/{sample}_split_probe_regions.txt"
+    shell:
+        "python ../../workflow/postprocess/scripts/split_probe_beds.py -f {input} -o {output}"
+
+rule align_probes:
+    input:
+        "pipeline_output/02_intermediate_files/02_split_regions/{sample}/{probe_coords}.bed"
+    output:
+        "pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0",
+        k_val = config["bt2_alignments"]
+    benchmark:
+        "pipeline_output/benchmark/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
+    shell:
+        'python ../../workflow/postprocess/scripts/pairwise_alignment.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val}'
+
+def aggregate_input(wildcards):
+    checkpoint_output = checkpoints.split_probes.get(**wildcards).output[0]
+    probe_coords, = glob_wildcards(checkpoint_output + "{probe_coords}.bed")
+    return expand("pipeline_output/03_output_files/01_plot_alignment/{{sample}}/{probe_coords}_plot.png", probe_coords = probe_coords, sample = SAMPLES)
+
+def aggregate_map(wildcards):
+    checkpoint_output = checkpoints.split_probes.get(**wildcards).output[0]
+    probe_coords, = glob_wildcards(checkpoint_output + "{probe_coords}.bed")
+    return expand("pipeline_output/03_output_files/02_chromomap/{{sample}}/{probe_coords}_chromomap.html", probe_coords = probe_coords, sample = SAMPLES)
+
+rule derived_beds:
+    input:
+        "pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
+    output:
+        "pipeline_output/02_intermediate_files/04_derived_beds/{sample}/{probe_coords}_derived.bed"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/02_intermediate_probes/04_derived_beds/{sample}/{probe_coords}_derived.txt"
+    shell:
+        "python ../../workflow/postprocess/scripts/make_derived_bed.py -f {input} -o {output}"
+
+rule bedtools_intersect:
+    input:
+        derived_bed = rules.derived_beds.output,
+        genome_bin = rules.bin_genome.output
+    output:
+        "pipeline_output/02_intermediate_files/05_bedtools_intersect/{sample}/{probe_coords}_intersect.txt"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/02_intermediate_probes/05_bedtools_intersect/{sample}/{probe_coords}_derived.txt"
+    shell:
+        "bedtools intersect -wa -wb -a {input.derived_bed} -b {input.genome_bin} > {output}"
+
+rule generate_plots:
+    input:
+        genome_bin = rules.bin_genome.output,
+        bedtools_out = rules.bedtools_intersect.output,
+        pairwise_out = rules.align_probes.output
+    output:
+        "pipeline_output/03_output_files/01_plot_alignment/{sample}/{probe_coords}_plot.png"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/03_pipeline_output/01_plots/{sample}/{probe_coords}_plots.txt"
+    shell:
+        "python ../../workflow/postprocess/scripts/generate_bins_plots.py -c_t {input.genome_bin} -c_o {input.bedtools_out} -p {input.pairwise_out} -pl {output}"
+
+rule generate_chromomap:
+    input:
+        chrom_sizes = rules.bin_genome.input,
+        probe_bed = rules.align_probes.input,
+        alignment_plot = aggregate_input
+    output:
+        "pipeline_output/03_output_files/02_chromomap/{sample}/{probe_coords}_chromomap.html"
+    conda:
+        "envs/chromomap_env.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    benchmark:
+        "pipeline_output/benchmark/03_pipeline_output/02_maps/{sample}/{probe_coords}_plots.txt"
+    shell:
+        "Rscript --vanilla ../../workflow/postprocess/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.probe_bed} -o {output}"
+
+rule final:
+    input:
+        aggregate_map
+    output:
+        "pipeline_output/final/{sample}_done.txt"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0"
+    shell:
+       'touch {output}'

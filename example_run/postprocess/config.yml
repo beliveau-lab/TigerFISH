@@ -1,0 +1,17 @@
+#path to genome fasta
+#the input genome chrom sizes file
+genome_windows: "data/chm13.chrom.sizes"
+
+#the output file of interest from probe design
+probe_file: "data/dxz4_test_probe.tsv"
+
+fasta_file: "data/example.fa"
+
+assembly: "chm13"
+
+#scaffolds present in output file
+samples:
+    - "chrX"
+
+bt2_alignments:
+    - 300000

@@ -29,9 +29,9 @@ $ conda install -n base -c conda-forge mamba
 
 ```
 $ git clone https://github.com/beliveau-lab/TigerFISH.git \
-    && cd Tigerfish_pipeline/ \
-    && mamba env create -f environment.yml \
-    && conda activate tigerfish_snakemake
+    && cd TigerFISH/ \
+    && mamba env create -f snakemake_env.yml \
+    && conda activate snakemake_env
 ```
 
 ## Running the pipeline
@@ -41,13 +41,13 @@ A full tutorial for running Tigerfish using both repeat discovery and probe desi
 When repeat coordinates are provided:
 
 ```
-$ cd example_run/defined_coords/ && ./run_pipeline.sh
+$ cd example_run/main/defined_coords/ && . run_pipeline.sh
 ```
 
 When repeat discovery is initiated:
 
 ```
-$ cd example_run/repeat_discovery/ && ./run_pipeline.sh
+$ cd example_run/main/repeat_ID/ && . run_pipeline.sh
 ```
 
 When these examples are run, expected outputs may be compared here.

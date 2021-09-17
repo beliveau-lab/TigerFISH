@@ -1,0 +1,60 @@
+
+#path to genome fasta
+fasta_file: "data/example.fa"
+
+#if coordinates are provided for probe design, file goes here
+bed_file: "data/dxz4_synthetic.bed"
+
+#option for probe design that directs pipeline implementation
+defined_coords: "TRUE"
+repeat_discovery: "FALSE"
+
+assembly: "chm13"
+
+#all chromosomes present in bed file or required for probe discovery are listed here
+samples:
+    - "chrX"
+
+#parameters for repeat_ID step
+window:
+    - 4000
+threshold: 
+    - 5
+composition:
+    - 0.25
+file_start:
+    - 0
+
+
+#parameters for kmer_filter script
+mer_val:
+    - 18
+c1_val:
+    - 5
+c2_val:
+    - 1
+
+
+#parameters used for probe_mer_filter script
+enrich_score:
+    - 0.50
+copy_num:
+    - 10
+
+
+#parameters used in alignment_filter script
+pdups:
+    - 0.95
+probe_count:
+    - 0
+target_sum:
+    - 5000
+mer_cutoff:
+    - 0.95
+bt2_alignments:
+    - 300000
+max_off_target:
+    - 100
+max_pdups_binding:
+    - 0.60
+
