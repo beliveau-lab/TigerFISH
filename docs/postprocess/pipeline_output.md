@@ -9,7 +9,7 @@ Tigerfish postprocessing pipeline output specification.
 |---------------|-------------------------------------------------------------------|
 | [01_reference_files/](../../example_run/postprocess/expected_pipeline_output/01_reference_files/)   | files that may be of use in other pipelines or analyses |
 | [02_intermediate_files/](../../example_run/postprocess/expected_pipeline_output/02_intermediate_files)  | large intermediate files, useful when debugging, but otherwise disposable |
-| [03_output_files/](../../example_run/postprocess/expected_pipeline_output/03_output_files) | all DNA/RNA probe sets as .tsv files |
+| [03_output_files/](../../example_run/postprocess/expected_pipeline_output/03_output_files) | all DNA probe alignment and chromomaps |
 
 All unwanted files may be safely deleted once pipeline is run and completed.
 
