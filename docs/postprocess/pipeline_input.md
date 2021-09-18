@@ -16,6 +16,10 @@ The paths for reference files is specified in the [config.yml](../../example_run
 
 * `probe_file` is a file containing a subset of the selected probes of interest after the Tigerfish main pipeline has been successfully run and completed. The exact file format and columns of the .tsv contain the following columns. For this exercise, subset probes from the probe file generated after the Tigerfish main run example is used. For reference to the full original file, that may be found here. For further descriptions about the output of Tigerfish and run modes, please refer to the guides provided in the Tigerfish main output and Tigerfish steps markdowns.
 
+* `sample` is a parameter that is the name of the scaffold. For this pipeline, if multiple oligos are placed into a single file for analysis, ensure that all chromosome names match. Oligos corresponding to different scaffolds should be placed in an indepedent file. 
+
+* `assembly` is the name of the genome assembly used to perform alignments
+
 The columns in DNA probe files are: 
 
 | # | Column | Description |
