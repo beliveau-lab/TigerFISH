@@ -8,7 +8,7 @@ The Tigerfish postprocess pipeline is intended for analysis of specific oligo pr
 
 ### Config file
 
-The paths for reference files is specified in the [config.yml](../../example_run/config.yml). Samples to run the Tigerfish postprocessing pipeline are included in the provided [example directory](../../example_run/data/).
+The paths for reference files is specified in the [config.yml](../../example_run/postprocess/config.yml). Samples to run the Tigerfish postprocessing pipeline are included in the provided [example directory](../../example_run/postprocess/data/).
 
 **Required parameters for implementation**
 
@@ -38,7 +38,3 @@ The columns in DNA probe files are:
 
 
 * `bt2_alignments`, when generating alignments for candidate probes to the entire queried genome, users can specify the maximum number of alignments that bowtie2 can return (default=300000).
-
-###
-
-
