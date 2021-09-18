@@ -7,9 +7,9 @@ Tigerfish postprocessing pipeline output specification.
 
 | Folder        | Description                                                       |
 |---------------|-------------------------------------------------------------------|
-| [01_reference_files/](../../example_run/tigerfish_postprocess/expected_pipeline_output/01_reference_files)   | files that may be of use in other pipelines or analyses |
-| [02_intermediate_files/](../../example_run/tigerfish_postprocess/expected_pipeline_output/02_intermediate_files)  | large intermediate files, useful when debugging, but otherwise disposable |
-| [03_output_files/](../../example_run/tigerfish_postprocess/expected_pipeline_output/03_output_files) | all DNA/RNA probe sets as .tsv files |
+| [01_reference_files/](../../example_run/postprocess/expected_pipeline_output/01_reference_files/)   | files that may be of use in other pipelines or analyses |
+| [02_intermediate_files/](../../example_run/postprocess/expected_pipeline_output/02_intermediate_files)  | large intermediate files, useful when debugging, but otherwise disposable |
+| [03_output_files/](../../example_run/postprocess/expected_pipeline_output/03_output_files) | all DNA/RNA probe sets as .tsv files |
 
 All unwanted files may be safely deleted once pipeline is run and completed.
 
@@ -21,15 +21,14 @@ All unwanted files may be safely deleted once pipeline is run and completed.
 
 | Item        | Location                                                       |
 |---------------|-------------------------------------------------------------------|
-| DNA FISH probe predicted target binding | [03_output_files/01_binding_maps/](../../example_run/expected_pipeline_output/03_output_files/01_binding_maps) | 
-| Raw bedgraphs of predicted target binding | [03_output_files/02_bedgraphs/](../../example_run/expected_pipeline_output/03_output_files/02_bedgraphs) |
+| DNA FISH probe predicted target binding | [03_output_files/01_plot_alignment](../../example_run/postprocess/expected_pipeline_output/03_output_files/01_plot_alignment/) | 
 
 
 #### Scaffold ideograms using chromoMap
 
 | Item        | Location                                                       |
 |---------------|-------------------------------------------------------------------|
-| Target repeat chromoMap plots | [03_output_files/03_repeat_chromoMaps/](../../example_run/expected_pipeline_output/03_output_files/03_repeat_chromoMaps) |
+| Target repeat chromoMap plots | [03_output_files/02_chromomap](../../example_run/postprocess/expected_pipeline_output/03_output_files/02_chromomap/) |
 
 ### Reporting
 
@@ -39,5 +38,5 @@ An HTML report with diagnostics and detailed pipeline information can by generat
 $ snakemake --snakefile path/to/Snakefile --configfile path/to/config.yml --report pipeline_output/report.html
 ```
 
-An example report is available in the example output tutorial. For a visualization of the pipeline DAG structure, see: [pipeline.pdf](../../example_run/expected_pipeline_output/pipeline.pdf) or [pipeline.svg](../../example_run/expected_pipeline_output/pipeline.svg)
+An example report is available in the example output tutorial. For a visualization of the pipeline DAG structure, see: [pipeline.pdf](../../example_run/postprocess/expected_pipeline_output/pipeline.pdf) or [pipeline.svg](../../example_run/postprocess/expected_pipeline_output/pipeline.svg)
 
