@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="#readme"><img src="../img/tigerfish.png" width="200"></a>
+    <a href="#readme"><img src="img/tigerfish.png" width="200"></a>
 </div>
 
 ## TigerFISH Pipeline Documentation
