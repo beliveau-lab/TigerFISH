@@ -2,7 +2,7 @@
     <a href="#readme"><img src="../../../docs/img/tigerfish.png" width="200"></a>
 </div>
 
-## Main Internal Workflow: Defined Coords Test
+## Main Internal Workflow: Repeat Identification Test
 
 Here, a genomic fasta which flanks the D4Z4 and DXZ4 repeats is provided as seperate scaffolds (chr4 and chrX) where repeats are identified by Tigerfish using the repeat identification setting. Links to files in these directories are summarized here:
 
