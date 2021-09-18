@@ -22,7 +22,7 @@ All unwanted files may be safely deleted once pipeline is run and completed.
 
 | Item        | Location                                                       |
 |---------------|-------------------------------------------------------------------|
-| DNA FISH probes in .tsv format | [03_output_files/01_dna_probes/](../../example_run/main/defined_coords/expected_pipeline_output/03_output_files/01_dna_probes) | 
+| DNA FISH probes in .tsv format | [03_output_files/01_dna_probes/](../../example_run/main/defined_coords/expected_pipeline_output/03_output_files/01_final_probes) | 
 
 #### Repetitive DNA probe sets
 
