@@ -57,9 +57,14 @@ def find_scaffold(fa_file,chrom,scaffold_fa):
     
     #parses the chromosome of interest from file
     for fasta in fasta_sequences:
-        if chrom == fasta.id:
-            
+
+        if fasta.id != chrom:
+            print("Please enter a valid scaffold. Exiting...")
+            exit()
+
+        else chrom == fasta.id:            
             #writes selected chromosome to output file
+
             SeqIO.write(fasta,scaffold_fa,"fasta")
 
     return scaffold_fa 
