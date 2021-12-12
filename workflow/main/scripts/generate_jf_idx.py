@@ -129,7 +129,7 @@ def map_coords(scaffold_fa):
         
         for match in re.finditer('[atcg]',sequence):
             bases_dist_start.append(int(match.start()))
-            
+                    
         #identifies the location of N bases
         for match in re.finditer('[n]', sequence):
             n_bases_start.append(int(match.start()))

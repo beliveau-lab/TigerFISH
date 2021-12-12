@@ -59,6 +59,9 @@ def open_index_file(index_file):
     with open(index_file, "r") as idx_f:
         kmer_indices = [line.rstrip('\n') for line in idx_f]
 
+    if len(kmer_indices) == 0:
+        print("Jellyfish count file provided not valid. Exiting...")
+
     return kmer_indices
 
 
