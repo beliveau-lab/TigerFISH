@@ -26,6 +26,28 @@ from Bio import SeqIO
 ##############################################################################
 
 def make_fasta_from_bed(bed, region_fa, genome_fa):
+    """
+    This function will run a bedtools process on a genomic fasta provided,
+    from a bed file to return a fasta of the bed file regions listed.
+
+    Parameters
+    ----------
+    bed: bed file
+    File containing the genomic coordinates to return a multi-entry fasta.
+    These genomic coordinates are the identified repeat regions from the
+    repeat identification script.
+
+    region_fa: multi-entry fasta file
+    The output fasta file of sequences from the generated bed file from
+    the repeat identification script.
+
+    genome_fa: fasta file name
+    Reference fasta file to be used to create fasta seqs against repeats.
+
+    Returns
+    -------
+    genome_fa described above
+    """
 
     subprocess.call(['bedtools', 'getfasta', '-fi', genome_fa, '-bed',
                      bed, '-fo', region_fa], stderr=None, shell=False)
