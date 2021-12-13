@@ -54,8 +54,29 @@ def make_fasta_from_bed(bed, region_fa, genome_fa):
 
 ##############################################################################
 
-#this function takes the fasta that you returned from the last function
 def blockParse_run(region_fa,name,probe_out):
+    """
+    This function takes the provided fasta seqs derived from the bed file
+    and passes each repeat seq into the refactoredBlockParse script from
+    Oligominer. Here, probes are written and appended to an output dataframe.
+    runSequenceCrawler is run using parameters described in Oligominer for 
+    default probe generation. 
+
+    Parameters
+    ----------
+    region_fa: fasta file
+    Contains fasta sequences from derived repeat regions
+
+    name: string
+    The header of each fasta repeat becomes a column specifying repeat name
+    that each probe was derived from.
+
+    Returns
+    -------
+    probe_out: tsv file
+    The output file name containing all designed probes for all provided
+    repeat region fasta sequences.
+    """
 
     name_list = []
     sequence_list = []
