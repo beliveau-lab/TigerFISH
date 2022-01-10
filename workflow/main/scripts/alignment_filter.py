@@ -96,143 +96,10 @@ def read_probe_filter(p_file):
 
 ##############################################################################
 
-def filter_count(probe_df,probe_count,strand_conc_a,strand_conc_b,
-                    bowtie_idx,bowtie_string,NUPACK_MODEL,pdups_p,
-                    bt2_k_val,max_off_target_sum,max_pdups_binding):
-    """
-    Function implements filter by returning up to X number of cands in each
-    repeat region.
-
-    Parameters
-    ----------
-    probe_df : dataframe
-        contains probes that have been filtered by mer count and uniqeness
-    probe_count : int
-        the number of probes to return
-
-    Returns
-    -------
-    on_target_dict : dictionary
-        the on target alignment pdups aggregate sum for any probe within
-        its repeat region target
-    off_target_dict : dictionary
-        the off target alignment pdups aggregate sum for any probe outside of 
-        its target repeat reguin.
-    prop_target_dict : dictionary
-        the proportion of on_target pdups binding sum/ all pdups binding
-        for all probes
-    """
-    
-    #need to make lists to store the probe names, on target, off target, prop
-    #and probe sequence
-    keep_probe_names_list = []
-    keep_on_target_list = []
-    keep_off_target_list = []
-    keep_probe_prop_list = []
-    keep_probe_seq = []
-
-    #initiate groupby
-    grouped_region=probe_df.groupby('region',sort=False)
-
-    for name,group in grouped_region:
-
-        #this takes into account single instances of probe in repeat
-        probe_list = group['probe'].tolist()
-        probe_coords_list = group['probe_coords'].tolist()
-
-        #make a list of the repeat regions
-        probe_regions_list = group['region'].tolist()
-
-        region_dict = dict(zip(probe_coords_list,probe_regions_list))
-
-        threshold_count_list = []
-
-        while (len(threshold_count_list) != probe_count and
-               len(probe_list) >= 1):
-
-            #make the call for the top probe to get the pairwise df
-            top_probe_al = generate_pairwise_df(probe_list[0],
-                                                      probe_coords_list[0],
-                                                      bowtie_idx,
-                                                      bowtie_string,
-                                                      strand_conc_a,
-                                                      strand_conc_b,
-                                                      NUPACK_MODEL,
-                                                      bt2_k_val)
-
-            #compute the on target sum for the top probe
-            prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
-                                                                  region_dict)
-            #check probes in the proportion dict
-            for key,val in prop_dict.items():
-
-                #if the on target pdups prop is >= pdups_p
-                #if off target pdups sum  is < 100 (default)
-                #and if this is the first probe being added to the keep list
-                if (val >= pdups_p and
-                    off_target_dict[key] <= int(max_off_target_sum) and
-                    len(keep_probe_names_list) == 0):
-
-                    #adds probes and their information to appropriate lists
-                    keep_probe_names_list.append(key)
-                    keep_on_target_list.append(on_target_dict[key])
-                    keep_off_target_list.append(off_target_dict[key])
-                    keep_probe_prop_list.append(prop_dict[key])
-                    keep_probe_seq.append(probe_list[0])
-
-                    threshold_count_list.append(on_target_dict[key])
-
-                #if the on target pdups prop is >= pdups_p
-                #if off target pdups sum  is < 100 (default)
-                #and for all other probes being added after first
-
-                if (val >= pdups_p and
-                    off_target_dict[key] <= int(max_off_target_sum) and
-                    len(keep_probe_names_list) >= 1):
-
-                    #does a check by implementing pdups function to 
-                    #compute if the pdups score is less than the max
-                    #pdups value in the list, if so, the probe and 
-                    #it's information is added
-
-                    pdups_track_list = []
-                    for probe in keep_probe_seq:
-                        pdups_compare = pdups(probe_list[0],probe,
-                                              strand_conc_a,strand_conc_b,
-                                              NUPACK_MODEL)
-                        pdups_track_list.append(pdups_compare)
-
-                    #this pdups threshold is set to 0.60 where probes 
-                    #are only added if the max pdups score in the current
-                    #list of kept probes evaluated with any new probe
-                    #being considered is below this particular value
-
-                    if max(pdups_track_list) <= float(max_pdups_binding):
-
-                        keep_probe_names_list.append(key)
-                        keep_on_target_list.append(on_target_dict[key])
-                        keep_off_target_list.append(off_target_dict[key])
-                        keep_probe_prop_list.append(prop_dict[key])
-                        keep_probe_seq.append(probe_list[0])
-                        threshold_count_list.append(on_target_dict[key])
-
-            #the top probe is popped to move down the list
-            probe_list.pop(0)
-            probe_coords_list.pop(0)
-
-    #make dictionaries of the on target, off target, prop
-    on_target_dict = dict(zip(keep_probe_names_list,keep_on_target_list))
-    off_target_dict = dict(zip(keep_probe_names_list,keep_off_target_list))
-    prop_target_dict = dict(zip(keep_probe_names_list,keep_probe_prop_list))
-
-    return on_target_dict,off_target_dict,prop_target_dict
-
-##############################################################################
-
 def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                bowtie_idx,r_thresh,bowtie_string,
                                NUPACK_MODEL,pdups_p,bt2_k_val,
-                               max_off_target_sum,max_pdups_binding):
+                               max_off_target_sum,max_pdups_binding,seed_length):
     """
     Function implements filter by returning probe cands until on target sum
     for a target region is reached.
@@ -293,7 +160,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                                       strand_conc_a,
                                                       strand_conc_b,
                                                       NUPACK_MODEL,
-                                                      bt2_k_val)
+                                                      bt2_k_val,seed_length)
 
             #compute the on target sum for the top probe
             prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
@@ -414,7 +281,7 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
 
 def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
-                         bt2_k_val):
+                         bt2_k_val,seed_length):
     """
     Function will take a probe sequence and generate an alignment against
     the entire genome with given bowtie2 string and indices. Then, 
@@ -458,7 +325,7 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 
         #the value 300000 is = k, or the max number of alignments returned
         sam_file = bt2_call(fastq_filename,sam_file,bt2_k_val,
-                            bowtie_idx,bowtie_string)
+                            bowtie_idx,bowtie_string,seed_length)
 
         bam_file = tmpdir + '/derived.bam'
         bam_file = samtools_call(sam_file,bam_file)
@@ -517,7 +384,7 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 
 ##############################################################################
 
-def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string):
+def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string,seed_length):
     """
     Function runs bowtie2
 
@@ -545,7 +412,8 @@ def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string):
          '-U', str(fq_file),
          '-k',str(k_val),
          bowtie_string,
-         '-S', str(sam_file)])
+         '-S', str(sam_file),
+         '-L', str(seed_length)])
 
     return sam_file
 
@@ -706,7 +574,7 @@ def nupack_sum(pairwise_df,probe_region_dict):
     Parameters
     ----------
     pairwise_df :  dataframe
-        DESCRIPTION.
+        contains probes, corresponding alignment, derived from sam2pairwise.
     probe_region_dict : dictionary
         contains information about the probe and repeat region in a dict
 
@@ -841,9 +709,6 @@ def main():
     userInput.add_argument('-p', '--pdups_prop', action='store',default=0.95,
                            type=float, help='The on target proportion'
                            'cutoff to keep a probe')
-    userInput.add_argument('-c', '--probe_count_mode', action='store',
-                           default=0,  type=int,help='Option to return'
-                           'requested number of probes/repeat region instead')
     requiredNamed.add_argument('-b', '--bowtie_index', action='store',
                            required=True, help='The path to the bowtie'
                            'index to run the alignment algorithm')
@@ -851,6 +716,12 @@ def main():
                            required=True, default = 300000, 
                            help='The max number of alignments to be returned'
                            'by bowtie')
+    requiredNamed.add_argument('-l', '--seed_length', action='store',
+                           required=True, default = 20, 
+                           help='Seed length when returning bt2 alignments')
+    requiredNamed.add_argument('-t', '--model_temp', action='store',
+                           required=True, default = 74.5,
+                           help='NUPACK model temp, (C)')
     requiredNamed.add_argument('-ot', '--max_off_target', action='store',
                            required=True, default = 100, 
                            help='The max off target aggregate pdups binding'
@@ -871,15 +742,16 @@ def main():
     bt2_k_val = args.bt2_max_align
     max_off_target_sum = args.max_off_target
     max_pdups_binding = args.max_pdups_binding
-
+    seed_length = args.seed_length
+    model_temp = args.model_temp
 
     #the bowtie string settings used for running the alignment algorithm
-    bowtie_string = "--local -N 1 -L 20 -R 3 -D 20 -i C,4 --score-min G,1,4"
+    bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
 
     # configure nupack model for use
     NUPACK_MODEL = nupack.Model(
         material = 'dna',
-        celsius = 74.5,
+        celsius = model_temp,
         sodium = 0.39,
         magnesium = 0.0,
         ensemble = 'stacking')
@@ -894,8 +766,7 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    if probe_count == 0:
-        on_target_d,off_target_d,prop_target_d = filter_thresh(probe_df,
+    on_target_d,off_target_d,prop_target_d = filter_thresh(probe_df,
                                                                strand_conc_a,
                                                                strand_conc_b,
                                                                bowtie_idx,
@@ -905,24 +776,14 @@ def main():
                                                                pdups_p,
                                                                bt2_k_val,
                                                                max_off_target_sum,
-                                                               max_pdups_binding)
-
-    else:
-        on_target_d,off_target_d,prop_target_d = filter_count(probe_df,
-                                                              probe_count,
-                                                              strand_conc_a,
-                                                              strand_conc_b,
-                                                              bowtie_idx,
-                                                              bowtie_string,
-                                                              NUPACK_MODEL,
-                                                              pdups_p,
-                                                              bt2_k_val,
-                                                              max_off_target_sum,
-                                                              max_pdups_binding)
+                                                               max_pdups_binding,
+                                                               seed_length)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
     generate_final_df(probe_df,on_target_d,off_target_d,prop_target_d,o_file)
+
+    print("---%s seconds ---"%(time.time()-start_time))
 
 if __name__== "__main__":
     main()
