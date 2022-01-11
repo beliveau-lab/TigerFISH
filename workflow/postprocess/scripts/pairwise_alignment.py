@@ -404,7 +404,7 @@ def main():
     # configure nupack model for use
     NUPACK_MODEL = nupack.Model(
         material = 'dna',
-        celsius = model_temp,
+        celsius = float(model_temp),
         sodium = 0.39,
         magnesium = 0.0,
         ensemble = 'stacking')
