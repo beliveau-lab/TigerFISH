@@ -288,7 +288,7 @@ def main():
 
     userInput = argparse.ArgumentParser(description=\
         'Requires the genome bin file, derived sequence bedtools intersect'
-        'and the file containing pdups scores from sam2pairwise')
+        'and the file containing pariwise sequences')
         
     requiredNamed = userInput.add_argument_group('required arguments')
     requiredNamed.add_argument('-c_t', '--chrom_track', action='store', 
@@ -301,28 +301,31 @@ def main():
                                required=True, help='file with pairwise'
                                'pdups vals')
     requiredNamed.add_argument('-pl', '--out_plot', action='store',
-                               required=True, help='file with pairwise'
-                               'pdups vals')
+                               required=True, help='output genome plot')
+
     args = userInput.parse_args()
     chr_track_file = args.chrom_track
     chr_overlap_bed = args.chrom_overlaps
     pdups_scores = args.pairwise_pdups
     out_plot = args.out_plot
-
     
     chr_track,chr_overlap,pairs_pdups = generate_dfs(chr_track_file,
                                                      chr_overlap_bed,
                                                      pdups_scores)
+
     print("---%s seconds ---"%(time.time()-start_time))
 
     
     bin_sums = map_columns(pairs_pdups,chr_overlap)
+
     print("---%s seconds ---"%(time.time()-start_time))
     
     merged = intersect_chr_tracks(bin_sums,chr_track)
+
     print("---%s seconds ---"%(time.time()-start_time))
 
     generate_plot(merged,out_plot)
+
     print("---%s seconds ---"%(time.time()-start_time))
     
     print("done")

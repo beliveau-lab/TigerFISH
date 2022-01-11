@@ -17,3 +17,12 @@ bowtie_idx: "/net/beliveau/vol1/home/eaguil/tigerfish/bt2_indices/t2t/t2t"
 
 bt2_alignments:
     - 300000
+
+window_size:
+    - 1000000
+
+
+model_temp: 74.5
+
+seed_length: 20
+

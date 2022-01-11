@@ -20,13 +20,29 @@ from subprocess import Popen
 
 ##############################################################################
 
-def generate_bins(file_path,out_path,genome_name):
+def generate_bins(file_path,out_path,genome_name,window_size):
+    """
+    This function generates a bedtools windows file based on the size
+    of windows provided
     
+    Parameters
+    ----------
+    file_path : file
+        file containing probes designed from the design_probes script
+    out_path: file path
+        output path where the generated probe bins should go
+    genome_name: string
+        the name of the genome build being referenced
+    Returns
+    -------
+    None.
+        Output file containing genome windows made by bedtools
+    """    
     genome_bin_file = str(out_path) + str(genome_name) + ".txt"
     
     #use subprocess to call bowtie
     subprocess.Popen(['bedtools', 'makewindows', '-g', str(file_path),
-                     '-w', '1000000', genome_bin_file], \
+                     '-w', str(window_size), genome_bin_file], \
     stdout=subprocess.PIPE)
     
 ##############################################################################
@@ -48,14 +64,15 @@ def main():
                                'the bin file should be kept')
     requiredNamed.add_argument('-g', '--genome_name', action='store',
                                required=True, help='The name of the genome')
-    
+    requiredNamed.add_argument('-w', '--window_size', action='store',
+                               required=True, help='Size of genome bins')
     args = userInput.parse_args()
     file_path = args.file_path
     out_path = args.out_path
     genome_name = args.genome_name
+    window_size = args.window_size
     
-    
-    generate_bins(file_path,out_path,genome_name)
+    generate_bins(file_path,out_path,genome_name,window_size)
     
     print("---%s seconds ---"%(time.time()-start_time))
     
