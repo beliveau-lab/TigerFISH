@@ -223,7 +223,7 @@ if config['repeat_discovery'] == 'TRUE':
             pdups_prop = config['pdups'], 
             k_val = config['bt2_alignments'],
             max_off_target = config['max_off_target'],
-            max_pdups_binding = config['max_pdups_binding']
+            max_pdups_binding = config['max_pdups_binding'],
             seed_length = config['seed_length'],
             model_temp = config['model_temp']
         benchmark:
