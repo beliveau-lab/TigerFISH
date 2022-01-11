@@ -272,7 +272,7 @@ def compute_normalized_binding(probe_df, c1_val, c2_val):
     Function groups probes by repeat region and implements weights to rank
     order probes. Higher c1_values indicate that probes are more likely to
     be ranked by higher repeat count, higher c2 values are to implement 
-    ranking mostly drivern by k-mer binding proportion.
+    ranking mostly driven by k-mer binding proportion.
     
     Parameters
     ----------
@@ -400,7 +400,7 @@ def main():
                                'k-mers, should be same as jf build k-mer'
                                'value; default is 18')
     requiredNamed.add_argument('-o', '--out_path', action='store',
-                               required=True, help='Th output path of the'
+                               required=True, help='Output path of the'
                                'filtered probe file')
     requiredNamed.add_argument('-c1', '--c1_value', action='store',
                                required=True,type=int,help='weight 1 used'
