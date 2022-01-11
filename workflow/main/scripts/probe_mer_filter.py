@@ -63,7 +63,7 @@ def split_mers(region_df,MERLENGTH):
     """
     Implements the generate_kmers function to add a column to the probe
     dataframe that decomposes each probe into it's k-mers (length specified
-    by user)'
+    by user)
     
     Parameters
     ----------
@@ -142,12 +142,13 @@ def rm_shared_mer_probes(region_df,MER_CUTOFF):
     Parameters
     ----------
     region_df : dataframe
-        contains relevant probe information
+        contains relevant probes before mer filtering
 
     Returns
     -------
     region_df : dataframe
-        contains relevant probe information
+        contains relevant probes following filtering based on mer
+        proportion
 
     """
     

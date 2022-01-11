@@ -148,8 +148,8 @@ def convolve_successes(pass_thresh_list,WINDOW,COMPOSITION):
 
     Returns
     -------
-    passing_range_iter : TYPE
-        DESCRIPTION.
+    pass_w : tuple
+        Windows of sequence to map repetitive region locations.
 
     """
     #convert list of binary k-mer count vals into array
@@ -226,7 +226,7 @@ def obtain_repeat_indices(pass_w):
 
 ##############################################################################
 
-def find_repeats(indices_to_parse,kmer_indices,MERLENGTH):
+def find_repeats(indices_to_parse,kmer_indices,mer_length):
     """
     This function will refer to the indices to parse and append to a list, 
     then at that index, the start val in kmer_indices is appended, this is 
@@ -271,7 +271,7 @@ def find_repeats(indices_to_parse,kmer_indices,MERLENGTH):
     for item in indices_to_parse['end_index_range']:
         index_end.append(int(item))
         end=kmer_indices[item]
-        kmer_end.append(int(int(end) + MERLENGTH))
+        kmer_end.append(int(int(end) + mer_length))
         
     repeat_ends_df=pd.DataFrame(list(zip(kmer_end,index_end)),
                                 columns=['r_end','r_index_end'])
@@ -379,7 +379,8 @@ def main():
     requiredNamed.add_argument('-o_b', '--bed_file', action='store',
                                required=True, help='Used to generate fasta'
                                'file of kmer rich regions; default is')
-        
+    requiredNamed.add_argument('-m', '--mer_length', action='store',
+                               required=True, help='Size of k-mers used')
 
     #Import user-specified command line values.
     args = userInput.parse_args()
@@ -391,14 +392,13 @@ def main():
     COMPOSITION = args.composition_score
     START=args.start
     bed_file = args.bed_file
+    mer_length = args.mer_length
 
     #a list for the regions and scaffold sequences 
     name_list=[]
     sequence_list=[]
     zipped_list=[]
     bases_dist_start=[]
-    MERLENGTH=18
-    
 
     #the names of output files to be generated
     
@@ -424,7 +424,7 @@ def main():
 
     kmer_start,kmer_end,index_start,index_end=find_repeats(indices_to_parse,
                                                            kmer_indices,
-                                                           MERLENGTH)
+                                                           mer_length)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
