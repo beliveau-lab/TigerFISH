@@ -126,20 +126,20 @@ def main():
     requiredNamed = userInput.add_argument_group('required arguments')
     
     requiredNamed.add_argument('-b', '--bed_name', action='store', 
-                               required=True, help='The chromosome' 
-                               'corresponding to the probes being generated')
+                               required=True, help='The valid regions'
+                               'evaluated by Tigerfish as repetitive')
     requiredNamed.add_argument('-r_o', '--region_out', action='store', 
-                               required=True, help='The chromosome'
-                               'corresponding to the probes being generated')
+                               required=True, help='Multi-entry fasta of'
+                               'mapped repetitive regions')
     requiredNamed.add_argument('-p_o', '--probes_out', action='store', 
-                               required=True, help='The chromosome'
-                               'corresponding to the probes being generated')
+                               required=True, help='Output probes from'
+                               'blockparse. File is a dataframe.')
     requiredNamed.add_argument('-g', '--genome_fasta', action='store',
-                               required=True, help='The chromosome'
-                               'corresponding to the probes being generated')
+                               required=True, help='Genomic fasta reference'
+                               'used to generate region_out file')
     requiredNamed.add_argument('-c', '--chrom_name', action='store',
-                               required=True, help='The chromosome'
-                               'corresponding to the probes being generated')
+                               required=True, help='The name of chromosome'
+                               'undergoing probe design')
     
     args = userInput.parse_args()
     bed = args.bed_name
