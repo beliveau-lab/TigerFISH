@@ -396,7 +396,7 @@ def main():
     
     requiredNamed.add_argument('-m', '--mer_val', action='store',
                                required=True,
-                               help='jellyfish index output file')
+                               help='length of k-mers queried')
 
     args = userInput.parse_args()
     fa_file = args.fasta_file
