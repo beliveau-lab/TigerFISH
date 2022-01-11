@@ -1,17 +1,26 @@
 #path to genome fasta
 #the input genome chrom sizes file
-genome_windows: "data/chm13.chrom.sizes"
+genome_windows: "../../../../../../../reference/Assemblies/chm13/supp_resources/chrom_sizes/chm13.chrom.sizes"
 
 #the output file of interest from probe design
-probe_file: "data/dxz4_test_probe.tsv"
+probe_file: "../test_files/chr21_test_region_1.txt"
 
-fasta_file: "data/example.fa"
-
-assembly: "chm13"
+genome_name:
+    - "chm13"
 
 #scaffolds present in output file
 samples:
-    - "chrX"
+    - "chr21"
 
-bt2_alignments:
-    - 300000
+#bowtie index to generate alignments
+bowtie_idx: "/net/beliveau/vol1/home/eaguil/tigerfish/bt2_indices/t2t/t2t"
+
+bt2_alignments: 300000
+
+window_size: 1000000
+
+
+model_temp: 74.5
+
+seed_length: 20
+
