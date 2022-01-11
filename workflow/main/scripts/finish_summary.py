@@ -94,8 +94,8 @@ def main():
                                required=True, help='The filtered probe file'
                                'that contains all sequences and regions')
     requiredNamed.add_argument('-o', '--out_file', action='store',
-                               required=True, help='The filtered probe file'
-                               'that contains all sequences and regions')
+                               required=True, help='The summary file'
+                               'aggregating target binding by mapped repeat')
     
     args = userInput.parse_args()
     p_file = args.probe_file
