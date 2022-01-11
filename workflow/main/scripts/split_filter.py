@@ -21,6 +21,19 @@ from itertools import groupby
 ##############################################################################
 
 def read_probe_file(file_path):
+    """
+    This function reads the probe file containing designed probes into a 
+    pandas dataframe
+    
+    Parameters
+    ----------
+    file_path : file
+        file containing probes that have been filtered
+    Returns
+    -------
+    probe_df : dataframe
+        returns a dataframe of probes that were filtered
+    """
     
     #read in the file with the appropriate column names
     colnames = ["chrom","p_start","p_end","probe","Tm","region",
@@ -34,7 +47,21 @@ def read_probe_file(file_path):
 ##############################################################################
 
 def split_file(probe_df,out_path):
+    """
+    This function splits the dataframe into output files by repeat region as
+    names.
     
+    Parameters
+    ----------
+    probe_df : dataframe
+        returns a dataframe of probes that were filtered
+    out_path: file path
+        file path of where split region files should be created.
+    Returns
+    -------
+    None. Output files contain probes within each listed repeat region.
+    """
+
     #do a groupby over the repeat regions
     grouped_regions=probe_df.groupby('region',sort=False)
     
