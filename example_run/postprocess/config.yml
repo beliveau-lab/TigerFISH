@@ -5,7 +5,7 @@ genome_windows: "../../../../../../../reference/Assemblies/chm13/supp_resources/
 #the output file of interest from probe design
 probe_file: "../test_files/chr21_test_region_1.txt"
 
-genome_name:
+assembly:
     - "chm13"
 
 #scaffolds present in output file
