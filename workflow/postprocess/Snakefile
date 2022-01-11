@@ -21,11 +21,12 @@ rule bin_genome:
     params:
         mfree="20G",
         h_rt = "10:0:0",
-        genome = config['assembly']
+        genome = config['assembly'],
+        window = config['window_size']
     benchmark:
         "pipeline_output/benchmark/01_reference_files/01_bin_genome/genome_bins.txt"
     shell:
-        'bedtools makewindows -g {input} -w 1000000 > {output}'
+        'bedtools makewindows -g {input} -w {params.window} > {output}'
 
 BOWTIE2_DIR = f'../../example_run/main/repeat_ID/pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
 rule make_probe_beds:
@@ -69,11 +70,13 @@ rule align_probes:
     params:
         mfree="20G",
         h_rt = "10:0:0",
-        k_val = config["bt2_alignments"]
+        k_val = config["bt2_alignments"],
+        seed_length = config["seed_length"],
+        model_temp = config["model_temp"]
     benchmark:
         "pipeline_output/benchmark/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt"
     shell:
-        'python ../../workflow/postprocess/scripts/pairwise_alignment.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val}'
+        'python ../../workflow/postprocess/scripts/pairwise_alignment.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val} -l {params.seed_length} -t {params.model_temp}'
 
 def aggregate_input(wildcards):
     checkpoint_output = checkpoints.split_probes.get(**wildcards).output[0]

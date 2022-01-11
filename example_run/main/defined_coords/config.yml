@@ -57,4 +57,5 @@ max_off_target:
     - 100
 max_pdups_binding:
     - 0.60
-
+seed_length: 20
+model_temp: 74.5
