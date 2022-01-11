@@ -737,7 +737,6 @@ def main():
     o_file = args.out_file
     r_thresh = args.region_threshold
     pdups_p = args.pdups_prop
-    probe_count = args.probe_count_mode
     bowtie_idx = args.bowtie_index
     bt2_k_val = args.bt2_max_align
     max_off_target_sum = args.max_off_target
@@ -751,7 +750,7 @@ def main():
     # configure nupack model for use
     NUPACK_MODEL = nupack.Model(
         material = 'dna',
-        celsius = model_temp,
+        celsius = float(model_temp),
         sodium = 0.39,
         magnesium = 0.0,
         ensemble = 'stacking')
