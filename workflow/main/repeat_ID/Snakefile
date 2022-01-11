@@ -95,6 +95,7 @@ if config['repeat_discovery'] == 'TRUE':
             composition = config["composition"],
             file_start = config["file_start"],
             chrom_name = "{sample}",
+            mer = config["mer_val"],
             mfree="85G",
             h_rt="200:0:0"
         benchmark:
@@ -184,13 +185,15 @@ if config['defined_coords'] == 'TRUE':
             probe_count = config['probe_count'],
             k_val = config['bt2_alignments'],
             max_off_target = config['max_off_target'],
-            max_pdups_binding = config['max_pdups_binding']
+            max_pdups_binding = config['max_pdups_binding'],
+            seed_length = config["seed_length"],
+            model_temp = config["model_temp"]
         benchmark:
             "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
         output:
             "pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv"
         shell:
-            "python ../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
+            "python ../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp}"
 
 if config['repeat_discovery'] == 'TRUE':
     checkpoint gather_repeat_regions:
@@ -222,13 +225,15 @@ if config['repeat_discovery'] == 'TRUE':
             probe_count = config['probe_count'],
             k_val = config['bt2_alignments'],
             max_off_target = config['max_off_target'],
-            max_pdups_binding = config['max_pdups_binding']
+            max_pdups_binding = config['max_pdups_binding'],
+            seed_length = config["seed_length"],
+            model_temp = config["model_temp"]
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
         output:
             "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
         shell:
-            "python ../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding}"
+            "python ../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -c {params.probe_count} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp}"
 
     # aggregate paths to dynamically created files
     def aggregate_input(wildcards):
