@@ -103,7 +103,7 @@ if config['repeat_discovery'] == 'TRUE':
         output:
             out_bed = "pipeline_output/02_intermediate_files/01_repeat_ID/{sample}_regions.bed",
         shell:
-            "python ../../../workflow/main/scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
+            "python ../../../workflow/main/scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -m {params.mer} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
 
 def input_for_design_probes(wildcards):
     # requires a config containing switches for the whole workflow
