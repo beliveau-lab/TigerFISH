@@ -1,15 +1,52 @@
-configfile: "config.yml"
+configfile: "../../../example_run/main/unit_test/config.yml"
 
 ASSEMBLY = config["assembly"]
 
 rule all:
     input:
         'pipeline_output/done/test_main_done.txt'
+
+rule generate_jf_count:
+    input:
+        fasta_file = config["fasta_file"]
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mer = config["mer_val"],
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log'
+    output:
+        'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
+    shell:
+        "jellyfish count -s 3300M -m {params.mer} -o {output} {input.fasta_file}"
+
+BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+rule generate_bt2_indices:
+    input:
+        fasta_file = config["fasta_file"]
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log'
+    output:
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.1.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.2.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.3.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.4.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.1.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.2.bt2',
+    shell:
+        'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
     
 rule generate_jf_idx:
     input:
-        fasta_file = 'data/generate_jf_idx/chr1_test.fa',
-        jf = '../../../../../../2021_11_29_repeat_collapse/pipeline_run/pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf' 
+        fasta_file = config["fasta_file"],
+        jf = rules.generate_jf_count.output 
     conda:
         "../../../workflow/main/envs/tigerfish.yml"
     params:
@@ -41,7 +78,7 @@ rule repeat_ID:
 
 rule split_bed:
     input:
-        bed = 'data/split_bed/coords.bed'
+        bed = 'data/coords.bed'
     conda:
         "../../../workflow/main/envs/tigerfish.yml"
     params:
@@ -58,7 +95,7 @@ rule design_probes:
         bed = rules.repeat_ID.output,
         region_fa = rules.generate_jf_idx.output.chrom_fa,
         genome_fa = rules.generate_jf_idx.input.fasta_file,
-        test_regions = 'data/design_probes/chr1_test_regions.fa'
+        test_regions = 'data/chrX_test_regions.fa'
     conda:
         "../../../workflow/main/envs/tigerfish.yml"
     params:
@@ -74,7 +111,7 @@ rule kmer_filter:
     input:
         probe_file = rules.design_probes.output,
         fasta_file = rules.design_probes.input.test_regions,
-        jf_file = "data/kmer_count/chr1_jf_idx.txt"
+        jf_file = rules.generate_jf_idx.output.jf_count
     conda:
         "../../../workflow/main/envs/tigerfish.yml"
     params:
@@ -102,11 +139,10 @@ rule probe_mer_filter:
     shell:
         "pytest -s ../../../workflow/main/scripts/unit_test/probe_mer_filter/test_probe_mer_filter.py --file_path {input.kmer_probe} --out_path {output} --enrich_score {params.enrich_score} --copy_num {params.copy_num} --mer_cutoff {params.mer_cutoff} --merlength {params.merlength}"
 
-BOWTIE2_DIR = f'../../../../../../2021_11_29_repeat_collapse/pipeline_run/pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
-
 rule alignment_filter:
     input:
-        probe_filter = rules.probe_mer_filter.output
+        probe_filter = rules.probe_mer_filter.output,
+        bt2_out = rules.generate_bt2_indices.output
     conda:
         "../../../workflow/main/envs/tigerfish.yml"
     params:

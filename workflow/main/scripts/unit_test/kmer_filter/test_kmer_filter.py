@@ -43,7 +43,7 @@ def test_read_probe_file(probe_file):
     - Function reads probe file and is of expected length without duplicates
     """
 
-    expected_length = 70
+    expected_length = 26
 
     #read probes csv
     colnames = ["chrom","p_start","p_stop","probe","Tm", "regions"]
@@ -208,9 +208,9 @@ def test_repeat_count(jf_file,fasta_file,probe_file):
             all_hg_counts[probe] = sum(probe_genome_count_list)
 
             #checks that the total k-mer sums match expected values
-            assert(sum(probe_region_count_list) == 130)
+            assert(sum(probe_region_count_list) == 24)
 
-            assert(sum(probe_genome_count_list) == 26743)
+            assert(sum(probe_genome_count_list) == 24)
 
     return probe_df,all_repeat_counts,all_hg_counts
 
@@ -345,7 +345,7 @@ def test_append_probe_df(jf_file,fasta_file,probe_file):
     probe_df['k_score']=probe_df['k_score'].astype(float)
 
     #assert that the k_score column is as expected, making other cols valid
-    assert(probe_df['k_score'].values[0] == 0.004861085143775941)
+    assert(probe_df['k_score'].values[0] == 1.0)
 
     return probe_df
 
@@ -378,15 +378,16 @@ def test_compute_normalized_binding():
     #that have different values of k_score to test ranking system
 
 
-    chrom_list = ["chr1","chr1"]
-    start_list = [37,75]
-    stop_list = [74,111]
-    seq_list = ["CTAACCCTAACCCTAACCCCTAAACCCTAACCCTAACC", "CTAACCCTAACCCTAACCCTAACCCTAACCCTAACCC"]
-    tm_list = [42.63,42.57]
-    region_list = ["chr1:0-200","chr1:0-200"]
-    r_count = [45,540]
-    h_count = [22000,20000]
-    k_score = [0.002,0.027]
+    chrom_list = ["chrX","chrX"]
+    start_list = [118,159]
+    stop_list = [158,198]
+    seq_list = ["AAATGATTGGTTCAAAACCAGGGTGACAAGTTGATGAAGTC",
+         "ATAATAGGTTTATGATGCTGATCACCCTCTCTCACCTGGT"]
+    tm_list = [42.07,42.19]
+    region_list = ["chrX:1-300","chrX:1-300"]
+    r_count = [24,24]
+    h_count = [24,24]
+    k_score = [1.0,1.0]
 
     #load into dataframe
     probe_df = pd.DataFrame({'chrom':chrom_list,
@@ -452,8 +453,8 @@ def test_compute_normalized_binding():
         norm_val_list.append(all_probe_norm_dict[probe])
 
     #validates that the test probes provided match dict values
-    check_probe_dict = {'CTAACCCTAACCCTAACCCCTAAACCCTAACCCTAACC': 0.23148148148148145, 
-    'CTAACCCTAACCCTAACCCTAACCCTAACCCTAACCC': 3.0}
+    check_probe_dict = {'AAATGATTGGTTCAAAACCAGGGTGACAAGTTGATGAAGTC': 1.0, 
+    'ATAATAGGTTTATGATGCTGATCACCCTCTCTCACCTGGT': 1.0}
 
     #checks that probe was appended with correct rank value
     assert(set(all_probe_norm_dict) == set(check_probe_dict))
@@ -465,7 +466,7 @@ def test_compute_normalized_binding():
     probe_df = probe_df.sort_values(by=['norm_vals'], ascending=False)
 
     #assert that the values match based on the constants provided
-    check_val_list = [0.23148148148148145, 3.0]
+    check_val_list = [3.0, 3.0]
 
     assert(norm_val_list == check_val_list)
 

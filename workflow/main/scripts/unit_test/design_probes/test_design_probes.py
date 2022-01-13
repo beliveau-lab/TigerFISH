@@ -55,9 +55,9 @@ def test_make_fasta_from_bed(bed, region_fa, genome_fa):
     - Validates file arguments passed into function
     """
 
-    #sequence of corresponding bed coordinates chr1:2-30
+    #sequence of corresponding bed coordinates chrX:2-30
     #aassertion equates if valid bases are called
-    test_seq = "CCCTAAACCCTAACCCCTAANNNNNNNN"
+    test_seq = "GACTATGTCTCAAAAAAAAAAAAAANNN"
 
     #takes a genomic fasta reference and bed coordinates as input
     #output is fasta file derived from bed coordinates

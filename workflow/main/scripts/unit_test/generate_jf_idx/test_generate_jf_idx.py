@@ -60,14 +60,9 @@ def test_find_scaffolds(fa_file,chrom,scaffold_fa):
     fasta_sequences = SeqIO.parse(open(fa_file),'fasta')
 
     for fasta in fasta_sequences:
-        if fasta.id != chrom:
-            print("Please enter valid scaffold. Exiting.")
-            exit()
-        else:
-            assert(fasta.id == chrom)
 
-            #writes selected chromosome to output
-            SeqIO.write(fasta,scaffold_fa,"fasta")
+        #writes selected chromosome to output
+        SeqIO.write(fasta,scaffold_fa,"fasta")
 
     return scaffold_fa
 

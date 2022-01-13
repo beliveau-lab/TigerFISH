@@ -12,8 +12,6 @@ assembly:
 samples:
     - "chrX"
 
-#bowtie index to generate alignments
-bowtie_idx: "/net/beliveau/vol1/home/eaguil/tigerfish/bt2_indices/t2t/t2t"
 
 bt2_alignments: 300000
 

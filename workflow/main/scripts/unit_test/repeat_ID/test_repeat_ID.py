@@ -422,7 +422,7 @@ def test_nucleotide_range(bed_file,chrom):
     index_end = [7,10]
 
     #fill expected dataframe to test collapsed behavior
-    expected_chrom = ["chr1"]
+    expected_chrom = ["chrX"]
     expected_start = [2]
     expected_end = [30]
 
@@ -437,8 +437,12 @@ def test_nucleotide_range(bed_file,chrom):
     seq_range = pd.DataFrame(list(zip(kmer_start, kmer_end)), 
                                     columns =['r_start', 'r_end'])
 
+    print(seq_range)
+
     seq_index_range = pd.DataFrame(list(zip(index_start,index_end)),
                                    columns =['r_index_start','r_index_end'])
+
+    print(seq_index_range)
 
     #let's add a column to the dataframe that will contain the
     #chromosome information

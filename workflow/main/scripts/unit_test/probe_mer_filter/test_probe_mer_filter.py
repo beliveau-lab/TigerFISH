@@ -215,8 +215,8 @@ def test_rm_shared_mer_probes(file_path, enrich_score, copy_num, merlength,
     region_df.drop(['mers_list'], axis=1, inplace=True)
    
     #validates that if a particular prop of k-mers are shared
-    #only 1/2 probes remains
-    assert(len(region_df) == 1)
+    #2/2 probes remains
+    assert(len(region_df) == 2)
 
     return region_df
 

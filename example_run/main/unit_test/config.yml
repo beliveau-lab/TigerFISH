@@ -1,8 +1,10 @@
 
 assembly: "chm13"
 
+fasta_file: "data/example.fa"
+
 chrom_name:
-    - "chr1"
+    - "chrX"
 
 #parameters for repeat_ID step
 window:
@@ -47,4 +49,8 @@ max_off_target:
                                                             
 max_pdups_binding:
     - 0.60
+
+seed_length: 20
+
+model_temp: 74.5
 

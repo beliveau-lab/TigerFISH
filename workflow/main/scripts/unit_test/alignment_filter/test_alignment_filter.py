@@ -43,19 +43,17 @@ def test_read_probe_filter():
     """
 
     #derived probe information comes from the chr10 probe in first chm13 panel
-    chrom_list = ["chr10","chr11","chr12"]
-    start_list = [6560,62000,75000]
-    stop_list = [6630,62046, 75048]
-    seq_list = ["ACACAGAATCATTCTCAACAACTACTTTGTGATGTGCACGT",
-        "ACAATCTTTTGTAGAATCTGCGATTGGAGATTTGGACTGCT",
-        "ACAAAGATGTTTCCTTTTCTACATTTGGCCTAAAAGCGCT"]
-    tm_list = [42.58, 42.37, 42.02]
-    region_list = ["chr10:39276592-43246446", "chr11:50669854-54493613",
-        "chr12:34483438-37375817"]
-    r_count = [36560, 59686, 44205]
-    h_count = [36630, 59729, 44476]
-    k_score = [0.998, 0.99, 0.99]
-    k_norm = [3.0, 1.48, 1.35]
+    chrom_list = ["chrX","chrX"]
+    start_list = [118,159]
+    stop_list = [158,198]
+    seq_list = ["AAATGATTGGTTCAAAACCAGGGTGACAAGTTGATGAAGTC",
+        "ATAATAGGTTTATGATGCTGATCACCCTCTCTCACCTGGT"]
+    tm_list = [42.07, 42.19]
+    region_list = ["chrX:1-300", "chrX:1-300"]
+    r_count = [24,24]
+    h_count = [24,24]
+    k_score = [1.0,1.0]
+    k_norm = [3.0,3.0]
 
     #load into dataframe
     probe_df = pd.DataFrame({'chrom':chrom_list,
@@ -113,6 +111,8 @@ def test_read_probe_filter():
     #rearrange cols
     probe_df = probe_df[['probe_coords','region','probe','Tm','r_count',
                          'h_count','k_score','k_norm']]
+
+    print(probe_df)
 
     #checks that the probe_df is populated
     assert(len(probe_df) != 0)
@@ -186,6 +186,8 @@ def filter_thresh(r_thresh,bowtie_idx,pdups_p,bt2_k_val,
         #this takes into account single instances of probe in repeat
         probe_list = group['probe'].tolist()
         probe_coords_list = group['probe_coords'].tolist()
+
+        print(probe_list)
 
         #make a list of the repeat regions
         probe_regions_list = group['region'].tolist()
@@ -427,9 +429,8 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bt2_k_val):
             strand_conc_b,NUPACK_MODEL)
 
         #checks that pdups values are computed correctly
-        assert(test_pdups == 0.9917303254236717 or 
-            test_pdups == 0.9921297321764659 or
-            test_pdups == 0.9978070507972542)
+        assert(test_pdups == 0.9991956572567842 or 
+            test_pdups == 0.9996010508341882)
 
         #zip the parent seq and the derived seq
         for ps,ds in zip(parent_seq,derived_seq):
@@ -758,13 +759,10 @@ def nupack_sum(pairwise_df,probe_region_dict):
                 off_total += pdups
 
         #assertions test that on and off target vals are correct
-        assert(on_total == 1219.9941278248148 or
-            on_total == 3278.4038973929432 or
-            on_total == 2073.847171092172)
+        assert(on_total == 0.9991956572567842 or
+            on_total == 0.9996010508341882)
 
-        assert(off_total == 3.1929246891416825 or
-            off_total == 2.983591104887683 or
-            off_total == 17.272901102089975)
+        assert(off_total == 0)
 
         #instead of a list this should be a dictionary
         prop_dict[key] = (on_total)/(on_total+off_total)

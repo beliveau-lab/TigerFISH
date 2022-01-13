@@ -41,7 +41,7 @@ def test_read_bed(bed_file):
 
     """
     #make a dataframe that matches the provide test  file
-    chrom_list = ["chr1","chr2"]
+    chrom_list = ["chrX","chr2"]
     start_list = [1,1]
     stop_list = [50,100]
 
@@ -79,7 +79,7 @@ def test_split_write_bed(bed_file,chrom,bed_out):
     bed_df = test_read_bed(bed_file)
 
     #generate new test dataframe to probe correct chrom is subset
-    chrom_list = ["chr1"]
+    chrom_list = ["chrX"]
     start_list = [1]
     stop_list = [50]
 
