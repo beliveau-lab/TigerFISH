@@ -1,4 +1,4 @@
-configfile: "../../../example_run/main/defined_coords/config.yml"
+configfile: "../../../example_run/main/main_pipeline/config.yml"
 
 SAMPLES = config["samples"]
 ASSEMBLY = config["assembly"]
@@ -103,7 +103,7 @@ if config['repeat_discovery'] == 'TRUE':
         output:
             out_bed = "pipeline_output/02_intermediate_files/01_repeat_ID/{sample}_regions.bed",
         shell:
-            "python ../../../workflow/main/scripts/main/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed} -m {params.mer}"
+            "python ../../../workflow/main/scripts/main/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -m {params.mer} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
 
 def input_for_design_probes(wildcards):
     # requires a config containing switches for the whole workflow
@@ -185,8 +185,8 @@ if config['defined_coords'] == 'TRUE':
             k_val = config['bt2_alignments'],
             max_off_target = config['max_off_target'],
             max_pdups_binding = config['max_pdups_binding'],
-            seed_length = config['seed_length'],
-            model_temp = config['model_temp']
+            seed_length = config["seed_length"],
+            model_temp = config["model_temp"]
         benchmark:
             "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
         output:
@@ -208,7 +208,7 @@ if config['repeat_discovery'] == 'TRUE':
         output:
             chrom_dir = directory("pipeline_output/02_intermediate_files/05_split_regions/{sample}/")
         shell:
-            "python ../../../workflow/main/scripts/split_filter.py -f {input} -o {output}"
+            "python ../../../workflow/main/scripts/main/split_filter.py -f {input} -o {output}"
 
     rule alignment_filter:
         input:
@@ -224,8 +224,8 @@ if config['repeat_discovery'] == 'TRUE':
             k_val = config['bt2_alignments'],
             max_off_target = config['max_off_target'],
             max_pdups_binding = config['max_pdups_binding'],
-            seed_length = config['seed_length'],
-            model_temp = config['model_temp']
+            seed_length = config["seed_length"],
+            model_temp = config["model_temp"]
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
         output:
