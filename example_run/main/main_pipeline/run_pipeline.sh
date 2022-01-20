@@ -9,7 +9,7 @@
 
 # configure file paths
 CONFIG_FILE='config.yml'
-SNAKE_FILE='../../../workflow/main/repeat_ID/Snakefile'
+SNAKE_FILE='../../../workflow/main/main_pipeline/Snakefile'
 CONDA_ENVS='../../../shared_conda_envs'
 WORK_DIR='/net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_01_10_github_unit_test_integ/git_clone/TigerFISH/example_run/main/repeat_ID'
 
