@@ -28,6 +28,13 @@ release = '2022'
 
 # -- General configuration ---------------------------------------------------
 
+def get_version():
+    """Return package version from setup.cfg."""
+    config = RawConfigParser()
+    config.read(os.path.join('..', 'setup.cfg'))
+    return config.get('metadata', 'version')
+
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
