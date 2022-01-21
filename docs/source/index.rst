@@ -22,8 +22,22 @@ An upcoming web resource for model organisms |:tropical_fish:|
 First steps
 -----------
 
-Feature overview
+If you are learning on how to get started with `Tigerfish`, we recommend learning about correct install and usage as a part of the tutorial for getting started. 
+
+* **Tutorial**: :doc: `/tutorial/index`
+
+* **Getting started**:
+    :doc: `Feature Overview` </features>` |
+
+Tigerfish Feature overview
 -----------
+
+Learn more about different use cases that may suit your own research applications.
+
+* **Overview of core features**:
+    :doc: `/repeat_discovery` |
+    :doc: `/defined_coord_probe_design` |
+    :doc: `post_processing`
 
 How to Guides
 -----------
@@ -45,7 +59,8 @@ How to Guides
 
 
 Indices and tables
-==================
+-----------
+
 
 * :ref:`genindex`
 * :ref:`modindex`
