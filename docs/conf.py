@@ -9,11 +9,12 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
 
+import os
+import sys
+from configparser import RawConfigParser
+
+import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
@@ -36,6 +37,14 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'doc_extensions',
+    'sphinx_tabs.tabs',
+    'sphinx-prompt',
+    'notfound.extension',
+    'hoverxref.extension',
+    'sphinx_search.extension',
+    'sphinxemoji.sphinxemoji',
+    'myst_parser',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -44,7 +53,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = [_build]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -53,6 +62,15 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+tatic_path = ['_static', f'{docset}/_static']
+html_css_files = ['css/custom.css', 'css/sphinx_prompt_css.css']
+html_js_files = ['js/expand_tabs.js']
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_logo = 'img/logo.svg'
+html_theme_options = {
+    'logo_only': True,
+    'display_version': False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
