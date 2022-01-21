@@ -62,11 +62,8 @@ exclude_patterns = ['_build']
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
-tatic_path = ['_static', f'{docset}/_static']
-html_css_files = ['css/custom.css', 'css/sphinx_prompt_css.css']
-html_js_files = ['js/expand_tabs.js']
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-html_logo = 'img/logo.svg'
+html_logo = 'img/tigerfish.png'
 html_theme_options = {
     'logo_only': True,
     'display_version': False,
