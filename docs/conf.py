@@ -37,7 +37,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-    'sphinx_search.extension',
     'sphinxemoji.sphinxemoji',
     'myst_parser',
 ]
