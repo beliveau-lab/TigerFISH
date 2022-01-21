@@ -29,12 +29,18 @@ How to Guides
 -----------
 
 .. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: First steps
 
-    usage
-    Tigerfish tutorial
-    api
-    glossary
+   /tutorial/index
+   /intro/getting-started-with-sphinx
+   /intro/getting-started-with-mkdocs
 
+   /intro/import-guide
+   /features
+   /choosing-a-site
+   /glossary
 
 
 
