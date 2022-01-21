@@ -3,9 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-=====================================
+#################################################################
 Tigerfish: A tool for repetitive DNA oligonucleotide probe design
-=====================================
+#################################################################
+
 
 Tigerfish is a technology and software tool that enables users to design oligonucleotide FISH experiments specific for satellite DNA and repetitive DNA families at the scale of genomes. Tigerfish is comprised of the following resources for repetitive probe design:
 
@@ -17,17 +18,18 @@ An interactive web application for probe design that will include diverse model 
 
 Tigerfish is intended to be a user-friendly and interactive probe design tool for exploring and visualizing abundantly repetitive DNA targets in genomes using oligo technology. You can find out more about all of Tigerfish's features in these pages.
 
-=====================================
+#################################################################
 First steps
-=====================================
+#################################################################
 
-=====================================
+#################################################################
 Feature overview
-=====================================
+#################################################################
 
-=====================================
+#################################################################
 How to Guides
-=====================================
+#################################################################
+
 
 .. toctree::
 
