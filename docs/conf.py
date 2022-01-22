@@ -16,8 +16,8 @@ from configparser import RawConfigParser
 
 import sphinx_rtd_theme
 
-sys.path.insert(0, os.path.abspath('..'))
-sys.path.append(os.path.dirname(__file__))
+#sys.path.insert(0, os.path.abspath('..'))
+#sys.path.append(os.path.dirname(__file__))
 
 # -- Project information -----------------------------------------------------
 
@@ -31,11 +31,11 @@ release = '2022'
 
 # -- General configuration ---------------------------------------------------
 
-def get_version():
-    """Return package version from setup.cfg."""
-    config = RawConfigParser()
-    config.read(os.path.join('.', 'setup.cfg'))
-    return config.get('metadata', 'version')
+#def get_version():
+#    """Return package version from setup.cfg."""
+#    config = RawConfigParser()
+#    config.read(os.path.join('.', 'setup.cfg'))
+#    return config.get('metadata', 'version')
 
 
 # Add any Sphinx extension module names here, as strings. They can be
