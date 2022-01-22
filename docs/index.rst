@@ -17,7 +17,7 @@ Provides downstream oligo probe analyses |:bar_chart:|
 An upcoming web resource for model organisms |:tropical_fish:|
         An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q3 2022).
 
-`Tigerfish` is intended to serve as a resource for exploring and visualizing abundantly repetitive DNA targets in genomes using oligo technology. You can find out more about features and functionality in these pages. Happy FISHing! :fish:
+`Tigerfish` is intended to serve as a resource for exploring and visualizing abundantly repetitive DNA targets in genomes using oligo technology. You can find out more about features and functionality in these pages. Happy FISHing! |:fish:|
 
 First steps
 -----------
