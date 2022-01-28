@@ -47,7 +47,7 @@ How to Guides
    :hidden:
    :caption: First steps
 
-   tutorial/index.rst
+   /tutorial/index
    /intro/getting-started-with-sphinx
    /intro/getting-started-with-mkdocs
 
