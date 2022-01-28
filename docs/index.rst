@@ -24,7 +24,7 @@ First steps
 
 If you are learning on how to get started with `Tigerfish`, we recommend learning about correct install and usage as a part of the tutorial for getting started. 
 
-* **Tutorial**: :doc: `/tutorial/index`
+* **Tutorial**: :doc: `tutorial/index.rst`
 
 * **Getting started**:
     :doc: `Feature Overview` </features>` |
@@ -47,7 +47,7 @@ How to Guides
    :hidden:
    :caption: First steps
 
-   /tutorial/index
+   tutorial/index.rst
    /intro/getting-started-with-sphinx
    /intro/getting-started-with-mkdocs
 
