@@ -99,7 +99,8 @@ def read_probe_filter(p_file):
 def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                bowtie_idx,r_thresh,bowtie_string,
                                NUPACK_MODEL,pdups_p,bt2_k_val,
-                               max_off_target_sum,max_pdups_binding,seed_length):
+                               max_off_target_sum,max_pdups_binding,seed_length,
+                               max_probe_return,min_on_target):
     """
     Function implements filter by returning probe cands until on target sum
     for a target region is reached.
@@ -150,7 +151,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
 
         #while the threshold count is below the param requested and 
         #the length of the probe list is greater than 1
-        while (threshold_count <= r_thresh and len(probe_list) >= 1):
+        while (threshold_count <= r_thresh and len(keep_probe_names_list) < int(max_probe_return) and len(probe_list) >= 1):
 
             #make the call for the top probe to get the pairwise df
             top_probe_al = generate_pairwise_df(probe_list[0],
@@ -173,6 +174,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
             for key,val in prop_dict.items():
                 if (val >= pdups_p and 
                     off_target_dict[key] <= int(max_off_target_sum) and
+                    on_target_dict[key] >= int(min_on_target) and
                     len(keep_probe_names_list) == 0):
 
                     #append probe and it's relevant on target and off
@@ -190,7 +192,8 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                 #now if there are new items being added to the keep list
                 if (val >= pdups_p and
                     off_target_dict[key] <= int(max_off_target_sum) and
-                    len(keep_probe_names_list) >= 1):
+                    on_target_dict[key] >= int(min_on_target) and
+                    len(keep_probe_names_list) >= 1) :
 
                     #invoke the pdups function to compare if the cand
                     #probe satisfies the threshold requirements for pdups
@@ -722,16 +725,23 @@ def main():
     requiredNamed.add_argument('-t', '--model_temp', action='store',
                            required=True, default = 74.5,
                            help='NUPACK model temp, (C)')
-    requiredNamed.add_argument('-ot', '--max_off_target', action='store',
-                           required=True, default = 100, 
-                           help='The max off target aggregate pdups binding'
-                           'sum to consider a probe')
     requiredNamed.add_argument('-pb', '--max_pdups_binding', action='store',
                            required=True, default = 0.60, 
                            help='In order for a probe to be added into a'
                            'list to be kept, its pdups value with all'
                            'probes must be below this max pdups binding val')
-    
+    requiredNamed.add_argument('-moT', '--min_on_target', action='store',
+                           required=True, default = 1000,
+                           help='The min on target aggregate pdups binding'
+                           'sum to consider a probe')
+    requiredNamed.add_argument('-Mr', '--max_probe_return', action='store',
+                           required=True, default = 10,
+                           help='Either aggregate on target is returned or'
+                           'max probe number is returned first.')
+    requiredNamed.add_argument('-MoT', '--max_off_target', action='store',
+                           required=True, default = 100,
+                           help='The max off target aggregate pdups binding'
+                           'sum to consider a probe')
     args = userInput.parse_args()
     p_file = args.probe_file
     o_file = args.out_file
@@ -743,6 +753,8 @@ def main():
     max_pdups_binding = args.max_pdups_binding
     seed_length = args.seed_length
     model_temp = args.model_temp
+    min_on_target = args.min_on_target
+    max_probe_return = args.max_probe_return
 
     #the bowtie string settings used for running the alignment algorithm
     bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
@@ -776,7 +788,9 @@ def main():
                                                                bt2_k_val,
                                                                max_off_target_sum,
                                                                max_pdups_binding,
-                                                               seed_length)
+                                                               seed_length, 
+                                                               max_probe_return,
+                                                               min_on_target)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

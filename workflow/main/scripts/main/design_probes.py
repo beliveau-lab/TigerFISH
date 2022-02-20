@@ -54,7 +54,7 @@ def make_fasta_from_bed(bed, region_fa, genome_fa):
 
 ##############################################################################
 
-def blockParse_run(region_fa,name,probe_out):
+def blockParse_run(region_fa,name,probe_out,min_len,min_temp,max_len,max_temp):
     """
     This function takes the provided fasta seqs derived from the bed file
     and passes each repeat seq into the refactoredBlockParse script from
@@ -99,8 +99,8 @@ def blockParse_run(region_fa,name,probe_out):
     #which can now handle multi-lined fastas
     for names,sequences in dict_name_seq.items():
         
-        probes=bp.runSequenceCrawler(sequences,names,name, 36, 41, 20, 80, 
-                                     mt.DNA_NN3, 42, 47,
+        probes=bp.runSequenceCrawler(sequences,names,name, int(min_len), int(max_len), 20, 80, 
+                                     mt.DNA_NN3, int(min_temp), int(max_temp),
                                      'AAAAA,TTTTT,CCCCC,GGGGG', 390, 50, 0,
                                      25, 25, None, True ,False, False, False,
                                      False, False,(str(probe_out)))
@@ -140,6 +140,14 @@ def main():
     requiredNamed.add_argument('-c', '--chrom_name', action='store',
                                required=True, help='The name of chromosome'
                                'undergoing probe design')
+    requiredNamed.add_argument('-l', '--min_len', action='store',
+                               required=True, help='min len of probe')
+    requiredNamed.add_argument('-L', '--max_len', action='store',
+                               required=True, help='max len of probe')
+    requiredNamed.add_argument('-t', '--min_temp', action='store',
+                               required=True, help='min Tm of probe')
+    requiredNamed.add_argument('-T', '--max_temp', action='store',
+                               required=True, help='max Tm of probe')
     
     args = userInput.parse_args()
     bed = args.bed_name
@@ -147,13 +155,17 @@ def main():
     probe_out = args.probes_out
     genome_fa = args.genome_fasta
     name = args.chrom_name
+    min_len = args.min_len
+    max_len = args.max_len
+    min_temp = args.min_temp
+    max_temp = args.max_temp
     
     
     make_fasta_from_bed(bed,region_fa,genome_fa)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    blockParse_run(region_fa,name,probe_out)
+    blockParse_run(region_fa,name,probe_out,min_len,min_temp,max_len,max_temp)
     
     print("---%s seconds ---"%(time.time()-start_time))
 
