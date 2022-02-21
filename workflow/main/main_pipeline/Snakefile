@@ -190,13 +190,15 @@ if config['defined_coords'] == 'TRUE':
             max_off_target = config['max_off_target'],
             max_pdups_binding = config['max_pdups_binding'],
             seed_length = config["seed_length"],
-            model_temp = config["model_temp"]
+            model_temp = config["model_temp"],
+            min_on_target = config["min_on_target"],
+            max_probe_return = config["max_probe_return"]
         benchmark:
             "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
         output:
             "pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -k {params.k_val} -MoT {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return}"
 
 if config['repeat_discovery'] == 'TRUE':
     checkpoint gather_repeat_regions:
@@ -229,13 +231,15 @@ if config['repeat_discovery'] == 'TRUE':
             max_off_target = config['max_off_target'],
             max_pdups_binding = config['max_pdups_binding'],
             seed_length = config["seed_length"],
-            model_temp = config["model_temp"]
+            model_temp = config["model_temp"],
+            min_on_target = config["min_on_target"],
+            max_probe_return = config["max_probe_return"]
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
         output:
             "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -k {params.k_val} -ot {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -k {params.k_val} -MoT {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return}"
 
     # aggregate paths to dynamically created files
     def aggregate_input(wildcards):

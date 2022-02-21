@@ -13,19 +13,18 @@ assembly: "chm13"
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
-    - "chr4"
+    - "chr21"
 
 #parameters for repeat_ID step
-window:
-    - 4000
-threshold: 
-    - 5
-composition:
-    - 0.25
-file_start:
-    - 0
+window: 4000
 
-#parameters for probe design step
+threshold: 5
+
+composition: 0.25
+
+file_start: 0
+
+#parameters for probe_design step
 min_length: 25
 
 max_length: 50
@@ -64,3 +63,7 @@ max_pdups_binding: 0.60
 seed_length: 20
 
 model_temp: 74.5
+
+min_on_target: 1000
+
+max_probe_return: 10
