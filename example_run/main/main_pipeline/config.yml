@@ -1,6 +1,6 @@
 
 #path to genome fasta
-fasta_file: "../../../../../../t2t_v1_1/chm13v1.1.hg002Y.fasta"
+fasta_file: "data/example.fa"
 
 #if coordinates are provided for probe design, file goes here
 #bed_file: "data/dxz4_synthetic.bed"
@@ -13,7 +13,7 @@ assembly: "chm13"
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
-    - "chr21"
+    - "chrX"
 
 #parameters for repeat_ID step
 window: 4000
