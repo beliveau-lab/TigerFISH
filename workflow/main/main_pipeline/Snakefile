@@ -121,14 +121,18 @@ rule design_probes:
     params:
         mfree="60G",
         h_rt="200:0:0",
-        chrom_name = "{sample}"
+        chrom_name = "{sample}",
+        min_length = config["min_length"],
+        max_length = config["max_length"],
+        min_temp = config["min_temp"],
+        max_temp = config["max_temp"]
     benchmark:
         "pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/{sample}_log.log"
     output:
         designed_probes = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_blockParse_probe_df.bed",
         probe_fa = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_probe_regions.fa"
     shell:
-        "python ../../../workflow/main/scripts/main/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa}"
+        "python ../../../workflow/main/scripts/main/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa} -l {params.min_length} -L {params.max_length} -t {params.min_temp} -T {params.max_temp}"
 
 rule kmer_filter:
     input:

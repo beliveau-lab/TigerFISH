@@ -1,6 +1,6 @@
 
 #path to genome fasta
-fasta_file: "data/example.fa"
+fasta_file: "../../../../../../t2t_v1_1/chm13v1.1.hg002Y.fasta"
 
 #if coordinates are provided for probe design, file goes here
 #bed_file: "data/dxz4_synthetic.bed"
@@ -13,7 +13,7 @@ assembly: "chm13"
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
-    - "chrX"
+    - "chr4"
 
 #parameters for repeat_ID step
 window:
@@ -25,37 +25,42 @@ composition:
 file_start:
     - 0
 
+#parameters for probe design step
+min_length: 25
+
+max_length: 50
+
+min_temp: 42
+
+max_temp: 52
 
 #parameters for kmer_filter script
-mer_val:
-    - 18
-c1_val:
-    - 5
-c2_val:
-    - 1
+mer_val: 18
+
+c1_val: 1
+
+c2_val: 5
 
 
 #parameters used for probe_mer_filter script
-enrich_score:
-    - 0.50
-copy_num:
-    - 10
+enrich_score: 0.90
+
+copy_num: 100
 
 
 #parameters used in alignment_filter script
-pdups:
-    - 0.95
-probe_count:
-    - 0
-target_sum:
-    - 5000
-mer_cutoff:
-    - 0.95
-bt2_alignments:
-    - 300000
-max_off_target:
-    - 100
-max_pdups_binding:
-    - 0.60
+pdups: 0.95
+
+target_sum: 5000
+
+mer_cutoff: 0.95
+
+bt2_alignments: 300000
+
+max_off_target: 100
+
+max_pdups_binding: 0.60
+
 seed_length: 20
+
 model_temp: 74.5
