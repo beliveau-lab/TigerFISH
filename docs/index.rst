@@ -27,7 +27,15 @@ If you are learning on how to get started with `Tigerfish`, we recommend learnin
 * **Tutorial**: :doc:`/tutorial/index`
 
 * **Getting started**:
-    :doc: `Feature Overview` </features>` |
+    :doc: `Feature Overview` </features>`
+
+.. toctree::
+      :maxdepth: 2
+   :hidden:
+   :caption: First steps
+
+   /tutorial/index
+   /intro/getting_started
 
 Tigerfish Feature overview
 -----------
@@ -37,7 +45,8 @@ Learn more about different use cases that may suit your own research application
 * **Overview of core features**:
     :doc: `/repeat_discovery` |
     :doc: `/defined_coord_probe_design` |
-    :doc: `post_processing`
+    :doc: `/post_processing` |
+    :doc: `/parameter_definitions`
 
 How to Guides
 -----------
@@ -45,23 +54,12 @@ How to Guides
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: First steps
+   :caption: Feature Overview
 
    /tutorial/index
-   /intro/getting-started-with-sphinx
-   /intro/getting-started-with-mkdocs
-
-   /intro/import-guide
-   /features
-   /choosing-a-site
-   /glossary
+   /intro/repeat_discovery
+   /intro/defined_coords
+   /intro/post_processing
+   /intro/glossary
 
 
-
-Indices and tables
------------
-
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
