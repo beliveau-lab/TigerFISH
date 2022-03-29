@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 """
-Created on Mon Jun 28 18:16:08 2021
+Created on Tues March 29
 @author: Robin Aguilar
 Beliveau and Noble Labs
 University of Washington | Department of Genome Sciences
@@ -28,17 +28,14 @@ def read_probe_filter(p_file):
     Function takes probe file, adjusts probe start and end to coordinates
     that match the repeat region syntax. Then removes redundant columns 
     before returning the file as a dataframe.
-
     Parameters
     ----------
     p_file : file
         contains the probe information after filtering
-
     Returns
     -------
     probe_df : dataframe
         returns probe information as a pandas dataframe
-
     """
 
     #read in the file with the appropriate column names
@@ -73,7 +70,7 @@ def read_probe_filter(p_file):
         probe_coords_list.append('%s:%s-%s' % (chrom,start,end))
 
     probe_df['probe_coords'] = probe_coords_list
-    
+
     #now do the same for region again
     r_start_list = probe_df['r_start'].tolist()
     r_end_list = probe_df['r_end'].tolist()
@@ -98,18 +95,16 @@ def read_probe_filter(p_file):
 
 def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                bowtie_idx,r_thresh,bowtie_string,
-                               NUPACK_MODEL,pdups_p,bt2_k_val,
-                               max_off_target_sum,max_pdups_binding,seed_length,
-                               max_probe_return,min_on_target):
+                               NUPACK_MODEL,bt2_k_val,max_pdups_binding,
+                               seed_length,max_probe_return,min_on_target,
+                               genomic_bins,thresh):
     """
     Function implements filter by returning probe cands until on target sum
     for a target region is reached.
-
     Parameters
     ----------
     probe_df : dataframe
         contains probes that have been filtered by mer count and uniqeness
-
     Returns
     -------
     on_target_dict : dictionary
@@ -121,7 +116,6 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
     prop_target_dict : dictionary
         the proportion of on_target pdups binding sum/ all pdups binding
         for all probes
-
     """
 
     #need to make lists to store the probe names, on target, off target, prop
@@ -133,7 +127,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
 
     #initiate groupby
     grouped_region=probe_df.groupby('region',sort=False)
-    
+
     for name,group in grouped_region:
 
         #this takes into account single instances of probe in repeat
@@ -151,7 +145,9 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
 
         #while the threshold count is below the param requested and 
         #the length of the probe list is greater than 1
-        while (threshold_count <= r_thresh and len(keep_probe_names_list) < int(max_probe_return) and len(probe_list) >= 1):
+        while (threshold_count <= r_thresh and 
+               len(keep_probe_names_list) < int(max_probe_return) and 
+               len(probe_list) >= 1):
 
             #make the call for the top probe to get the pairwise df
             top_probe_al = generate_pairwise_df(probe_list[0],
@@ -167,13 +163,20 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
             prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
                                                                   region_dict)
 
+            #function that makes a temp .bed of alignments and gets overlap
+            #embedded function that takes both overlap inputs to return pileup
+            #returns: agg by chrom, and pileup subset if pileup ok, then proceed
+            signal_pileup_subset,chrom_summ_df = get_bedtools_map(name,
+                                                                  genomic_bins,
+                                                                  top_probe_al,
+                                                                  thresh)
+
+
             #checks the items in the proportion dictionary
-            #if the value of pdups passes the desired user cutoff
-            #and has an off target aggregate pdups sum in it's target
             #and this is the first item  to be added into the empty list
+            #evals if any bins are off target
             for key,val in prop_dict.items():
-                if (val >= pdups_p and 
-                    off_target_dict[key] <= int(max_off_target_sum) and
+                if ((signal_pileup_subset['bin_type'] == 1).all() == True and
                     on_target_dict[key] >= int(min_on_target) and
                     len(keep_probe_names_list) == 0):
 
@@ -190,21 +193,21 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                     threshold_count += on_target_dict[key]
 
                 #now if there are new items being added to the keep list
-                if (val >= pdups_p and
-                    off_target_dict[key] <= int(max_off_target_sum) and
+
+                if ((signal_pileup_subset['bin_type'] == 1).all() == True and
                     on_target_dict[key] >= int(min_on_target) and
                     len(keep_probe_names_list) >= 1) :
 
                     #invoke the pdups function to compare if the cand
                     #probe satisfies the threshold requirements for pdups
                     pdups_track_list = []
-                    
+
                     for probe in keep_probe_seq:
-                        
+
                         pdups_compare = pdups(probe_list[0],probe,
                                               strand_conc_a,strand_conc_b,
                                               NUPACK_MODEL)
-                        
+
                         pdups_track_list.append(pdups_compare)
 
                     if max(pdups_track_list) <= float(max_pdups_binding):
@@ -236,7 +239,6 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     """
     Function will make the dictionaries into pandas dataframes where the 
     cols are read as probe, on target, off target, on target pdups prop
-
     Parameters
     ----------
     probe_df :  dataframe
@@ -254,7 +256,6 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     Returns
     -------
     None. Writes output file with probes to keep and relevant info
-
     """
 
     #make the three dicts into a dataframe
@@ -281,7 +282,6 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     keep_probes_df.to_csv(o_file, header=False, index=False, sep="\t")
 
 ##############################################################################
-
 def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
                          bt2_k_val,seed_length):
@@ -300,12 +300,10 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
         a probe sequence of interest from the filtered probe dataframe
     probe_coords : string
         the coordinates of the probe sequence
-
     Returns
     -------
     pairwise_df : dataframe
         includes parent seq, derived seq, and pdups score
-
     """
 
     #begin looping over each RR to write a tmp file
@@ -390,7 +388,6 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string,seed_length):
     """
     Function runs bowtie2
-
     Parameters
     ----------
     fq_file : fastq file 
@@ -402,12 +399,10 @@ def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string,seed_length):
         by bowtie2
     bowtie_idx: path
         the file path to the bt2 idx for a particular genome
-
     Returns
     -------
     sam_file : sam file
         the temp sam file to be generated
-
     """
 
     #use subprocess to call bowtie
@@ -426,7 +421,6 @@ def samtools_call(sam_file,bam_file):
     """
     Function takes the sam file derived and generates a bam file to run
     sam2pairwise
-
     Parameters
     ----------
     sam_file : sam file
@@ -434,13 +428,11 @@ def samtools_call(sam_file,bam_file):
     bam_file : name of output bam file
         bam contains the appropriate format to parse out alignment
         sequences
-
     Returns
     -------
     bam_file : name of output bam file
         bam contains the appropriate format to parse out alignment
         sequences
-
     """
 
     #call subprocess to cast sam file into bam file
@@ -450,22 +442,18 @@ def samtools_call(sam_file,bam_file):
     return bam_file
 
 ##############################################################################
-
 def sam2pairwise_call(bam_file):
     """
     Function calls sam2pairwise to generate derived sequences for each
     recorded alignment from bowtie2 
-
     Parameters
     ----------
     bam_file : bam file
         contains sequences in the appropriate format
-
     Returns
     -------
     s2p : sam to pairwise output
         contains probe sequence and derived alignment sequence
-
     """
 
     #calls on subprocess to generate sam2pairwise output file
@@ -479,26 +467,22 @@ def sam2pairwise_call(bam_file):
 
 
 ##############################################################################
-
 def process_pairwise(pairwise_file):
     """
     Function takes the sam2pairwise output file and parses out the derived
     sequences into a pandas dataframe. Returns a compact version where
     sequences are collapsed into unique pairs as well as the version
     that is not condensed into unique pairs
-
     Parameters
     ----------
     pairwise_file : sam2pairwise output
         output of running sam2pairiwise
-
     Returns
     -------
     pairwise_df : dataframe
         the full pairwise dataframe of alignments
     unique_probes_df : dataframe
         the collapsed dataframe with unique pairs of alignments
-
     """
 
     #create list to add dictionary of rows
@@ -533,24 +517,20 @@ def process_pairwise(pairwise_file):
     return pairwise_df, unique_probes_df
 
 ##############################################################################
-
 def pdups(seq1,seq2,strand_conc_a,strand_conc_b,NUPACK_MODEL):
     """
     Function implements NUPACK by invoking the NUPACK model and computing
     pdups over two sequences of interest, taking the RC of seq2
-
     Parameters
     ----------
     seq1 : string
         sequence string 1 (parent probe)
     seq2 : string
         sequence string 2 (derived alignment)
-
     Returns
     -------
     pdups_score : float
         the computed pdups score by nupack
-
     """
 
     a = nupack.Strand(seq1, name='a')
@@ -573,14 +553,12 @@ def nupack_sum(pairwise_df,probe_region_dict):
     """
     Function computes the sum of nupack scores that correspond to on target
     and off target binding
-
     Parameters
     ----------
     pairwise_df :  dataframe
         contains probes, corresponding alignment, derived from sam2pairwise.
     probe_region_dict : dictionary
         contains information about the probe and repeat region in a dict
-
     Returns
     -------
     total_prop_dict : dictionary
@@ -589,7 +567,6 @@ def nupack_sum(pairwise_df,probe_region_dict):
         probe is key and on target binding sum is value.
     total_off_target_dict : dictionary
         probe is key and off target binding sum is value.
-
     """
 
     #make a col that includes the derived end
@@ -690,6 +667,240 @@ def nupack_sum(pairwise_df,probe_region_dict):
 
 ##############################################################################
 
+def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+
+        #the file for the bed file overlap
+        repeat_filename = tmpdir + '/region.bed'
+
+        repeat_overlap_out = tmpdir + '/overlap_out.bed'
+
+        #write the repeat contents as a bed file
+        repeat_bed = open(repeat_filename, 'w')
+
+        #split the string on chars
+        probe_region = probe_region.replace(":","\t")
+        probe_region = probe_region.replace("-","\t")
+
+        #write repeat into file format
+        repeat_bed.write(str(probe_region))
+
+        repeat_bed.close()
+
+        #subprocess call to get overlap file
+        subprocess.call(['bedtools', 'intersect', '-wa', '-wb', '-a',
+                         repeat_filename, '-b', genome_bin_file],
+                    stdout=open(repeat_overlap_out,'w'))
+
+        #read repeat file as dataframe
+        colnames = ["chrom", "start", "stop", "chrom_b","start_b","stop_b"]
+        repeat_overlap_out_df = pd.read_csv(repeat_overlap_out,
+                                            names=colnames,header=None,
+                            sep='\t')
+
+       #the tmp file for the alignments
+        alignment_file = tmpdir + '/probe_alignments.tsv'
+
+        #drop cols
+        columns = ['probe_ID', 'parent', 'derived', 'pdups', 
+                   'repeat_coords', 'parent_chrom', 'region',
+                   'r_start', 'r_end']
+        
+        top_probe_al_coords = top_probe_al.drop(columns,axis=1)
+
+        #write contents of df to file
+        top_probe_al_coords.to_csv(alignment_file, header=False,
+                                   index=False, sep="\t")
+
+        probe_overlap_out = tmpdir + '/probe_overlap_out.bed'
+
+        #subprocess call to get overlap file
+        subprocess.call(['bedtools', 'intersect', '-wa', '-wb', '-a',
+                         alignment_file, '-b', genome_bin_file],
+                    stdout=open(probe_overlap_out,'w'))
+
+        #read probe overlap filer as dataframe
+        colnames = ["chrom", "start", "stop", "chrom_b","start_b","stop_b"]
+        probe_overlap_out_df = pd.read_csv(probe_overlap_out,
+                                           names=colnames,
+                                           header=None,sep='\t')
+
+        #format pDups file correctly for map function
+        columns = ['align_end','repeat_coords','parent_chrom',
+                   'region','r_start','r_end']
+        top_probe_al_map = top_probe_al.drop(columns,axis=1)
+
+        top_probe_al_map = top_probe_al_map[["probe_ID","parent","derived",
+                "align_chr","align_start","pdups"]]
+
+        #read repeat file as dataframe
+        colnames = ["chrom","bin_start","bin_stop"]
+        genome_bin_file_df = pd.read_csv(genome_bin_file, names=colnames,
+                                         header=None,sep='\t')
+
+        signal_pileup_subset,chrom_summ_df = map_alignments_by_bin(genome_bin_file_df,
+                                                                   probe_overlap_out_df,
+                                                                   repeat_overlap_out_df,
+                                                                   top_probe_al_map,thresh)
+
+        return signal_pileup_subset,chrom_summ_df
+
+##############################################################################
+
+def map_alignments_by_bin(chr_track,chr_overlap,repeat_overlap,pairs_pdups,thresh):
+
+    """
+    Function takes the genome bin file, the bedtools intersect file, and
+    the pairwise file containing pdups computes to process them as 
+    dataframes.
+    
+    Parameters
+    ----------
+    chr_track_file : file
+        file containing the 1Mb bins of the genome
+    chr_overlap_bed : file
+        bedtools intersect output over alignment coords
+    repeat_overlap_bed: file
+        bedtools intersect output over repeat region coords
+    pDups_scores : file
+        file from alignment output
+    Returns
+    -------
+    chr_track : dataframe
+        bed file containing the coordinates of 1Mb bins
+    chr_overlap : dataframe
+        contains the overlaps of bedtools intersect on alignments
+    repeat_overlap: dataframe
+        contains the overlaps of the bedtools intersect on repeat region
+    pairs_pdups : dataframe
+        contains the pairwise output
+    """
+
+    #label columns for ground file with the bed tracks
+    chr_track=chr_track[~chr_track.chrom.str.contains("M")]
+
+    #label columns for matching overlaps
+    chr_overlap=chr_overlap[~chr_overlap.chrom.str.contains("M")]
+
+    #label columns for matching overlaps
+    repeat_overlap=repeat_overlap[~repeat_overlap.chrom.str.contains("M")]
+
+    #label columns for data where you have the nupack data
+    pairs_pdups=pairs_pdups[~pairs_pdups.derived.str.contains("M")]
+
+    pairs_pdups = pairs_pdups.drop(['parent', 'derived'], axis = 1)
+
+    derived_coords_list = pairs_pdups['align_chr'].tolist()
+    starts_list = pairs_pdups['align_start'].tolist()
+    pdups_vals_list = pairs_pdups['pdups'].tolist()
+
+    pairs_pdups_dict = {}
+    bin_dict = {}
+    bin_coords_list = []
+
+    chrom_list = chr_overlap['chrom'].tolist()
+    start_list = chr_overlap['start'].tolist()
+    start_b_list = chr_overlap['start_b'].tolist()
+    stop_b_list = chr_overlap['stop_b'].tolist()
+
+    for chrom,start,start_b,stop_b in zip(chrom_list,start_list,
+                                          start_b_list,stop_b_list):
+        
+        coord_key = str(chrom) + "_" + str(start)
+        coord_vals = str(start_b) + "_" + str(stop_b)
+        bin_dict[coord_key] = coord_vals
+
+    for chrom,start,pdup in zip(derived_coords_list,starts_list,
+                                pdups_vals_list):
+        
+        coord_key = str(chrom) + "_" + str(start)
+        if coord_key in bin_dict:
+            bin_coords_list.append(bin_dict[coord_key])
+
+    pairs_pdups['bin_label'] = bin_coords_list
+
+    #split bin column into two seperate cols
+
+    pairs_pdups[['bin_start','bin_stop']] = pairs_pdups['bin_label'].str.split('_',expand=True)
+
+    #remove intermediate column
+    pairs_pdups = pairs_pdups.drop(['probe_ID', 'align_start', 'bin_label'], axis=1)
+
+    pairs_pdups = pairs_pdups[["align_chr","bin_start","bin_stop","pdups"]]
+
+    pairs_pdups.columns = ['chrom','bin_start','bin_stop','pdups']
+
+    bin_sums = pairs_pdups.groupby(['chrom','bin_start','bin_stop'])['pdups'].sum().reset_index()
+
+    #subset items in chr_track not in bin sums
+
+    #drop pdups for now 
+    bins_w_vals = bin_sums.drop(['pdups'], axis = 1)
+
+    chr_track['bin_start']=chr_track['bin_start'].astype(int)
+    chr_track['bin_stop']=chr_track['bin_stop'].astype(int)
+    bins_w_vals['bin_start']=bins_w_vals['bin_start'].astype(int)
+    bins_w_vals['bin_stop']=bins_w_vals['bin_stop'].astype(int)
+
+    #subset rows not in bins with vals
+    common = bins_w_vals.merge(chr_track,on=['chrom', 'bin_start',
+                                             'bin_stop'],how='left')
+
+    not_overlapping = pd.merge(chr_track, common, how='left', indicator=True) \
+           .query("_merge == 'left_only'") \
+           .drop('_merge',1)
+
+    not_overlapping['pdups'] = 0.0
+
+    #now merge with nupack
+    frames = [bin_sums,not_overlapping]
+
+    merged = pd.concat(frames)
+
+    merged = merged.sort_values(by=['chrom','bin_start','bin_stop'])
+
+    #here you should read in the repeat dataframe to get the chrom_start_stops
+    chrom_list = repeat_overlap['chrom_b'].tolist()
+    start_list = repeat_overlap['start_b'].tolist()
+    stop_list = repeat_overlap['stop_b'].tolist()
+
+    #make a dictionary storing location as key lookup
+    repeat_dict = {}
+
+    for chrom,start,stop in zip(chrom_list,start_list,stop_list):
+        repeat_key = str(chrom) + "_" + str(start) + "_" + str(stop)
+        repeat_dict[repeat_key] = 1
+
+    #store values of bin type (target = 1, non = 0)
+    bin_type = []
+
+    #make lists to generate key lookups of all bins
+    bin_chrom_list = merged['chrom'].tolist()
+    bin_start_list = merged['bin_start'].tolist()
+    bin_stop_list = merged['bin_stop'].tolist()
+
+    for chrom,start,stop in zip(bin_chrom_list,bin_start_list,bin_stop_list):
+        location_key = str(chrom) + "_" + str(start) + "_" + str(stop)
+        if location_key in repeat_dict:
+            bin_type.append(1)
+        else:
+            bin_type.append(0)
+
+    #annotates whether bin is considered target or non-target
+    merged['bin_type'] = bin_type
+
+    #subset the signal over particular regions of interest
+    signal_pileup_subset = merged.loc[merged['pdups'] >= int(thresh)]
+
+    #summarize all signals by chromosome in table form 
+    chrom_summ_df = merged.groupby(['chrom'])['pdups'].sum().reset_index()
+
+    return signal_pileup_subset,chrom_summ_df
+
+##############################################################################
+                                                                          
+
 def main():
 
     start_time=time.time()
@@ -709,24 +920,21 @@ def main():
     userInput.add_argument('-r', '--region_threshold', action='store',
                            default=5000, type=int, help='The total'
                            'on-target binding sum to reach by repeat region')
-    userInput.add_argument('-p', '--pdups_prop', action='store',default=0.95,
-                           type=float, help='The on target proportion'
-                           'cutoff to keep a probe')
     requiredNamed.add_argument('-b', '--bowtie_index', action='store',
                            required=True, help='The path to the bowtie'
                            'index to run the alignment algorithm')
     requiredNamed.add_argument('-k', '--bt2_max_align', action='store',
-                           required=True, default = 300000, 
+                           required=True, default = 300000,
                            help='The max number of alignments to be returned'
                            'by bowtie')
     requiredNamed.add_argument('-l', '--seed_length', action='store',
-                           required=True, default = 20, 
+                           required=True, default = 20,
                            help='Seed length when returning bt2 alignments')
     requiredNamed.add_argument('-t', '--model_temp', action='store',
                            required=True, default = 74.5,
                            help='NUPACK model temp, (C)')
     requiredNamed.add_argument('-pb', '--max_pdups_binding', action='store',
-                           required=True, default = 0.60, 
+                           required=True, default = 0.60,
                            help='In order for a probe to be added into a'
                            'list to be kept, its pdups value with all'
                            'probes must be below this max pdups binding val')
@@ -738,23 +946,24 @@ def main():
                            required=True, default = 10,
                            help='Either aggregate on target is returned or'
                            'max probe number is returned first.')
-    requiredNamed.add_argument('-MoT', '--max_off_target', action='store',
-                           required=True, default = 100,
-                           help='The max off target aggregate pdups binding'
-                           'sum to consider a probe')
+    requiredNamed.add_argument('-gb', '--genomic_bin', action = 'store',
+                           required = True, help = 'genome binned file')
+    requiredNamed.add_argument('-th', '--thresh', action='store',
+                               required=True, help='pdups >= to subset')
+
     args = userInput.parse_args()
     p_file = args.probe_file
     o_file = args.out_file
     r_thresh = args.region_threshold
-    pdups_p = args.pdups_prop
     bowtie_idx = args.bowtie_index
     bt2_k_val = args.bt2_max_align
-    max_off_target_sum = args.max_off_target
     max_pdups_binding = args.max_pdups_binding
     seed_length = args.seed_length
     model_temp = args.model_temp
     min_on_target = args.min_on_target
     max_probe_return = args.max_probe_return
+    genomic_bins = args.genomic_bin
+    thresh = args.thresh
 
     #the bowtie string settings used for running the alignment algorithm
     bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
@@ -784,13 +993,13 @@ def main():
                                                                r_thresh,
                                                                bowtie_string,
                                                                NUPACK_MODEL,
-                                                               pdups_p,
                                                                bt2_k_val,
-                                                               max_off_target_sum,
                                                                max_pdups_binding,
-                                                               seed_length, 
+                                                               seed_length,
                                                                max_probe_return,
-                                                               min_on_target)
+                                                               min_on_target,
+                                                               genomic_bins,
+                                                               thresh)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

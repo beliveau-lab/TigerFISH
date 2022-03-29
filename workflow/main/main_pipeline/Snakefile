@@ -174,11 +174,29 @@ rule probe_mer_filter:
     shell:
         "python ../../../workflow/main/scripts/main/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
 
+rule generate_genome_bins:
+    input:
+        sizes = config["chrom_sizes_file"]
+    output:
+        "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
+    conda:
+        "envs/tigerfish.yml"
+    params:
+        mfree="20G",
+        h_rt = "10:0:0",
+        genome = config['assembly'],
+        window = config['genome_windows']
+    benchmark:
+        "pipeline_output/benchmark/01_reference_files/01_bin_genome/genome_bins.txt"
+    shell:
+        'bedtools makewindows -g {input.sizes} -w {params.window} > {output}'
+
 if config['defined_coords'] == 'TRUE':
     rule alignment_filter:
         input:
             probe_files = rules.probe_mer_filter.output,
-            bt2_idx = rules.generate_bt2_indices.output
+            bt2_idx = rules.generate_bt2_indices.output,
+            genome_bins = rules.generate_genome_bins.output
         conda:
             "../envs/tigerfish.yml"
         params:
@@ -192,13 +210,14 @@ if config['defined_coords'] == 'TRUE':
             seed_length = config["seed_length"],
             model_temp = config["model_temp"],
             min_on_target = config["min_on_target"],
-            max_probe_return = config["max_probe_return"]
+            max_probe_return = config["max_probe_return"],
+            off_bin_thresh = config["off_bin_thresh"]
         benchmark:
             "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
         output:
             "pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -k {params.k_val} -MoT {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh}"
 
 if config['repeat_discovery'] == 'TRUE':
     checkpoint gather_repeat_regions:
@@ -219,7 +238,8 @@ if config['repeat_discovery'] == 'TRUE':
     rule alignment_filter:
         input:
             probe_files = "pipeline_output/02_intermediate_files/05_split_regions/{sample}/{region}.txt",
-            bt2_idx = rules.generate_bt2_indices.output
+            bt2_idx = rules.generate_bt2_indices.output,
+            genome_bins = rules.generate_genome_bins.output
         conda:
             "../envs/tigerfish.yml"
         params:
@@ -233,13 +253,14 @@ if config['repeat_discovery'] == 'TRUE':
             seed_length = config["seed_length"],
             model_temp = config["model_temp"],
             min_on_target = config["min_on_target"],
-            max_probe_return = config["max_probe_return"]
+            max_probe_return = config["max_probe_return"],
+            off_bin_thresh = config["off_bin_thresh"]
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
         output:
             "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.pdups_prop} -k {params.k_val} -MoT {params.max_off_target} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh}"
 
     # aggregate paths to dynamically created files
     def aggregate_input(wildcards):

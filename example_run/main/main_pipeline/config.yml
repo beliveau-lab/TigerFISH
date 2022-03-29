@@ -2,6 +2,9 @@
 #path to genome fasta
 fasta_file: "data/example.fa"
 
+#path to file containing primary chromosome sizes
+chrom_sizes_file: "data/chm13.chrom.sizes"
+
 #if coordinates are provided for probe design, file goes here
 #bed_file: "data/dxz4_synthetic.bed"
 
@@ -48,21 +51,17 @@ copy_num: 100
 
 
 #parameters used in alignment_filter script
-pdups: 0.95
-
 target_sum: 5000
 
 mer_cutoff: 0.95
 
-bt2_alignments: 300000
-
-max_off_target: 100
+bt2_alignments: 500000
 
 max_pdups_binding: 0.60
 
-seed_length: 20
+seed_length: 15
 
-model_temp: 74.5
+model_temp: 69.5
 
 min_on_target: 1000
 
