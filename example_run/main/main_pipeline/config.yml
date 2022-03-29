@@ -51,7 +51,11 @@ copy_num: 100
 
 
 #parameters used in alignment_filter script
+genome_windows: 5000000
+
 target_sum: 5000
+
+off_bin_thresh: 120 
 
 mer_cutoff: 0.95
 
