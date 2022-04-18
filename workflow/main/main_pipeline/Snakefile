@@ -200,8 +200,8 @@ if config['defined_coords'] == 'TRUE':
         conda:
             "../envs/tigerfish.yml"
         params:
-            mfree="50G",
-            h_rt="200:0:0",
+            mfree="12G",
+            h_rt="350:0:0",
             region_thresh = config['target_sum'],
             k_val = config['bt2_alignments'],
             max_pdups_binding = config['max_pdups_binding'],
@@ -224,8 +224,8 @@ if config['repeat_discovery'] == 'TRUE':
         conda:
             "../envs/tigerfish.yml"
         params:
-            mfree="50G",
-            h_rt="200:0:0"
+            mfree="5G",
+            h_rt="350:0:0"
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/05_split_regions/{sample}_log.log"
         output:
@@ -241,8 +241,8 @@ if config['repeat_discovery'] == 'TRUE':
         conda:
             "../envs/tigerfish.yml"
         params:
-            mfree="50G",
-            h_rt="200:0:0",
+            mfree="12G",
+            h_rt="350:0:0",
             region_thresh = config['target_sum'], 
             k_val = config['bt2_alignments'],
             max_pdups_binding = config['max_pdups_binding'],
