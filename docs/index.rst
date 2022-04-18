@@ -34,7 +34,7 @@ If you are learning on how to get started with `Tigerfish`, we recommend learnin
    :hidden:
    :caption: First steps
 
-   /tutorial/index
+   tutorial/index
    /intro/getting_started
 
 Tigerfish Feature overview
@@ -56,10 +56,4 @@ How to Guides
    :hidden:
    :caption: Feature Overview
 
-   /tutorial/index
-   /intro/repeat_discovery
-   /intro/defined_coords
-   /intro/post_processing
-   /intro/glossary
-
-
+   tutorial/index
