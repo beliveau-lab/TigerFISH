@@ -43,3 +43,5 @@ To deploy Tigerfish on your own data, update the file paths in config.yml with t
 
 This pipeline is implemented using Snakemake, and distributed according to best practices. If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started.
 
+Test update.
+
