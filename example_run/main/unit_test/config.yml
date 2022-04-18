@@ -1,0 +1,56 @@
+
+assembly: "chm13"
+
+fasta_file: "data/example.fa"
+
+chrom_name:
+    - "chrX"
+
+#parameters for repeat_ID step
+window:
+    - 4000
+threshold: 
+    - 5
+composition:
+    - 0.25
+file_start:
+    - 0
+
+#parameters for kmer_filter script
+mer_val:
+    - 18
+c1_val:
+    - 5
+c2_val:
+    - 1
+
+##parameters used for probe_mer_filter script
+enrich_score:
+    - 0.001
+                                
+copy_num:
+    - 5
+
+##parameters used in alignment_filter script
+pdups:
+    - 0.60
+
+target_sum:
+    - 5000
+
+mer_cutoff:
+    - 0.05
+
+bt2_alignments:
+    - 300000
+                                                        
+max_off_target:
+    - 100
+                                                            
+max_pdups_binding:
+    - 0.60
+
+seed_length: 20
+
+model_temp: 74.5
+

@@ -28,7 +28,7 @@ from Bio.Seq import Seq
 
 def read_probes(file_path,out_path,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
-                         bt2_k_val):
+                         bt2_k_val,seed_length):
     """
     Function implements pairwise alignment once reading in probe file as a 
     dataframe
@@ -66,7 +66,8 @@ def read_probes(file_path,out_path,bowtie_idx,bowtie_string,
     probe_alignment = generate_pairwise_df(probe[0],probe_coords[0],
                                             bowtie_idx,bowtie_string,
                                             strand_conc_a,strand_conc_b,
-                                            NUPACK_MODEL,bt2_k_val)
+                                            NUPACK_MODEL,bt2_k_val,
+                                            seed_length)
                     
     probe_alignment.to_csv(out_path, header=False, index=False, sep="\t")
 
@@ -75,7 +76,7 @@ def read_probes(file_path,out_path,bowtie_idx,bowtie_string,
 
 def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
-                         bt2_k_val):
+                         bt2_k_val,seed_length):
     """
     Function will take a probe sequence and generate an alignment against
     the entire genome with given bowtie2 string and indices. Then, 
@@ -117,9 +118,9 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
         #now you want to take the fastq and I think run bt2
         sam_file = tmpdir + '/derived.sam'
 
-        #the value 300000 is = k, or the max number of alignments returned
+        #creates sam file
         sam_file = bt2_call(fastq_filename,sam_file,bt2_k_val,
-                            bowtie_idx,bowtie_string)
+                            bowtie_idx,bowtie_string,seed_length)
 
         bam_file = tmpdir + '/derived.bam'
         bam_file = samtools_call(sam_file,bam_file)
@@ -178,7 +179,7 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 
 ##############################################################################
 
-def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string):
+def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string,seed_length):
     """
     Function runs bowtie2
 
@@ -206,7 +207,8 @@ def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string):
          '-U', str(fq_file),
          '-k',str(k_val),
          bowtie_string,
-         '-S', str(sam_file)])
+         '-S', str(sam_file),
+         '-L', str(seed_length)])
 
     return sam_file
 
@@ -381,20 +383,28 @@ def main():
                            required=True, default = 300000, 
                            help='The max number of alignments to be returned'
                            'by bowtie')
-    
+    requiredNamed.add_argument('-l', '--seed_length', action='store',
+                           required=True, default = 20, 
+                           help='Seed length when returning bt2 alignments')
+    requiredNamed.add_argument('-t', '--model_temp', action='store',
+                           required=True, default = 74.5,
+                           help='NUPACK model temp, (C)')
+
     args = userInput.parse_args()
     file_path = args.file_path
     out_path = args.out_path
     bowtie_idx = args.bowtie_index
     bt2_k_val = args.bt2_max_align
+    seed_length = args.seed_length
+    model_temp = args.model_temp
     
     #the bowtie string settings used for running the alignment algorithm
-    bowtie_string = "--local -N 1 -L 20 -R 3 -D 20 -i C,4 --score-min G,1,4"
+    bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
 
     # configure nupack model for use
     NUPACK_MODEL = nupack.Model(
         material = 'dna',
-        celsius = 74.5,
+        celsius = float(model_temp),
         sodium = 0.39,
         magnesium = 0.0,
         ensemble = 'stacking')
@@ -406,7 +416,7 @@ def main():
     
     read_probes(file_path,out_path,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
-                         bt2_k_val)
+                         bt2_k_val,seed_length)
     
     print("---%s seconds ---"%(time.time()-start_time))
     

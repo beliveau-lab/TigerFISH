@@ -20,6 +20,18 @@ import pandas as pd
 ##############################################################################
 
 def read_probe_file(file_path):
+    """
+    This function reads the parsed file from sam2pairwise alignments
+    
+    Parameters
+    ----------
+    file_path : file
+        file containing alignments from sam2pairwise with computed pdups
+    Returns
+    -------
+    probe_data : dataframe
+        dataframe of probe alignments and pdups values
+    """
     
     colnames = ["probe_coords","probe_seq","derived_seq","chrom","start",
                 "pdups"]
@@ -31,7 +43,19 @@ def read_probe_file(file_path):
 ##############################################################################
 
 def generate_bed(probe_df,out_path):
+    """
+    This function generates a bed file of all alignments provided in probe_df
     
+    Parameters
+    ----------
+    probe_df : dataframe
+        contains probe alignments and sequence info
+    Returns
+    -------
+    None. 
+        Output file contains bed coordinates of alignments identified.
+    """
+
     #make the start and sequences into lists
     derived_seq_list = probe_df['derived_seq'].tolist()
     derived_start_list = probe_df['start'].tolist()

@@ -1,0 +1,174 @@
+configfile: "../../../example_run/main/unit_test/config.yml"
+
+ASSEMBLY = config["assembly"]
+
+rule all:
+    input:
+        'pipeline_output/done/test_main_done.txt'
+
+rule generate_jf_count:
+    input:
+        fasta_file = config["fasta_file"]
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mer = config["mer_val"],
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log'
+    output:
+        'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
+    shell:
+        "jellyfish count -s 3300M -m {params.mer} -o {output} {input.fasta_file}"
+
+BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+rule generate_bt2_indices:
+    input:
+        fasta_file = config["fasta_file"]
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="60G",
+        h_rt = "20:0:0"
+    benchmark:
+        'pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log'
+    output:
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.1.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.2.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.3.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.4.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.1.bt2',
+        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.2.bt2',
+    shell:
+        'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
+    
+rule generate_jf_idx:
+    input:
+        fasta_file = config["fasta_file"],
+        jf = rules.generate_jf_count.output 
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="40G",
+        h_rt = "20:0:0",
+        mer = config["mer_val"],
+        chrom_name = config["chrom_name"]
+    output:
+        jf_count = 'pipeline_output/01_generate_jf_idx_test/test_jf_temp.txt',
+        chrom_idx = 'pipeline_output/01_generate_jf_idx_test/test_index.txt',
+        chrom_fa = 'pipeline_output/01_generate_jf_idx_test/test.fa'
+    shell:
+        "pytest -s ../../../workflow/main/scripts/unit_test/generate_jf_idx/test_generate_jf_idx.py --fa_file {input.fasta_file} --jf_idx {input.jf} --chrom {params.chrom_name} --k_mer_length {params.mer} --scaffold_fa {output.chrom_fa} --jf_out {output.jf_count} --index_out {output.chrom_idx}"
+
+rule repeat_ID:
+    input:
+        chrom_idx = rules.generate_jf_idx.output.chrom_idx,
+        jf_count = rules.generate_jf_idx.output.jf_count
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="40G",
+        h_rt = "20:0:0",
+        chrom_name = config["chrom_name"]
+    output:
+        "pipeline_output/02_repeat_ID/test_chrom_out.bed"
+    shell:
+        "pytest -s ../../../workflow/main/scripts/unit_test/repeat_ID/test_repeat_ID.py --index_file {input.chrom_idx} --jf_count {input.jf_count} --bed_file {output} --chrom {params.chrom_name}"
+
+rule split_bed:
+    input:
+        bed = 'data/coords.bed'
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="10G",
+        h_rt="5:0:0",
+        chrom_name = config["chrom_name"]
+    output:
+        'pipeline_output/03_split_bed/test_split_chrom_out.bed'
+    shell:
+        "pytest -s ../../../workflow/main/scripts/unit_test/split_bed/test_split_bed.py --bed_file {input.bed} --chrom {params.chrom_name} --bed_out {output}"
+
+rule design_probes:
+    input:
+        bed = rules.repeat_ID.output,
+        region_fa = rules.generate_jf_idx.output.chrom_fa,
+        genome_fa = rules.generate_jf_idx.input.fasta_file,
+        test_regions = 'data/chrX_test_regions.fa'
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="10G",
+        h_rt="5:0:0",
+        chrom_name = config["chrom_name"]
+    output:
+        'pipeline_output/04_design_probes/chrom_test_probes.tsv'
+    shell:
+        'pytest -s ../../../workflow/main/scripts/unit_test/design_probes/test_design_probes.py --bed {input.bed} --region_fa {input.region_fa} --name {params.chrom_name} --genome_fa {input.genome_fa} --test_regions {input.test_regions} --probe_out {output}'
+
+rule kmer_filter:
+    input:
+        probe_file = rules.design_probes.output,
+        fasta_file = rules.design_probes.input.test_regions,
+        jf_file = rules.generate_jf_idx.output.jf_count
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="10G",
+        h_rt="5:0:0"
+    output:
+        "pipeline_output/05_kmer_filter/test_probes_out.tsv"
+    shell:
+        "pytest -s ../../../workflow/main/scripts/unit_test/kmer_filter/test_kmer_filter.py --probe_file {input.probe_file} --fasta_file {input.fasta_file} --jf_file {input.jf_file} --o_path {output}"
+
+rule probe_mer_filter:
+    input:
+        kmer_probe = rules.kmer_filter.output
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="10G",
+        h_rt="5:0:0",
+        enrich_score = config['enrich_score'],
+        copy_num = config['copy_num'],
+        mer_cutoff = config['mer_cutoff'],
+        merlength = config['mer_val']
+    output:
+        "pipeline_output/06_probe_mer_filter/test_probe_mer_out.tsv"
+    shell:
+        "pytest -s ../../../workflow/main/scripts/unit_test/probe_mer_filter/test_probe_mer_filter.py --file_path {input.kmer_probe} --out_path {output} --enrich_score {params.enrich_score} --copy_num {params.copy_num} --mer_cutoff {params.mer_cutoff} --merlength {params.merlength}"
+
+rule alignment_filter:
+    input:
+        probe_filter = rules.probe_mer_filter.output,
+        bt2_out = rules.generate_bt2_indices.output
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="10G",
+        h_rt="5:0:0",
+        r_thresh = config['target_sum'],
+        pdups_p = config['pdups'],
+        bt2_k_val = config['bt2_alignments'] ,
+        max_off_target = config['max_off_target'],
+        max_pdups_binding = config['max_pdups_binding'] 
+    output:
+        "pipeline_output/07_alignment_filter/test_probes_alignment.tsv"
+    shell:
+        "pytest -s ../../../workflow/main/scripts/unit_test/alignment_filter/test_alignment_filter.py --o_file {output} --r_thresh {params.r_thresh} --pdups_p {params.pdups_p} --bowtie_idx {BOWTIE2_DIR}/{ASSEMBLY} --bt2_k_val {params.bt2_k_val} --max_off_target_sum {params.max_off_target} --max_pdups_binding {params.max_pdups_binding}"
+
+rule finish:
+    input:
+        rules.alignment_filter.output,
+        rules.split_bed.output
+    conda:
+        "../../../workflow/main/envs/tigerfish.yml"
+    params:
+        mfree="10G",
+        h_rt="5:0:0"
+    output:
+        "pipeline_output/done/test_main_done.txt"
+    shell:
+        'touch {output}'
+    

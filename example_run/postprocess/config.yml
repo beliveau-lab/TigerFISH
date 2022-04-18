@@ -2,16 +2,25 @@
 #the input genome chrom sizes file
 genome_windows: "data/chm13.chrom.sizes"
 
+bowtie2_dir: '../main_pipeline/expected_pipeline_output/repeat_ID_output/01_reference_files/02_bt2_idx/chm13'
+
 #the output file of interest from probe design
 probe_file: "data/dxz4_test_probe.tsv"
 
-fasta_file: "data/example.fa"
-
-assembly: "chm13"
+assembly:
+    - "chm13"
 
 #scaffolds present in output file
 samples:
     - "chrX"
 
-bt2_alignments:
-    - 300000
+
+bt2_alignments: 300000
+
+window_size: 1000000
+
+
+model_temp: 74.5
+
+seed_length: 20
+
