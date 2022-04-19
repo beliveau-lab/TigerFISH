@@ -16,7 +16,10 @@ import subprocess
 from configparser import RawConfigParser
 import sphinx_rtd_theme
 
-sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
+#sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
+
+sys.path.insert(0, os.path.abspath('..'))
+sys.path.append(os.path.dirname(__file__))
 
 try:
     import numpydoc
@@ -90,7 +93,7 @@ intersphinx_mapping = {
 templates_path = ['_templates']
 
 # The root document.
-#root_doc = 'index.rst'
+root_doc = 'index'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -105,7 +108,7 @@ exclude_patterns = []
 #
 html_theme = 'sphinx_rtd_theme'
 
-master_doc = "index"
+#master_doc = "index"
 
 source_suffix = [".rst", ".md"]
 
