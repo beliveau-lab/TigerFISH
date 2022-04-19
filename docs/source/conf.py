@@ -21,10 +21,10 @@ sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 #sys.path.insert(0, os.path.abspath('..'))
 #sys.path.append(os.path.dirname(__file__))
 
-try:
-    import numpydoc
-except ModuleNotFoundError:
-    subprocess.run(["pip", "install", "numpydoc"], check=True)
+#try:
+#    import numpydoc
+#except ModuleNotFoundError:
+#    subprocess.run(["pip", "install", "numpydoc"], check=True)
 
 
 # -- Project information -----------------------------------------------------
@@ -64,22 +64,22 @@ extensions = [
 
 nbsphinx_execute = "never"
 
-autosummary_generate = True
-autodoc_default_options = {
-    "members": True,
-    "inherited-members": True,
-    "member-order": "bysource",
-}
+#autosummary_generate = True
+#autodoc_default_options = {
+#    "members": True,
+#    "inherited-members": True,
+#    "member-order": "bysource",
+#}
 
-numpydoc_show_class_members = True
-numpydoc_show_inherited_class_members = True
-numpydoc_attributes_as_param_list = True
-intersphinx_mapping = {
-    "pandas": ("https://pandas.pydata.org/docs", None),
-    "sklearn": ("https://scikit-learn.org/stable", None),
-    "numpy": ("https://numpy.org/doc/stable", None),
-    "matplotlib": ("https://matplotlib.org", None),
-}
+#numpydoc_show_class_members = True
+#numpydoc_show_inherited_class_members = True
+#numpydoc_attributes_as_param_list = True
+#intersphinx_mapping = {
+#    "pandas": ("https://pandas.pydata.org/docs", None),
+#    "sklearn": ("https://scikit-learn.org/stable", None),
+#    "numpy": ("https://numpy.org/doc/stable", None),
+#    "matplotlib": ("https://matplotlib.org", None),
+#}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
