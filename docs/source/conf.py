@@ -92,8 +92,6 @@ intersphinx_mapping = {
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-# The root document.
-root_doc = 'index'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -108,7 +106,7 @@ exclude_patterns = []
 #
 html_theme = 'sphinx_rtd_theme'
 
-#master_doc = "index"
+master_doc = "index"
 
 source_suffix = [".rst", ".md"]
 
