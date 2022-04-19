@@ -58,7 +58,6 @@ extensions = [
     "recommonmark",
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
-    "sphinx_tabs.tabs",
     "sphinx-prompt",
     "sphinx_search.extension",
     "sphinx.ext.intersphinx",
