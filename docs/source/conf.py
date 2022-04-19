@@ -57,7 +57,12 @@ extensions = [
     "sphinxarg.ext",
     "nbsphinx",
     "recommonmark",
-    "sphinxemoji.sphinxemoji",
+    'sphinx.ext.duration',
+    'sphinx_tabs.tabs',
+    'sphinx-prompt',
+    'sphinx_search.extension',
+    'sphinx.ext.intersphinx',
+    'sphinxemoji.sphinxemoji',
     "myst_parser",
 ]
 
