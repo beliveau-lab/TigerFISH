@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Tigerfish: A tool for repetitive DNA oligonucleotide probe design
-=======================================
+=================================================================
 
 `Tigerfish` is a user-friendly and interactive software tool that allows for the design of oligonucleotide FISH experiments specific for satellite DNA and repetitive DNA families at the scale of genomes.
 

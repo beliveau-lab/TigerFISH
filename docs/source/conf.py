@@ -16,15 +16,15 @@ import subprocess
 from configparser import RawConfigParser
 import sphinx_rtd_theme
 
-#sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 
 #sys.path.insert(0, os.path.abspath('..'))
 #sys.path.append(os.path.dirname(__file__))
 
-#try:
-#    import numpydoc
-#except ModuleNotFoundError:
-#    subprocess.run(["pip", "install", "numpydoc"], check=True)
+try:
+    import numpydoc
+except ModuleNotFoundError:
+    subprocess.run(["pip", "install", "numpydoc"], check=True)
 
 
 # -- Project information -----------------------------------------------------
@@ -68,6 +68,26 @@ extensions = [
     "myst_parser",
 ]
 
+
+nbsphinx_execute = "never"
+
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "inherited-members": True,
+    "member-order": "bysource",
+}
+
+numpydoc_show_class_members = True
+numpydoc_show_inherited_class_members = True
+numpydoc_attributes_as_param_list = True
+intersphinx_mapping = {
+    "pandas": ("https://pandas.pydata.org/docs", None),
+    "sklearn": ("https://scikit-learn.org/stable", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "matplotlib": ("https://matplotlib.org", None),
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -75,7 +95,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ["build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -85,8 +105,9 @@ exclude_patterns = []
 #
 html_theme = 'sphinx_rtd_theme'
 
-#master_doc = "index"
+html_static_path = ["_static"]
 
+master_doc = "index"
 source_suffix = [".rst", ".md"]
 
 html_theme_options = {
@@ -101,4 +122,4 @@ html_css_files = [
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_logo = "_static/tigerfish.png"
