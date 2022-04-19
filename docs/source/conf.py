@@ -105,7 +105,7 @@ exclude_patterns = []
 #
 html_theme = 'sphinx_rtd_theme'
 
-#master_doc = "index"
+master_doc = "index"
 
 source_suffix = [".rst", ".md"]
 
