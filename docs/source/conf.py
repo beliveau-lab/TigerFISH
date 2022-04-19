@@ -57,8 +57,7 @@ extensions = [
     'sphinx_search.extension',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
-    'sphinxemoji.sphinxemoji',
-    'myst_parser',
+    'sphinxemoji.sphinxemoji'
 ]
 
 
