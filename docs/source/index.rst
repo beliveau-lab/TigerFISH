@@ -24,27 +24,5 @@ First steps
 
 If you are learning on how to get started with `Tigerfish`, we recommend learning about correct install and usage as a part of the tutorial for getting started. 
 
-* **Tutorial**: :doc:`tutorial/index`
-
-* **Getting started**:
-    :doc: `Feature Overview` </features>`
-
-.. toctree::
-      :maxdepth: 2
-   :hidden:
-   :caption: First steps
-
-   tutorial/index
-   /intro/getting_started
-
 Tigerfish Feature overview
------------
-
-Learn more about different use cases that may suit your own research applications.
-
-* **Overview of core features**:
-    :doc: `/repeat_discovery` |
-    :doc: `/defined_coord_probe_design` |
-    :doc: `/post_processing` |
-    :doc: `/parameter_definitions`
-
+--------------------------
