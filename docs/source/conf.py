@@ -15,7 +15,6 @@ import sys
 import subprocess
 from configparser import RawConfigParser
 import sphinx_rtd_theme
-from multiproject.utils import get_project
 
 sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 
