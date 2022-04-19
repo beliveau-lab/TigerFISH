@@ -49,21 +49,16 @@ release = '2022'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.doctest",
-    "sphinx.ext.coverage",
-    "sphinx.ext.viewcode",
-    "sphinx_rtd_theme",
-    "sphinx.ext.intersphinx",
-    "nbsphinx",
-    "recommonmark",
     'sphinx.ext.duration',
+    'sphinx.ext.doctest',
+    'sphinx.ext.autodoc',
     'sphinx_tabs.tabs',
     'sphinx-prompt',
     'sphinx_search.extension',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
     'sphinxemoji.sphinxemoji',
-    "myst_parser",
+    'myst_parser',
 ]
 
 
