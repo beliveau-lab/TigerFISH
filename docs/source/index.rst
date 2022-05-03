@@ -40,4 +40,66 @@ Installation
 
 2. Proceed with installing Mamba to assist with snakemake installation, as recommended in the Snakemake installation tutorial.
 
-3. Clone the **Tigerfish** repo and create and active the provided environment for implementing Snakemake for Tigerfish:
+.. code-block:: bash
+   $ conda install -n base -c conda-forge mamba
+
+3. Clone the **Tigerfish** repo and create and active the provided environment for implementing Snakemake for **Tigerfish**:
+
+.. code-block:: bash
+   $ git clone https://github.com/beliveau-lab/TigerFISH.git \
+    && cd TigerFISH/ \
+    && mamba env create -f snakemake_env.yml \
+    && conda activate snakemake_env
+
+Basic usage
+-----------
+
+A full tutorial for running **Tigerfish** via command line using both repeat discovery and probe design from user provided bed coordinates in included to test the pipeline installation. To run the pipeline using both cases on sample files:
+
+When repeat coordinates are provided:
+#####################################
+
+.. code-block:: bash
+   $ cd example_run/main/defined_coords/ && . run_pipeline.sh
+
+When repeat discovery is initiated:
+###################################
+
+.. code-block:: bash
+   $ cd example_run/main/repeat_ID/ && . run_pipeline.sh
+
+When these examples are run, expected outputs may be compared `here <>`_ when coordinates are provided and `here <>`_ for repeat discovery mode.
+
+When selected probes undergo post-processing:
+#############################################
+
+To survey how postprocessing is done, a seperate analysis pipeline may be invoked using the command below once both items in the main implementation tutorial have been completed.
+
+.. code-block:: bash
+   $ cd example_run/postprocess/ && . run_pipeline.sh
+
+Further tutorials on usage
+--------------------------
+
+To deploy Tigerfish on your own data, update the file paths in config.yml with the paths to your genome assembly. For more information on input and output files, please read further documentation on our tutorials and glossary of Tigerfish parameters in our documentation.
+
+This pipeline is implemented using `Snakemake <https://snakemake.readthedocs.io/en/stable/index.html>`_, and distributed according to `best practices <https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html>`_. If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started.
+
+Need help?
+##########
+
+Do you still have questions after reading the documentation on this site? The best way to get help is to reach out via the Tigerfish discussion board. 
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: Tigerfish
+   :titlesonly:
+
+   self
+   Tutorials <tutorials.rst>
+   vignettes/index.rst
+   api/index.rst
+   cli.rst
+   FAQ <faq.rst>
+   Code of Conduct <CODE_OF_CONDUCT.md>
