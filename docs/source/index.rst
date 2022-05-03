@@ -41,11 +41,13 @@ Installation
 2. Proceed with installing Mamba to assist with snakemake installation, as recommended in the Snakemake installation tutorial.
 
 .. code-block:: bash
+
    $ conda install -n base -c conda-forge mamba
 
 3. Clone the **Tigerfish** repo and create and active the provided environment for implementing Snakemake for **Tigerfish**:
 
 .. code-block:: bash
+
    $ git clone https://github.com/beliveau-lab/TigerFISH.git \
     && cd TigerFISH/ \
     && mamba env create -f snakemake_env.yml \
