@@ -60,12 +60,14 @@ When repeat coordinates are provided:
 #####################################
 
 .. code-block:: bash
+
    $ cd example_run/main/defined_coords/ && . run_pipeline.sh
 
 When repeat discovery is initiated:
 ###################################
 
 .. code-block:: bash
+
    $ cd example_run/main/repeat_ID/ && . run_pipeline.sh
 
 When these examples are run, expected outputs may be compared `here <>`_ when coordinates are provided and `here <>`_ for repeat discovery mode.
@@ -76,6 +78,7 @@ When selected probes undergo post-processing:
 To survey how postprocessing is done, a seperate analysis pipeline may be invoked using the command below once both items in the main implementation tutorial have been completed.
 
 .. code-block:: bash
+
    $ cd example_run/postprocess/ && . run_pipeline.sh
 
 Further tutorials on usage
