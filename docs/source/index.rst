@@ -104,7 +104,6 @@ Do you still have questions after reading the documentation on this site? The be
    self
    Tutorials <tutorials.rst>
    vignettes/index.rst
-   api/index.rst
    cli.rst
    FAQ <faq.rst>
    Code of Conduct <CODE_OF_CONDUCT.md>
