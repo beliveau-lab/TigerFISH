@@ -7,7 +7,7 @@ How did Tigerfish get it's name?
 If you were to google Tigerfish you might end up finding a picture of a fish that looks like this ...
 
 .. image:: imgs/tigerfish_fish.jpg
-   :width: 200
+   :width: 500
    :alt: A man holding a large striped fish with sharp teeth
 
 There are several species belonging to the "tigerfish" family that are found in many rivers and lakes in Africa. The goliath tigerfish is among the most famous tigerfish which are found in the Congo River system. 
@@ -17,7 +17,7 @@ Despite the very cool animal facts, the freshwater tigerfish is actually complet
 We've also had friends and colleagues share that perhaps tiger stripes are naturally repetitive in nature but we're grateful the tool has a memorable name!
 
 .. image:: imgs/tiger.jpg
-   :width: 200
+   :width: 500
    :alt: A picture of a tiger lying in rest. 
 
 Who designed your logo?
