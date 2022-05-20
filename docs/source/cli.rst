@@ -10,7 +10,7 @@ The `Tigerfish` workflow is managed by Snakemake which is used to scale and auto
 Essentially, each script in the Tigerfish workflow has a set of parameters that may be modified by users. Each script in the main workflow implements these parameters which are called from the pipeline's config.yml file. As a user, one would only need to modify arguments from the config.yml file in order to get Tigerfish working. Named arguments for each script are defined in detail below. Recommended default parameters are also provided that were used for probe mining in the latest version of the CHM13 genome.  
 
 Named Arguments in config.yml for main workflow
-###############################################
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **fasta_file**: File path. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format.
 
@@ -89,8 +89,12 @@ seq2
 Table of default parameters
 ###########################
 
+The following table summarizes parameters used to design and search for repeat specific probes in the fully assembled CHM13 human genome assembly. We would recommend these settings as default parameters depending on the use case. The first column presents a more strict high copy repeat probe search that primarily focuses on searching for large rpeetitive probe arrays that predominantly map to alpha satellite and human satellite repeats. The other two columns present more flexible parameters that will provide many diverse repeat target types including some smaller repeat families such as LINES/SINES, LTRs, etc including larger satellite DNA arrays. 
+
+We also share that these parameters may *not* equally map across genome size. For smaller genomes (mouse, fly, etc.) we recommend decreasing window size to ensure that the window is smaller than that of the smallest scaffold present in the genome assembly if performing repeat identification. Further resources on repeat probe design in model organism genomes is in development. 
+
 .. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
-      :widths: 25 25 50
+   :widths: 25 25 50
    :header-rows: 1
 
    * - Parameter
