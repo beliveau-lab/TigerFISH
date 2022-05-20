@@ -95,7 +95,6 @@ We also share that these parameters may *not* equally map across genome size. Fo
 
 
 .. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
-      :widths: 25 25 50
    :header-rows: 1
 
    * - Parameter
