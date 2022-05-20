@@ -93,9 +93,10 @@ The following table summarizes parameters used to design and search for repeat s
 
 We also share that these parameters may *not* equally map across genome size. For smaller genomes (mouse, fly, etc.) we recommend decreasing window size to ensure that the window is smaller than that of the smallest scaffold present in the genome assembly if performing repeat identification. Further resources on repeat probe design in model organism genomes is in development. 
 
+
 .. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
       :widths: 25 25 50
-      :header-rows: 1
+   :header-rows: 1
 
       * - Parameter
         - Strict high copy repeat probe search mode
