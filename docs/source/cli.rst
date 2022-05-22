@@ -213,11 +213,11 @@ The scripts below are presented in the order that they are executed by the `Tige
 generate_jf_count
 -----------------
 
-Purpose: Generates a Jellyfish index file that is used for counting k-mers downstream.
+**Purpose**: Generates a Jellyfish index file that is used for counting k-mers downstream.
 
-Input: Genome reference FASTA file
+**Input**: Genome reference FASTA file
 
-Output: A genome query hash file containing counts of all k-mers in the form of a .jf file. 
+**Output**: A genome query hash file containing counts of all k-mers in the form of a .jf file. 
 
 .. code-block:: bash
 
@@ -238,11 +238,11 @@ Output: A genome query hash file containing counts of all k-mers in the form of 
 generate_bt2_indices
 ------------------
 
-Purpose: Generates genome Bowtie2 indices which is used for aligning probes to the entire genome of interest.
+**Purpose**: Generates genome Bowtie2 indices which is used for aligning probes to the entire genome of interest.
 
-Input: Genome reference FASTA file
+**Input**: Genome reference FASTA file
 
-Output: Collection of Bowtie2 indices placed in a Bowtie2 directory of your choosing.
+**Output**: Collection of Bowtie2 indices placed in a Bowtie2 directory of your choosing.
 
 .. code-block:: bash
 
@@ -261,11 +261,11 @@ Output: Collection of Bowtie2 indices placed in a Bowtie2 directory of your choo
 generate_jf_idx
 -----------------
 
-Purpose: To generate k-mer count index files using the derived jellyfish hash table from the `generate_jf_count` step. Generates independent k-mer count index files for each scaffold. 
+**Purpose**: To generate k-mer count index files using the derived jellyfish hash table from the `generate_jf_count` step. Generates independent k-mer count index files for each scaffold. 
 
-Inputs: Genome reference FASTA file (FASTA_FILE). Output Jellyfish hash table generated from the `generate_jf_count` step (JF_INDEXFILE)
+**Inputs**: Genome reference FASTA file (FASTA_FILE). Output Jellyfish hash table generated from the `generate_jf_count` step (JF_INDEXFILE)
 
-Outputs: An output jellyfish k-mer count file containing all k-mers within a selected scaffold and it's corresponding counts (JF_OUT). A file that is used to reference the base position of where the start of each k-mer in the output count file occurs (J_INDEX_OUT). A seperated FASTA file of each selected scaffold (SCAFFOLD_FA_OUT).
+**Outputs**: An output jellyfish k-mer count file containing all k-mers within a selected scaffold and it's corresponding counts (JF_OUT). A file that is used to reference the base position of where the start of each k-mer in the output count file occurs (J_INDEX_OUT). A seperated FASTA file of each selected scaffold (SCAFFOLD_FA_OUT).
 
 .. code-block:: bash
 
@@ -291,11 +291,11 @@ Outputs: An output jellyfish k-mer count file containing all k-mers within a sel
 split_bed
 ---------
 
-Purpose:
+**Purpose**: Reads a bed file provided by the user containing coordinates of regions for probe design. If regions on different chromosomes exist,this script will generate independent files for different regions based on chromosome.
 
-Inputs:
+**Inputs**: A BED file provided in the config.yml if `defined_coords` = TRUE.
 
-Outputs:
+**Outputs**: A BED file split by chromosomes if different repeat regions are provided in the input file.
 
 .. code-block:: bash
 
@@ -303,18 +303,23 @@ Outputs:
 
 **config.yml parameters**
 
+* sample (CHROM_NAME)
+* bed_file (BED_FILE)
+
 **Snakemake parameters**
 
-
+* BED_OUT
 
 
 
 repeat_ID
 ---------
 
-Purpose: 
-Input:
-Output:
+**Purpose**: Reads a jellyfish count file of a given scaffold, a chrom index file to account for base location, as well as the path to the chromosome FASTA to generate BED files of genomic regions that have been flagged as having elevated k-mer counts based on user parameters.
+
+**Input**: Jellyfish count and index files derived from generate_jf_idx output.
+
+**Output**: BED File of repeat region coordinates.
  
 .. code-block:: bash
 
@@ -324,13 +329,28 @@ Output:
 
 **config.yml parameters**
 
+* sample (CHR_NAME)
+* file_start (START)
+* window (WINDOW_LENGTH)
+* threshold (THRESHOLD)
+* composition (COMPOSITION_SCORE)
+* mer_val (MER_LENGTH)
+
+**Snakmake parameters**
+
+* JF_COUNT (JF_OUT)
+* INDEX_FILE (JF_INDEXFILE)
+* BED_FILE
+
 
 design_probes
 -------------
 
-Purpose:
-Input:
-Output:
+**Purpose**: Designs oligo probes against identified repeat regions if `repeat_ID` = TRUE. If repeat coordinates provided, probes will be designed here against those regions.
+
+**Input**: Provided **bed_file** or output from repeat_ID step. 
+
+**Output**: File containing probe scaffold, start, stop, melting temperature, probe sequence in a tab seperated file. 
 
 .. code-block:: bash
 
@@ -340,12 +360,29 @@ Output:
 
 **config.yml parameters**
 
+* fasta_file (GENOME_FASTA)
+* sample (CHROM_NAME)
+* min_len (MIN_LEN)
+* max_len (MAX_LEN)
+* min_temp (MIN_TEMP)
+* max_temp (MAX_TEMP)
+
+**Snakemake parameters**
+
+* BED_NAME (BED_FILE)
+* REGION_OUT 
+* PROBES_OUT
+
+
+
 kmer_filter
 -----------
 
-Purpose:
-Input:
-Output:
+Purpose: Takes a probe file generated from design_probes and computes each probe's aggregate on-target region k-mer count and k-mer counts that occur in the whole genome. Rank orders probes based on this on target binding proportion and aggregate on-target region k-mer count. 
+
+Input: Generated probe file, Jellyfish k-mer count file, and the FASTA file provided for all repeat regions. 
+
+Output: A probe file with oligos provided in ranked order based on user parameter preferences.
 
 .. code-block:: bash
 
@@ -354,12 +391,27 @@ Output:
 
 **config.yml parameters**
 
+* c1_val (C1_value)
+* c2_val (C2_value)
+* mer_val (MERLENGTH)
+
+**Snakemake parameters**
+
+* PROBE_FILE (PROBES_OUT)
+* JF_FILE (JF_COUNT)
+* OUT_PATH
+
+
+
 probe_mer_filter
 ----------------
 
-Purpose:
-Input:
-Output"
+Purpose: Takes a probe file that undergoes rank sorting in kmer_filter to cull probes based on user parameters.
+
+Input: Output probe file from kmer_filter step
+
+Output: Provides truncated probe list that will undergo genome wide alignment to identify best candidate probes for each repeat region.
+ 
 
 .. code-block:: bash
 
@@ -368,13 +420,26 @@ Output"
 
 **config.yml parameters**
 
+* enrich_score (ENRICH_SCORE)
+* copy_num (COPY_NUM)
+* mer_cutoff (MER_CUTOFF)
+* mer_val (MERLENGTH)
+
+**Snakemake parameters**
+
+* FILE_PATH (PROBES_OUT)
+* OUT_PATH
+
+
 
 generate_genome_bins
 --------------------
 
-Purpose:
-Input:
-Output:
+Purpose: Takes reference genome file and makes it into bins of a specified size using BEDtools.
+
+Input: Genome chrom.sizes file provided as chrom_sizes_file.
+
+Output: A file containing the chromosome and bin position in a tab seperated file.
 
 .. code-block:: bash
 
@@ -382,11 +447,22 @@ Output:
 
 **config.yml parameters**
 
+* genome_windows {params.window}
+* chrom_sizes_file {input.sizes}
+
+**Snakemake parameters**
+
+* {output}
+
+
+
 alignment_filter
 ----------------
 
 Purpose:
+
 Input:
+
 Output:
 
 .. code-block:: bash
@@ -399,13 +475,30 @@ Output:
 
 **config.yml parameters**
 
+* target_sum (REGION_THRESHOLD)
+* bt2_alignments (BT2_MAX_ALIGN)
+* seed_length (SEED_LENGTH)
+* model_temp (MODEL_TEMP)
+* max_pdups_binding (MAX_PDUPS_BINDING)
+* min_on_target (MIN_ON_TARGET)
+* max_probe_return (MAX_PROBE_RETURN)
+* off_bin_thresh (THRESH)
 
-gather_repeat_regions
+**Snakemake parameters**
+
+* PROBES_OUT (PROBE_FILE) 
+* (OUT_FILE)
+* (BOWTIE_INDEX)
+* genome_windows (GENOMIC_BIN)
+
+gather_repeat_regions (checkpoint)
 ---------------------
 
-Purpose:
-Input:
-Output:
+Purpose: Before alignment, to parallelize multiple repeat regions found within each scaffold, all repeats are split into independent files for parallel computing.
+
+Input: Output filtered probes from probes_mer_filter step.
+
+Output: A series of probe files split by each repeat region and grouped within a scaffold name's directory. 
 
 .. code-block:: bash
 
@@ -413,18 +506,38 @@ Output:
 
 **config.yml parameters**
 
+* None.
+
+**Snakemake parameters**
+
+* PROBES_OUT (FILE_PATH)
+* Specified directory in Snakemake file (OUT_PATH)
+
+
+
 summary
 -------
 
-Purpose:
-Input:
-Output:
+Purpose: Following alignment of all regions, all seperate repeat files are merged into an aggregate probe file. From this probe file statistics are computed that summarizes the total probes per repreat region and their aggregate on and off-target binding. 
+
+Input: Aggregated output from alignment_filter step.
+
+Output: A summary file of total candidates found within each repeat region.
 
 .. code-block:: bash
 
    usage: finish_summary.py [-h] -f PROBE_FILE -o OUT_FILE
 
 **config.yml parameters**
+
+* None
+
+**Snakemake parameters**
+
+* PROBES_OUT (PROBE_FILE)
+* OUT_FILE
+
+
 
 
 Post-process Workflow
