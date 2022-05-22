@@ -87,7 +87,7 @@ seq2
 
 
 Table of default parameters
-###########################
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The following table summarizes parameters used to design and search for repeat specific probes in the fully assembled CHM13 human genome assembly. We would recommend these settings as default parameters depending on the use case. The first column presents a more strict high copy repeat probe search that primarily focuses on searching for large rpeetitive probe arrays that predominantly map to alpha satellite and human satellite repeats. The other two columns present more flexible parameters that will provide many diverse repeat target types including some smaller repeat families such as LINES/SINES, LTRs, etc including larger satellite DNA arrays. 
 
@@ -199,7 +199,7 @@ We also share that these parameters may *not* equally map across genome size. Fo
      - 40
 
 Main workflow
-#############
+^^^^^^^^^^^^^
 
 Here is a simplified DAG of how Snakemake implements scripts in the Tigerfish workflow:
 
@@ -208,13 +208,15 @@ Here is a simplified DAG of how Snakemake implements scripts in the Tigerfish wo
    :alt: A picture of a DAG of the Tigerfish workflow
 
 
-The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Parameters are defined so that they are easy to understand how they can be modified in the config.yml file that executes the pipeline.
+The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, which files are generated at each snakemake step, and where config parameters are called. 
 
 generate_jf_count
 -----------------
 
 Purpose: Generates a Jellyfish index file that is used for counting k-mers downstream.
+
 Input: Genome reference FASTA file
+
 Output: A genome query hash file containing counts of all k-mers in the form of a .jf file. 
 
 .. code-block:: bash
@@ -224,11 +226,16 @@ Output: A genome query hash file containing counts of all k-mers in the form of 
 
 **config.yml parameters**
 
-fasta_file: File path. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format. 
+* mer_val
+* fasta_file
 
-mer_val: Integer value. The k-mer size of interest when designing Jellyfish query files, hash tables, and during comparative sequence composition analyses. Default = 18. 
+**Snakemake parameters**
 
-generate_bt2_index
+* {output}
+
+
+
+generate_bt2_indices
 ------------------
 
 Purpose: Generates genome Bowtie2 indices which is used for aligning probes to the entire genome of interest.
@@ -243,12 +250,15 @@ Output: Collection of Bowtie2 indices placed in a Bowtie2 directory of your choo
 
 **config.yml parameters**
 
-ASSEMBLY = String. The name of the genome assembly being used. Example) ASSEMBLY = "CHM13"
+* {input}
 
-BOWTIE2_DIR = File path. The location of where generated Bowtie2 indices will live. Default: 'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+**Snakemake parameters**
+
+* {BOWTIE2_DIR}/{ASSEMBLY}
 
 
-generate_jf_index
+
+generate_jf_idx
 -----------------
 
 Purpose: To generate k-mer count index files using the derived jellyfish hash table from the `generate_jf_count` step. Generates independent k-mer count index files for each scaffold. 
@@ -263,20 +273,40 @@ Outputs: An output jellyfish k-mer count file containing all k-mers within a sel
                           SCAFFOLD_FA_OUT -j_o JF_OUT -i J_INDEX_OUT -m
                           MER_VAL
 
+**config.yml parameters**
+
+* fasta_file
+* sample (CHR_NAME)
+* mer_val (MER_VAL)
+
+**Snakemake parameters**
+
+* JF_INDEXFILE (`generate_jf_count` output)
+* SCAFFOLD_FA_OUT
+* JF_OUT
+* J_INDEX_OUT
+
+
+
+split_bed
+---------
+
+Purpose:
+
+Inputs:
+
+Outputs:
+
+.. code-block:: bash
+
+   usage: split_bed.py [-h] -b BED_FILE -c CHROM_NAME -o BED_OUT
 
 **config.yml parameters**
 
-CHR_NAME = String. Described as sample in config.yml file. Each sample can be one or more scaffolds present in a given genome. Scaffold names should match FASTA file headers. 
+**Snakemake parameters**
 
-Example format in config.yml:
 
-sample:
-    - "chr1"
 
-Example format in FASTA file:
-
->chr1
-dnasequence
 
 
 repeat_ID
@@ -291,5 +321,278 @@ Output:
     usage: repeat_ID.py [-h] -j JF_COUNT -i INDEX_FILE -chr CHR_NAME -st START
                     [-w WINDOW_LENGTH] [-t THRESHOLD] [-c COMPOSITION_SCORE]
                     -o_b BED_FILE -m MER_LENGTH
+
+**config.yml parameters**
+
+
+design_probes
+-------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: design_probes.py [-h] -b BED_NAME -r_o REGION_OUT -p_o PROBES_OUT -g
+                        GENOME_FASTA -c CHROM_NAME -l MIN_LEN -L MAX_LEN -t
+                        MIN_TEMP -T MAX_TEMP
+
+**config.yml parameters**
+
+kmer_filter
+-----------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: kmer_filter.py [-h] -p PROBE_FILE -j JF_FILE -f FASTA [-m MERLENGTH] -o
+                      OUT_PATH -c1 C1_VALUE -c2 C2_VALUE
+
+**config.yml parameters**
+
+probe_mer_filter
+----------------
+
+Purpose:
+Input:
+Output"
+
+.. code-block:: bash
+
+   usage: probe_mer_filter.py [-h] -f FILE_PATH -o OUT_PATH -e ENRICH_SCORE -cn
+                           COPY_NUM -m MER_CUTOFF -k MERLENGTH
+
+**config.yml parameters**
+
+
+generate_genome_bins
+--------------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   bedtools makewindows -g {input.sizes} -w {params.window} > {output}
+
+**config.yml parameters**
+
+alignment_filter
+----------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: alignment_filter.py [-h] -f PROBE_FILE -o OUT_FILE
+                           [-r REGION_THRESHOLD] -b BOWTIE_INDEX -k
+                           BT2_MAX_ALIGN -l SEED_LENGTH -t MODEL_TEMP -pb
+                           MAX_PDUPS_BINDING -moT MIN_ON_TARGET -Mr
+                           MAX_PROBE_RETURN -gb GENOMIC_BIN -th THRESH
+
+**config.yml parameters**
+
+
+gather_repeat_regions
+---------------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: split_filter.py [-h] -f FILE_PATH -o OUT_PATH
+
+**config.yml parameters**
+
+summary
+-------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: finish_summary.py [-h] -f PROBE_FILE -o OUT_FILE
+
+**config.yml parameters**
+
+
+Post-process Workflow
+^^^^^^^^^^^^^^^^^^^^^
+
+The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, w
+hich files are generated at each snakemake step, and where config parameters are called.
+
+bin_genome
+----------
+
+Purpose
+Input:
+Output:
+
+.. code-block:: bash
+
+   bedtools makewindows -g {input.sizes} -w {params.window} > {output}
+
+**config.yml parameters**
+
+
+
+gather_repeat_regions
+---------------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   split_filter_region.py [-h] -f FILE_PATH -o OUT_PATH -c CHROM
+
+
+**config.yml parameters**
+
+
+
+align_probes
+------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: generate_alignments.py [-h] -f FILE_PATH -o OUT_PATH -b BOWTIE_INDEX -k
+                              BT2_MAX_ALIGN -l SEED_LENGTH -t MODEL_TEMP
+
+**config.yml parameters**
+
+
+
+derived_beds
+------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: make_derived_beds.py [-h] -f FILE_PATH -o OUT_PATH
+
+**config.yml parameters**
+
+
+
+get_region_bed
+--------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: get_region_bed.py [-h] -i IN_FILE -o OUT_FILE
+
+**config.yml parameter**
+
+
+
+bedtools_intersect
+------------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+   "bedtools intersect -wa -wb -a {input.derived_bed} -b {input.genome_bin} > {output.alignments_out} |"
+   "bedtools intersect -wa -wb -a {input.repeat_bed} -b {input.genome_bin} > {output.repeat_out}"
+
+**config.yml parameters**
+
+
+
+get_alignments
+--------------
+
+Purpose:
+Input:
+Output
+
+.. code-block:: bash
+
+   usage: get_alignments.py [-h] -c_t CHROM_TRACK -c_o CHROM_OVERLAPS -r_o
+                         REPEAT_OVERLAP -p PAIRWISE_PDUPS -pl OUT_PLOT -t
+                         THRESH -t_s THRESH_SUMM -c_s CHROM_SUMM
+
+**config.yml parameters**
+
+
+
+summarize_probe_binding
+-----------------------
+
+Purpose:
+Input:
+Output
+
+.. code-block:: bash
+
+   usage: pipeline_alignment_check.py [-h] -f PROBE_FILE -o OUT_FILE -b
+                                   BOWTIE_INDEX -k BT2_MAX_ALIGN -l
+                                   SEED_LENGTH -t MODEL_TEMP
+
+
+**config.yml parameter**
+
+
+
+generate_plots
+--------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: generate_bins_plots.py [-h] -c_t CHROM_TRACK -c_o CHROM_OVERLAPS -p
+                              PAIRWISE_PDUPS -pl OUT_PLOT
+
+**config.yml parameters**
+
+
+
+generate_chromomap
+------------------
+
+Purpose:
+Input:
+Output:
+
+.. code-block:: bash
+
+   usage: Rscript --vanilla make_chromomap.R -c {input.chrom_sizes} -r {input.probe_bed} -o {output}
+
+**config.yml parameters**
+
+
+
+If you have more questions about any scripts in particular from the main workflow or post process workflow, be sure to check out our GitHub page. Also check out our `Tigerfish` tutorial to see how these scripts come together to generate example data.
+
+
 
 
