@@ -549,9 +549,11 @@ hich files are generated at each snakemake step, and where config parameters are
 bin_genome
 ----------
 
-Purpose
-Input:
-Output:
+Purpose: Takes reference genome file and makes it into bins of a specified size using BEDtools.
+
+Input: Genome chrom.sizes file provided as chrom_sizes_file.
+
+Output: A file containing the chromosome and bin position in a tab seperated file.
 
 .. code-block:: bash
 
@@ -559,13 +561,24 @@ Output:
 
 **config.yml parameters**
 
+* genome_windows {params.window}
+* chrom_sizes_file {input.sizes}
+
+**Snakemake parameters**
+
+* {output}
+
 
 
 gather_repeat_regions
 ---------------------
 
-Purpose:
-Input:
+Purpose: If in final set of probes that undergo processing contains repeat regions from multiple chromosomes, they are split by scaffold.
+
+Input: Final probe file with subset of select probes of interest for ordering and imaging. Can have probes from different chromosomes, multiple probes from the same repeat region, or individual probes from repeat regions. 
+
+Output: A split BED file containing selected probes corresponding to each provided chromosome
+
 Output:
 
 .. code-block:: bash
@@ -575,14 +588,22 @@ Output:
 
 **config.yml parameters**
 
+* sample (CHROM)
+* probe_file (FILE_PATH)
+
+**Snakemake parameters**
+
+* OUT_PATH
 
 
 align_probes
 ------------
 
-Purpose:
-Input:
-Output:
+Purpose: Takes probes from split files and aligns them to generated genome-wide Bowtie2 indices created during previous run for probe generation in the main workflow. Note: it is important that the whole genome FASTA is provided as the **fasta_file** to ensure that a correct genome wide Bowtie2 index is made.
+
+Input: Split probes from `gather_repeat_regions` step and Bowtie2 index derived from main pipeline workflow.
+
+Output: An alignment file containing the derived mapped alignments for each probe sequence corresponding to a target repeat region. 
 
 .. code-block:: bash
 
@@ -591,14 +612,25 @@ Output:
 
 **config.yml parameters**
 
+* bt2_alignments (BT2_MAX_ALIGN)
+* seed_length (SEED_LENGTH)
+* model_temp (MODEL_TEMP)
+* bowtie_index (BOWTIE_INDEX)
+
+**Snakemake parameters**
+
+* FILE_PATH
+* OUT_PATH
 
 
 derived_beds
 ------------
 
-Purpose:
-Input:
-Output:
+Purpose: Takes the output of the alignment file to generate a BED file of all derived alignment locations.
+
+Input: The output alignment file from `align_probes`.
+
+Output: A BED file containing the coords of all mapped genome wide alignments. 
 
 .. code-block:: bash
 
@@ -606,14 +638,23 @@ Output:
 
 **config.yml parameters**
 
+* None
+
+**Snakemake parameters**
+
+* FILE_PATH
+* OUT_PATH
+
 
 
 get_region_bed
 --------------
 
-Purpose:
-Input:
-Output:
+Purpose: Takes the subset probe file and generates a BED file from the repeat target coordinates.
+
+Input: The split probe file generated from `gather_repeat_regions`.
+
+Output: A BED file containing the repeat region coordinates.
 
 .. code-block:: bash
 
@@ -621,14 +662,23 @@ Output:
 
 **config.yml parameter**
 
+* None
+
+**Snakemake parameters**
+
+* IN_FILE
+* OUT_FILE
+
 
 
 bedtools_intersect
 ------------------
 
-Purpose:
-Input:
-Output:
+Purpose: Performs a BEDtools intersect using the generated genomic bins file on the BED coordinates from derived alignments and the target repeat region. This is to be able to map alignments to target and non-target bins. 
+
+Input: The generated genome bin file, BED file from derived alignments, and BED file from target repeat region.
+
+Output: An intersected BEDtools file containing the coordinates of each mapped BED coordinate to the corresponding genome bin window it falls in. 
 
 .. code-block:: bash
    "bedtools intersect -wa -wb -a {input.derived_bed} -b {input.genome_bin} > {output.alignments_out} |"
@@ -636,14 +686,26 @@ Output:
 
 **config.yml parameters**
 
+* None
+
+**Snakemake parameters**
+
+* input.derived_bed
+* input.genome_bin
+* input.repeat_bed
+* output.alignments_out
+* output.repeat_out
+
 
 
 get_alignments
 --------------
 
-Purpose:
-Input:
-Output
+Purpose: For all alignments, predicted duplexing (pDups) values are computed to assess how likely a probe is to bind at a mapped genomic region. This is then used to compute aggregate on-target vs off-target based on the genomic windows computed. 
+
+Input: The genome bin file, derived alignment and repeat region  mapped genomic overlaps from BEDtools.
+
+Output: An annotated probe file summarizing all true on and off target alignments in the entire genome for all probe candidates that mapped to a particular repeat region, A populated file summarizing which bins are mapping to the repeat target bins vs other bins in the genome if above provided threshold value, and plotted maps based on where pileup binding can be found. 
 
 .. code-block:: bash
 
@@ -653,48 +715,26 @@ Output
 
 **config.yml parameters**
 
+* bin_thresh (THRESH)
 
+**Snakemake parameters**
 
-summarize_probe_binding
------------------------
-
-Purpose:
-Input:
-Output
-
-.. code-block:: bash
-
-   usage: pipeline_alignment_check.py [-h] -f PROBE_FILE -o OUT_FILE -b
-                                   BOWTIE_INDEX -k BT2_MAX_ALIGN -l
-                                   SEED_LENGTH -t MODEL_TEMP
-
-
-**config.yml parameter**
-
-
-
-generate_plots
---------------
-
-Purpose:
-Input:
-Output:
-
-.. code-block:: bash
-
-   usage: generate_bins_plots.py [-h] -c_t CHROM_TRACK -c_o CHROM_OVERLAPS -p
-                              PAIRWISE_PDUPS -pl OUT_PLOT
-
-**config.yml parameters**
-
-
+* input.genome_bin (CHROM_TRACK)
+* output.repeat_out (CHROM_OVERLAPS)
+* output.alignments_out (REPEAT_OVERLAP)
+* (PAIRWISE_PDUPS)
+* (OUT_PLOT)
+* (THRESH_SUMM)
+* (CHROM_SUMM)
 
 generate_chromomap
 ------------------
 
-Purpose:
-Input:
-Output:
+Purpose: Implements an R library, chromoMap, to plot where target probes are ancitipated to make FISH signal. These are especially helpful to validate binding sites based on morphology if validating probes via metaphase FISH assay.
+
+Input: Generated repeat region probe BED coordinates.
+
+Output: An image of a chromosome with an annotated color highlighting the repeat region location. 
 
 .. code-block:: bash
 
