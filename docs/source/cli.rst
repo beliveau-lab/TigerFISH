@@ -459,11 +459,11 @@ Output: A file containing the chromosome and bin position in a tab seperated fil
 alignment_filter
 ----------------
 
-Purpose:
+Purpose: Takes probes filtered from probe_mer_split after undergoing repeat region split in gather_repeat_regions. Aligns candidate probes to entire reference genome and takes pairwise derived sequences to compute predicted thermodynamic duplexing probability. This means Tigerfish uses this probabilities to aggregate which alignments match to the target repeat region vs elsewhere in the target genome. This is just to ensure that final candidate probes are able to bind to targets of interest. 
 
-Input:
+Input: Filtered and rank sorted probe file.
 
-Output:
+Output: Select repeat specific probes based on user specified filtering parameters. 
 
 .. code-block:: bash
 
