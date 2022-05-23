@@ -259,8 +259,6 @@ def find_repeats(indices_to_parse,kmer_indices,mer_length):
     #index of regions found as valid in k-mer sliding window
     index_start=[]
     index_end=[]
-
-    print(indices_to_parse)
     
     for item in indices_to_parse['start_index_range']:
         index_start.append(int(item))
@@ -270,12 +268,8 @@ def find_repeats(indices_to_parse,kmer_indices,mer_length):
     repeat_starts_df=pd.DataFrame(list(zip(kmer_start,index_start)),
                                   columns=['r_start','r_index_start'])
 
-    print(kmer_indices)
-    print(len(kmer_indices))
-
     for item in indices_to_parse['end_index_range']:
         index_end.append(int(item))
-        print(index_end)
         end=kmer_indices[item]
         kmer_end.append(int(int(end) + int(mer_length)))
      
