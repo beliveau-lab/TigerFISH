@@ -15,6 +15,8 @@ Tigerfish is a technology and software tool that enables users to design oligonu
 
 3. An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2022).  
 
+Our documents are publicly found and hosted on Read the Docs.
+
 ## Installation
 
 1. Install [conda](https://docs.conda.io/en/latest/miniconda.html) as needed for your system.
@@ -63,11 +65,7 @@ This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/
 
 ## Documentation
 
-Additional information is available in the docs for:
-
-* [Input file specification](docs/main/pipeline_input.md)
-* [Output file specification](docs/main/pipeline_output.md)
-* [Description of pipeline steps](docs/main/pipeline_steps.md)
+Please read our comprehensive Read the Docs page and tutorials to learn more about Tigerfish.
 
 ## Questions
 
