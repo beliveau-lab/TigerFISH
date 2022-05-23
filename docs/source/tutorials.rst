@@ -13,7 +13,7 @@ The following tutorial is used to cover **Tigerfish** functionality on a toy gen
 
 .. image:: imgs/tutorials_summary.png
      :width: 500
-  :alt: Tigerfish tutorials overview
+     :alt: Tigerfish tutorials overview
 
 Config file
 ===========
