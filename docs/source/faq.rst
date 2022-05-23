@@ -1,7 +1,7 @@
 Frequently Asked Questions
 ==========================
 
-How did Tigerfish get it's name?
+How did Tigerfish get its name?
 --------------------------------
 
 If you were to google Tigerfish you might end up finding a picture of a fish that looks like this ...
