@@ -53,11 +53,17 @@ def summarize_probe_data(probe_df,o_file):
         #none of the designed probes satisfied the alignment filter
         #so the file is empty
         
-        with open("Output.txt", "w") as o_file:
-            o_file.write("File empty. No probes satisfied alignment filter.")
-            o_file.close()
-            
-        exit()
+
+       colnames = ["probe_coords","repeat_coords","probe","Tm","r_count",
+                "h_count","k_score","k_norm", "on_target_prop"]
+
+       #drop redundant cols
+       summ_df = probe_df.drop(colnames, axis=1)
+
+       #fill missing vals with 0s
+       summ_df['probe_count'] = 0
+       summ_df['on_target_sum'] = 0.0
+       summ_df['off_target_sum'] = 0.0
         
     else:
         

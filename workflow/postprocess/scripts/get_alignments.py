@@ -19,7 +19,9 @@ import argparse
 
 ##############################################################################
 
-def generate_dfs(chr_track_file,chr_overlap_bed,pDups_scores):
+def generate_dfs(chr_track_file,chr_overlap_bed,repeat_overlap_bed,
+                 pDups_scores):
+    
     """
     Function takes the genome bin file, the bedtools intersect file, and
     the pairwise file containing pdups computes to process them as 
@@ -30,23 +32,25 @@ def generate_dfs(chr_track_file,chr_overlap_bed,pDups_scores):
     chr_track_file : file
         file containing the 1Mb bins of the genome
     chr_overlap_bed : file
-        bedtools intersect output
+        bedtools intersect output over alignment coords
+    repeat_overlap_bed: file
+        bedtools intersect output over repeat region coords
     pDups_scores : file
         file from alignment output
-
     Returns
     -------
     chr_track : dataframe
         bed file containing the coordinates of 1Mb bins
     chr_overlap : dataframe
-        contains the overlaps of bedtools intersect
+        contains the overlaps of bedtools intersect on alignments
+    repeat_overlap: dataframe
+        contains the overlaps of the bedtools intersect on repeat region
     pairs_pdups : dataframe
         contains the pairwise output
-
     """
 
     #label columns for ground file with the bed tracks
-    colnames = ["chrom","start","stop"]
+    colnames = ["chrom","bin_start","bin_stop"]
     chr_track = pd.read_csv(chr_track_file, names=colnames,header=None,
                             sep='\t')
     
@@ -56,6 +60,15 @@ def generate_dfs(chr_track_file,chr_overlap_bed,pDups_scores):
     colnames = ["chrom", "start", "stop", "chrom_b","start_b","stop_b"]
     chr_overlap = pd.read_csv(chr_overlap_bed, names=colnames,header=None,
                           sep='\t')
+    
+    chr_overlap=chr_overlap[~chr_overlap.chrom.str.contains("M")]
+ 
+    #label columns for matching overlaps
+    colnames = ["chrom", "start", "stop", "chrom_b","start_b","stop_b"]
+    repeat_overlap = pd.read_csv(repeat_overlap_bed, names=colnames,
+                                 header=None, sep='\t')
+    
+    repeat_overlap=repeat_overlap[~repeat_overlap.chrom.str.contains("M")]
 
     #label columns for data where you have the nupack data
     colnames = ["probe_type","parent","derived",
@@ -64,72 +77,100 @@ def generate_dfs(chr_track_file,chr_overlap_bed,pDups_scores):
     pairs_pdups = pd.read_csv(pDups_scores, names=colnames,header=None,
                           sep='\t')
 
-    return chr_track,chr_overlap,pairs_pdups
+    pairs_pdups=pairs_pdups[~pairs_pdups.derived_coords.str.contains("M")]
+
+    return chr_track,chr_overlap,repeat_overlap,pairs_pdups
 
 ##############################################################################
 
 def map_columns(pairs_pdups,chr_overlap):
     """
     Function maps the bedtools intersect overlaps with the pdups scorese
-
     Parameters
     ----------
     pairs_pdups : dataframe
         contains the pairwise probes with pdups computes
     chr_overlap : dataframe
         contains the genomic overlaps from bedtools intersect
-
     Returns
     -------
     bin_sums : dataframe
         contains the derived chrom, start, stop, and pdups score
-
     """
 
     pairs_pdups = pairs_pdups.drop(['parent', 'derived'], axis = 1)
-    
-    #overlap pairs_pdups to chr_overlap on o_chrom, o_start, o_stop
-        
-    pairs_pdups = pd.merge(pairs_pdups,chr_overlap, on='start')
 
-    bin_sums = pairs_pdups.groupby(['chrom_b','start_b',
-                           'stop_b'])['pDups'].sum().reset_index()
+    derived_coords_list = pairs_pdups['derived_coords'].tolist()
+    starts_list = pairs_pdups['start'].tolist() 
+    pdups_vals_list = pairs_pdups['pDups'].tolist()
+
+    pairs_pdups_dict = {}
+    bin_dict = {}
+    bin_coords_list = []
+
+    chrom_list = chr_overlap['chrom'].tolist()
+    start_list = chr_overlap['start'].tolist()
+    start_b_list = chr_overlap['start_b'].tolist()
+    stop_b_list = chr_overlap['stop_b'].tolist()
     
-    #sort columns in ascending order
-    bin_sums = bin_sums.sort_values(by=['chrom_b','start_b','stop_b'])
-    
-    
-    bin_sums.columns = ['chrom', 'start','stop','pDups']
-    
+    for chrom,start,start_b,stop_b in zip(chrom_list,start_list,start_b_list,stop_b_list):
+        coord_key = str(chrom) + "_" + str(start)
+        coord_vals = str(start_b) + "_" + str(stop_b)
+        bin_dict[coord_key] = coord_vals
+
+    for chrom,start,pdup in zip(derived_coords_list,starts_list,pdups_vals_list):
+        coord_key = str(chrom) + "_" + str(start)
+        if coord_key in bin_dict:
+            bin_coords_list.append(bin_dict[coord_key])
+
+    pairs_pdups['bin_label'] = bin_coords_list
+
+    #split bin column into two seperate cols
+
+    pairs_pdups[['bin_start','bin_stop']] = pairs_pdups['bin_label'].str.split('_',expand=True)
+
+    #remove intermediate column
+    pairs_pdups = pairs_pdups.drop(['probe_type', 'start', 'bin_label'], axis=1)
+
+    pairs_pdups = pairs_pdups[["derived_coords","bin_start","bin_stop","pDups"]]
+
+    pairs_pdups.columns = ['chrom', 'bin_start','bin_stop','pDups']
+
+    bin_sums = pairs_pdups.groupby(['chrom','bin_start','bin_stop'])['pDups'].sum().reset_index()
+
     return bin_sums
 
 ##############################################################################
 
-def intersect_chr_tracks(bin_sums,chr_track):
+def intersect_chr_tracks(bin_sums,chr_track,repeat_overlap):
     """
     Function takes the where probes map to genomic bins and their pdups
     scores and merges this to all other genomic bins. All other bins that
     do not have pdups scores mapping to them receive a 0.
-
     Parameters
     ----------
     bin_sums : dataframe
         contains chromosome tracks and corresponding pdups scores
     chr_track : dataframe
         contains the genomic chr, start, stop for 1Mb bins
-
     Returns
     -------
     merged : dataframe
         contains all genomic bins with corresponding mapped scores
-
     """
-    
+   
+    #subset items in chr_track not in bin sums
+ 
     #drop pdups for now 
     bins_w_vals = bin_sums.drop(['pDups'], axis = 1)
 
+    chr_track['bin_start']=chr_track['bin_start'].astype(int)
+    chr_track['bin_stop']=chr_track['bin_stop'].astype(int)
+    bins_w_vals['bin_start']=bins_w_vals['bin_start'].astype(int)
+    bins_w_vals['bin_stop']=bins_w_vals['bin_stop'].astype(int)
+    
     #subset rows not in bins with vals
-    common = bins_w_vals.merge(chr_track,on=['chrom', 'start','stop'])
+    common = bins_w_vals.merge(chr_track,on=['chrom', 'bin_start','bin_stop'],how='left')
     
     not_overlapping = pd.merge(chr_track, common, how='left', indicator=True) \
            .query("_merge == 'left_only'") \
@@ -142,9 +183,62 @@ def intersect_chr_tracks(bin_sums,chr_track):
     
     merged = pd.concat(frames)
     
-    merged = merged.sort_values(by=['chrom','start','stop'])
+    merged = merged.sort_values(by=['chrom','bin_start','bin_stop'])
+
+    #here you should read in the repeat dataframe to get the chrom_start_stops
+    chrom_list = repeat_overlap['chrom_b'].tolist()
+    start_list = repeat_overlap['start_b'].tolist()
+    stop_list = repeat_overlap['stop_b'].tolist()
+
+    #make a dictionary storing location as key lookup
+    repeat_dict = {}
+
+    for chrom,start,stop in zip(chrom_list,start_list,stop_list):
+        repeat_key = str(chrom) + "_" + str(start) + "_" + str(stop)
+        repeat_dict[repeat_key] = 1
+
+    #store values of bin type (target = 1, non = 0)
+    bin_type = []
+
+    #make lists to generate key lookups of all bins
+    bin_chrom_list = merged['chrom'].tolist()
+    bin_start_list = merged['bin_start'].tolist()
+    bin_stop_list = merged['bin_stop'].tolist()
+
+    for chrom,start,stop in zip(bin_chrom_list,bin_start_list,bin_stop_list):
+        location_key = str(chrom) + "_" + str(start) + "_" + str(stop)
+        if location_key in repeat_dict:
+            bin_type.append(1)
+        else:
+            bin_type.append(0)
+
+    #annotates whether bin is considered target or non-target
+    merged['bin_type'] = bin_type
 
     return merged
+
+##############################################################################
+#function to return binding summary of all bins >= input_val (~120)
+
+def generate_summary_table(merged,thresh,thresh_summ,chrom_summ):
+
+    #subset the signal over particular regions of interest
+
+    signal_pileup_subset = merged.loc[merged['pDups'] >= int(thresh)]
+
+    #writes row(s) to output
+    signal_pileup_subset.to_csv(thresh_summ,index = False,
+                               index_label=False,
+                               header = None,
+                               sep = '\t')
+
+    #summarize all signals by chromosome in table form 
+    chrom_summ_df = merged.groupby(['chrom'])['pDups'].sum().reset_index() 
+
+    chrom_summ_df.to_csv(chrom_summ,index = False,
+                               index_label=False,
+                               header = None,
+                               sep = '\t')
 
 ##############################################################################
 
@@ -152,12 +246,10 @@ def generate_plot(merged,out_plot):
     """
     Function takes the tracks of genomic regions and maps them
     accordingly based on scaffold.
-
     Parameters
     ----------
     merged : dataframe
         chrom, start, stop, and pdups sum
-
     Returns
     -------
     .png of in silico predicted binding of oligo signal
@@ -193,7 +285,7 @@ def generate_plot(merged,out_plot):
     
     merged['chrom_num'] = merged['chrom'].map(chrom_dict)
         
-    merged = merged.sort_values(by=['chrom_num','start','stop'])
+    merged = merged.sort_values(by=['chrom_num','bin_start','bin_stop'])
         
     #scales the values of pdups between 0 - 255 using normalization
     min_max_scaler = preprocessing.MinMaxScaler(feature_range=(0, 255))
@@ -217,7 +309,7 @@ def generate_plot(merged,out_plot):
         y_list = group['nupack_trans'].tolist()
         y_vals_trans.append(y_list)
         
-        bins_list = group['start'].tolist()
+        bins_list = group['bin_start'].tolist()
         bins_ll.append(bins_list)
         standard_chrom.append(name)
 
@@ -296,31 +388,48 @@ def main():
                                'containing chrom sizes')
     requiredNamed.add_argument('-c_o', '--chrom_overlaps', action='store',
                                required=True, help='bedtools intersect'
-                               'output')
+                               'output for alignments')
+    requiredNamed.add_argument('-r_o', '--repeat_overlap', action='store',
+                               required=True, help='bedtools intersect'
+                               'output for repeat regions')
     requiredNamed.add_argument('-p', '--pairwise_pdups', action='store',
                                required=True, help='file with pairwise'
                                'pdups vals')
     requiredNamed.add_argument('-pl', '--out_plot', action='store',
                                required=True, help='output genome plot')
+    requiredNamed.add_argument('-t', '--thresh', action='store',
+                               required=True, help='pdups >= to subset')
+    requiredNamed.add_argument('-t_s', '--thresh_summ', action='store',
+                               required=True, help='threshold summ file')
+    requiredNamed.add_argument('-c_s', '--chrom_summ', action='store',
+                               required=True, help='chrom pdups summ file')
 
     args = userInput.parse_args()
     chr_track_file = args.chrom_track
     chr_overlap_bed = args.chrom_overlaps
+    repeat_overlap_bed = args.repeat_overlap
     pdups_scores = args.pairwise_pdups
     out_plot = args.out_plot
-    
-    chr_track,chr_overlap,pairs_pdups = generate_dfs(chr_track_file,
+    thresh = args.thresh
+    thresh_summ = args.thresh_summ
+    chrom_summ = args.chrom_summ
+ 
+    chr_track,chr_overlap,repeat_overlap, pairs_pdups = generate_dfs(chr_track_file,
                                                      chr_overlap_bed,
+                                                     repeat_overlap_bed,
                                                      pdups_scores)
 
     print("---%s seconds ---"%(time.time()-start_time))
-
     
     bin_sums = map_columns(pairs_pdups,chr_overlap)
 
     print("---%s seconds ---"%(time.time()-start_time))
     
-    merged = intersect_chr_tracks(bin_sums,chr_track)
+    merged = intersect_chr_tracks(bin_sums,chr_track,repeat_overlap)
+
+    print("---%s seconds ---"%(time.time()-start_time))
+
+    generate_summary_table(merged,thresh,thresh_summ,chrom_summ)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
@@ -332,3 +441,4 @@ def main():
     
 if __name__== "__main__":
     main()
+

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 """
-Created on Tues March 29
+Created on Mon Jun 28 18:16:08 2021
 @author: Robin Aguilar
 Beliveau and Noble Labs
 University of Washington | Department of Genome Sciences
@@ -39,65 +39,21 @@ def read_probe_filter(p_file):
     """
 
     #read in the file with the appropriate column names
-    colnames = ["chrom","p_start","p_end","probe","Tm","region",
-                "r_count","h_count","k_score","k_norm"]
+
+    colnames = ["probe_coords","repeat_coords","probe","Tm","repeat_count",
+                "genome_count","k-binding","k_norm","on_target_sum",
+                "off_target_sum","on_target_prop"]
 
     #read as a dataframe
     probe_df = pd.read_csv(p_file, delimiter = '\t', names = colnames)
-
-    probe_df[['chrom','region']] = probe_df['region'].str.split(':',
-                expand=True)
-
-    probe_df[['r_start','r_end']] = probe_df['region'].str.split('-',
-                expand=True)
-
-    #cast r columns as ints
-    probe_df[['r_start','r_end']] = probe_df[['r_start',
-                'r_end']].astype(int)
-
-    # column for chrom:start-stop that matches true genomic coords
-    probe_df['start'] = probe_df['p_start'] + probe_df['r_start']
-    probe_df['end'] = probe_df['p_end'] + probe_df['r_start']
-
-    probe_coords_list = []
-    #make lists to make a new region
-    chrom_list = probe_df['chrom'].tolist()
-    start_list = probe_df['start'].tolist()
-    end_list = probe_df['end'].tolist()
-
-    #make the probe coords column
-    for chrom,start,end in zip(chrom_list,start_list,end_list):
-        probe_coords_list.append('%s:%s-%s' % (chrom,start,end))
-
-    probe_df['probe_coords'] = probe_coords_list
-
-    #now do the same for region again
-    r_start_list = probe_df['r_start'].tolist()
-    r_end_list = probe_df['r_end'].tolist()
-
-    r_coords_list = []
-    for chrom,r_start,r_end in zip(chrom_list,r_start_list,r_end_list):
-        r_coords_list.append('%s:%s-%s' % (chrom,r_start,r_end))
-
-    probe_df['region'] = r_coords_list
-
-    #cull columns
-    columns = ['chrom','p_start','p_end','r_start','r_end','start','end']
-    probe_df = probe_df.drop(columns,axis=1)
-
-    #rearrange cols
-    probe_df = probe_df[['probe_coords','region','probe','Tm','r_count',
-                         'h_count','k_score','k_norm']]
 
     return probe_df
 
 ##############################################################################
 
 def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
-                               bowtie_idx,r_thresh,bowtie_string,
-                               NUPACK_MODEL,bt2_k_val,max_pdups_binding,
-                               seed_length,max_probe_return,min_on_target,
-                               genomic_bins,thresh,pdups_p):
+                               bowtie_idx,bowtie_string,
+                               NUPACK_MODEL,bt2_k_val,seed_length):
     """
     Function implements filter by returning probe cands until on target sum
     for a target region is reached.
@@ -125,105 +81,39 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
     keep_probe_prop_list = []
     keep_probe_seq = []
 
-    #initiate groupby
-    grouped_region=probe_df.groupby('region',sort=False)
+    #this takes into account single instances of probe in repeat
+    probe_list = probe_df['probe'].tolist()
+    probe_coords_list = probe_df['probe_coords'].tolist()
 
-    for name,group in grouped_region:
+    #make a list of the repeat regions
+    probe_regions_list = probe_df['region'].tolist()
 
-        #this takes into account single instances of probe in repeat
-        probe_list = group['probe'].tolist()
-        probe_coords_list = group['probe_coords'].tolist()
+    #sets probe coords per region as a dictionary
+    region_dict = dict(zip(probe_coords_list,probe_regions_list))
 
-        #make a list of the repeat regions
-        probe_regions_list = group['region'].tolist()
+    for probe,coords in zip(probe_list,probe_coords_list):
 
-        #sets probe coords per region as a dictionary
-        region_dict = dict(zip(probe_coords_list,probe_regions_list))
+        #make the call for the top probe to get the pairwise df
+        top_probe_al = generate_pairwise_df(probe,coords,
+                                                  bowtie_idx,
+                                                  bowtie_string,
+                                                  strand_conc_a,
+                                                  strand_conc_b,
+                                                  NUPACK_MODEL,
+                                                  bt2_k_val,seed_length)
 
-        #keeps track of the on target threshold sum for the region
-        threshold_count = 0
-
-        #while the threshold count is below the param requested and 
-        #the length of the probe list is greater than 1
-        while (threshold_count <= r_thresh and 
-               len(keep_probe_names_list) < int(max_probe_return) and 
-               len(probe_list) >= 1):
-
-            #make the call for the top probe to get the pairwise df
-            top_probe_al = generate_pairwise_df(probe_list[0],
-                                                      probe_coords_list[0],
-                                                      bowtie_idx,
-                                                      bowtie_string,
-                                                      strand_conc_a,
-                                                      strand_conc_b,
-                                                      NUPACK_MODEL,
-                                                      bt2_k_val,seed_length)
-
-            #compute the on target sum for the top probe
-            prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
+        #compute the on target sum for the top probe
+        prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
                                                                   region_dict)
 
-            #function that makes a temp .bed of alignments and gets overlap
-            #embedded function that takes both overlap inputs to return pileup
-            #returns: agg by chrom, and pileup subset if pileup ok, then proceed
-            signal_pileup_subset,chrom_summ_df = get_bedtools_map(name,
-                                                                  genomic_bins,
-                                                                  top_probe_al,
-                                                                  thresh)
-
-
-            #checks the items in the proportion dictionary
-            #and this is the first item  to be added into the empty list
-            #evals if any bins are off target
-            for key,val in prop_dict.items():
-                if (val >= float(pdups_p) and (signal_pileup_subset['bin_type'] == 1).all() == True and
-                    on_target_dict[key] >= int(min_on_target) and
-                    len(keep_probe_names_list) == 0):
-
-                    #append probe and it's relevant on target and off
-                    #target information
-                    keep_probe_names_list.append(key)
-                    keep_on_target_list.append(on_target_dict[key])
-                    keep_off_target_list.append(off_target_dict[key])
-                    keep_probe_prop_list.append(prop_dict[key])
-                    keep_probe_seq.append(probe_list[0])
-
-                    #add the on target aggregate pdups sum to update 
-                    #the threshold count
-                    threshold_count += on_target_dict[key]
-
-                #now if there are new items being added to the keep list
-
-                if (val >= float(pdups_p) and (signal_pileup_subset['bin_type'] == 1).all() == True and
-                    on_target_dict[key] >= int(min_on_target) and
-                    len(keep_probe_names_list) >= 1) :
-
-                    #invoke the pdups function to compare if the cand
-                    #probe satisfies the threshold requirements for pdups
-                    pdups_track_list = []
-
-                    for probe in keep_probe_seq:
-
-                        pdups_compare = pdups(probe_list[0],probe,
-                                              strand_conc_a,strand_conc_b,
-                                              NUPACK_MODEL)
-
-                        pdups_track_list.append(pdups_compare)
-
-                    if max(pdups_track_list) <= float(max_pdups_binding):
-
-                        #if so, then add the probe and it's relevant
-                        #information into the keep lists
-                        keep_probe_names_list.append(key)
-                        keep_on_target_list.append(on_target_dict[key])
-                        keep_off_target_list.append(off_target_dict[key])
-                        keep_probe_prop_list.append(prop_dict[key])
-                        keep_probe_seq.append(probe_list[0])
-                        threshold_count += on_target_dict[key]
-
-            #pop the head probe being compared from the top of the list
-            probe_list.pop(0)
-            probe_coords_list.pop(0)
+        for key,val in prop_dict.items():
+            #append probe and it's relevant on target and off
+            #target information
+            keep_probe_names_list.append(key)
+            keep_on_target_list.append(on_target_dict[key])
+            keep_off_target_list.append(off_target_dict[key])
+            keep_probe_prop_list.append(prop_dict[key])
+            keep_probe_seq.append(probe_list)
 
     #make dictionaries of the on target, off target, prop
     on_target_dict = dict(zip(keep_probe_names_list,keep_on_target_list))
@@ -282,6 +172,7 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     keep_probes_df.to_csv(o_file, header=False, index=False, sep="\t")
 
 ##############################################################################
+
 def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
                          bt2_k_val,seed_length):
@@ -442,6 +333,7 @@ def samtools_call(sam_file,bam_file):
     return bam_file
 
 ##############################################################################
+
 def sam2pairwise_call(bam_file):
     """
     Function calls sam2pairwise to generate derived sequences for each
@@ -467,6 +359,7 @@ def sam2pairwise_call(bam_file):
 
 
 ##############################################################################
+
 def process_pairwise(pairwise_file):
     """
     Function takes the sam2pairwise output file and parses out the derived
@@ -509,10 +402,6 @@ def process_pairwise(pairwise_file):
                                         'align_chr',
                                         'align_start'])
 
-        pairwise_df=pairwise_df[~pairwise_df.parent.str.contains("N")]
-        pairwise_df=pairwise_df[~pairwise_df.derived.str.contains("N")]
-
-
     #collapse duplicates
     unique_probes_df = pairwise_df.drop_duplicates(subset=['parent',
                                                   'derived'],
@@ -521,6 +410,7 @@ def process_pairwise(pairwise_file):
     return pairwise_df, unique_probes_df
 
 ##############################################################################
+
 def pdups(seq1,seq2,strand_conc_a,strand_conc_b,NUPACK_MODEL):
     """
     Function implements NUPACK by invoking the NUPACK model and computing
@@ -671,245 +561,6 @@ def nupack_sum(pairwise_df,probe_region_dict):
 
 ##############################################################################
 
-def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-
-        #the file for the bed file overlap
-        repeat_filename = tmpdir + '/region.bed'
-
-        repeat_overlap_out = tmpdir + '/overlap_out.bed'
-
-        #write the repeat contents as a bed file
-        repeat_bed = open(repeat_filename, 'w')
-
-        #split the string on chars
-        probe_region = probe_region.replace(":","\t")
-        probe_region = probe_region.replace("-","\t")
-
-        #write repeat into file format
-        repeat_bed.write(str(probe_region))
-
-        repeat_bed.close()
-
-        #subprocess call to get overlap file
-        subprocess.call(['bedtools', 'intersect', '-wa', '-wb', '-a',
-                         repeat_filename, '-b', genome_bin_file],
-                    stdout=open(repeat_overlap_out,'w'))
-
-        #read repeat file as dataframe
-        colnames = ["chrom", "start", "stop", "chrom_b","start_b","stop_b"]
-        repeat_overlap_out_df = pd.read_csv(repeat_overlap_out,
-                                            names=colnames,header=None,
-                            sep='\t')
-
-       #the tmp file for the alignments
-        alignment_file = tmpdir + '/probe_alignments.tsv'
-
-        #drop cols
-        columns = ['probe_ID', 'parent', 'derived', 'pdups', 
-                   'repeat_coords', 'parent_chrom', 'region',
-                   'r_start', 'r_end']
-        
-        top_probe_al_coords = top_probe_al.drop(columns,axis=1)
-
-        #write contents of df to file
-        top_probe_al_coords.to_csv(alignment_file, header=False,
-                                   index=False, sep="\t")
-
-        probe_overlap_out = tmpdir + '/probe_overlap_out.bed'
-
-        #subprocess call to get overlap file
-        subprocess.call(['bedtools', 'intersect', '-wa', '-wb', '-a',
-                         alignment_file, '-b', genome_bin_file],
-                    stdout=open(probe_overlap_out,'w'))
-
-        #read probe overlap filer as dataframe
-        colnames = ["chrom", "start", "stop", "chrom_b","start_b","stop_b"]
-        probe_overlap_out_df = pd.read_csv(probe_overlap_out,
-                                           names=colnames,
-                                           header=None,sep='\t')
-
-        #format pDups file correctly for map function
-        columns = ['align_end','repeat_coords','parent_chrom',
-                   'region','r_start','r_end']
-        top_probe_al_map = top_probe_al.drop(columns,axis=1)
-
-        top_probe_al_map = top_probe_al_map[["probe_ID","parent","derived",
-                "align_chr","align_start","pdups"]]
-
-        #read repeat file as dataframe
-        colnames = ["chrom","bin_start","bin_stop"]
-        genome_bin_file_df = pd.read_csv(genome_bin_file, names=colnames,
-                                         header=None,sep='\t')
-
-        signal_pileup_subset,chrom_summ_df = map_alignments_by_bin(genome_bin_file_df,
-                                                                   probe_overlap_out_df,
-                                                                   repeat_overlap_out_df,
-                                                                   top_probe_al_map,thresh)
-
-        return signal_pileup_subset,chrom_summ_df
-
-##############################################################################
-
-def map_alignments_by_bin(chr_track,chr_overlap,repeat_overlap,pairs_pdups,thresh):
-
-    """
-    Function takes the genome bin file, the bedtools intersect file, and
-    the pairwise file containing pdups computes to process them as 
-    dataframes.
-    
-    Parameters
-    ----------
-    chr_track_file : file
-        file containing the 1Mb bins of the genome
-    chr_overlap_bed : file
-        bedtools intersect output over alignment coords
-    repeat_overlap_bed: file
-        bedtools intersect output over repeat region coords
-    pDups_scores : file
-        file from alignment output
-    Returns
-    -------
-    chr_track : dataframe
-        bed file containing the coordinates of 1Mb bins
-    chr_overlap : dataframe
-        contains the overlaps of bedtools intersect on alignments
-    repeat_overlap: dataframe
-        contains the overlaps of the bedtools intersect on repeat region
-    pairs_pdups : dataframe
-        contains the pairwise output
-    """
-
-    #label columns for ground file with the bed tracks
-    chr_track=chr_track[~chr_track.chrom.str.contains("M")]
-
-    #label columns for matching overlaps
-    chr_overlap=chr_overlap[~chr_overlap.chrom.str.contains("M")]
-    chr_overlap=chr_overlap[~chr_overlap.chrom_b.str.contains("M")]
-
-    #label columns for matching overlaps
-    repeat_overlap=repeat_overlap[~repeat_overlap.chrom.str.contains("M")]
-    repeat_overlap=repeat_overlap[~repeat_overlap.chrom_b.str.contains("M")]
-
-    #label columns for data where you have the nupack data
-    pairs_pdups=pairs_pdups[~pairs_pdups.derived.str.contains("M")]
-    pairs_pdups=pairs_pdups[~pairs_pdups.align_chr.str.contains("M")]
-
-    pairs_pdups = pairs_pdups.drop(['parent', 'derived'], axis = 1)
-
-    derived_coords_list = pairs_pdups['align_chr'].tolist()
-    starts_list = pairs_pdups['align_start'].tolist()
-    pdups_vals_list = pairs_pdups['pdups'].tolist()
-
-    pairs_pdups_dict = {}
-    bin_dict = {}
-    bin_coords_list = []
-
-    chrom_list = chr_overlap['chrom'].tolist()
-    start_list = chr_overlap['start'].tolist()
-    start_b_list = chr_overlap['start_b'].tolist()
-    stop_b_list = chr_overlap['stop_b'].tolist()
-
-    for chrom,start,start_b,stop_b in zip(chrom_list,start_list,
-                                          start_b_list,stop_b_list):
-        
-        coord_key = str(chrom) + "_" + str(start)
-        coord_vals = str(start_b) + "_" + str(stop_b)
-        bin_dict[coord_key] = coord_vals
-
-    for chrom,start,pdup in zip(derived_coords_list,starts_list,
-                                pdups_vals_list):
-        
-        coord_key = str(chrom) + "_" + str(start)
-        if coord_key in bin_dict:
-            bin_coords_list.append(bin_dict[coord_key])
-        else:
-            print(bin_dict[coord_key])
-
-    pairs_pdups['bin_label'] = bin_coords_list
-
-    #split bin column into two seperate cols
-
-    pairs_pdups[['bin_start','bin_stop']] = pairs_pdups['bin_label'].str.split('_',expand=True)
-
-    #remove intermediate column
-    pairs_pdups = pairs_pdups.drop(['probe_ID', 'align_start', 'bin_label'], axis=1)
-
-    pairs_pdups = pairs_pdups[["align_chr","bin_start","bin_stop","pdups"]]
-
-    pairs_pdups.columns = ['chrom','bin_start','bin_stop','pdups']
-
-    bin_sums = pairs_pdups.groupby(['chrom','bin_start','bin_stop'])['pdups'].sum().reset_index()
-
-    #subset items in chr_track not in bin sums
-
-    #drop pdups for now 
-    bins_w_vals = bin_sums.drop(['pdups'], axis = 1)
-
-    chr_track['bin_start']=chr_track['bin_start'].astype(int)
-    chr_track['bin_stop']=chr_track['bin_stop'].astype(int)
-    bins_w_vals['bin_start']=bins_w_vals['bin_start'].astype(int)
-    bins_w_vals['bin_stop']=bins_w_vals['bin_stop'].astype(int)
-
-    #subset rows not in bins with vals
-    common = bins_w_vals.merge(chr_track,on=['chrom', 'bin_start',
-                                             'bin_stop'],how='left')
-
-    not_overlapping = pd.merge(chr_track, common, how='left', indicator=True) \
-           .query("_merge == 'left_only'") \
-           .drop('_merge',1)
-
-    not_overlapping['pdups'] = 0.0
-
-    #now merge with nupack
-    frames = [bin_sums,not_overlapping]
-
-    merged = pd.concat(frames)
-
-    merged = merged.sort_values(by=['chrom','bin_start','bin_stop'])
-
-    #here you should read in the repeat dataframe to get the chrom_start_stops
-    chrom_list = repeat_overlap['chrom_b'].tolist()
-    start_list = repeat_overlap['start_b'].tolist()
-    stop_list = repeat_overlap['stop_b'].tolist()
-
-    #make a dictionary storing location as key lookup
-    repeat_dict = {}
-
-    for chrom,start,stop in zip(chrom_list,start_list,stop_list):
-        repeat_key = str(chrom) + "_" + str(start) + "_" + str(stop)
-        repeat_dict[repeat_key] = 1
-
-    #store values of bin type (target = 1, non = 0)
-    bin_type = []
-
-    #make lists to generate key lookups of all bins
-    bin_chrom_list = merged['chrom'].tolist()
-    bin_start_list = merged['bin_start'].tolist()
-    bin_stop_list = merged['bin_stop'].tolist()
-
-    for chrom,start,stop in zip(bin_chrom_list,bin_start_list,bin_stop_list):
-        location_key = str(chrom) + "_" + str(start) + "_" + str(stop)
-        if location_key in repeat_dict:
-            bin_type.append(1)
-        else:
-            bin_type.append(0)
-
-    #annotates whether bin is considered target or non-target
-    merged['bin_type'] = bin_type
-
-    #subset the signal over particular regions of interest
-    signal_pileup_subset = merged.loc[merged['pdups'] >= int(thresh)]
-
-    #summarize all signals by chromosome in table form 
-    chrom_summ_df = merged.groupby(['chrom'])['pdups'].sum().reset_index()
-
-    return signal_pileup_subset,chrom_summ_df
-
-##############################################################################
-                                                                          
-
 def main():
 
     start_time=time.time()
@@ -926,55 +577,27 @@ def main():
     requiredNamed.add_argument('-o', '--out_file', action='store',
                                required=True, help='The filtered probe file'
                                'that contains all sequences and regions')
-    userInput.add_argument('-r', '--region_threshold', action='store',
-                           default=5000, type=int, help='The total'
-                           'on-target binding sum to reach by repeat region')
     requiredNamed.add_argument('-b', '--bowtie_index', action='store',
                            required=True, help='The path to the bowtie'
                            'index to run the alignment algorithm')
     requiredNamed.add_argument('-k', '--bt2_max_align', action='store',
-                           required=True, default = 300000,
+                           required=True, default = 300000, 
                            help='The max number of alignments to be returned'
                            'by bowtie')
     requiredNamed.add_argument('-l', '--seed_length', action='store',
-                           required=True, default = 20,
+                           required=True, default = 20, 
                            help='Seed length when returning bt2 alignments')
     requiredNamed.add_argument('-t', '--model_temp', action='store',
                            required=True, default = 74.5,
                            help='NUPACK model temp, (C)')
-    requiredNamed.add_argument('-pb', '--max_pdups_binding', action='store',
-                           required=True, default = 0.60,
-                           help='In order for a probe to be added into a'
-                           'list to be kept, its pdups value with all'
-                           'probes must be below this max pdups binding val')
-    requiredNamed.add_argument('-moT', '--min_on_target', action='store',
-                           required=True, default = 1000,
-                           help='The min on target aggregate pdups binding'
-                           'sum to consider a probe')
-    requiredNamed.add_argument('-Mr', '--max_probe_return', action='store',
-                           required=True, default = 10,
-                           help='Either aggregate on target is returned or'
-                           'max probe number is returned first.')
-    requiredNamed.add_argument('-gb', '--genomic_bin', action = 'store',
-                           required = True, help = 'genome binned file')
-    requiredNamed.add_argument('-th', '--thresh', action='store',
-                               required=True, help='pdups >= to subset')
-    requiredNamed.add_argument('-p', '--pdups_p', action='store',
-                               required=True, help='pdups prop min')
+
     args = userInput.parse_args()
     p_file = args.probe_file
     o_file = args.out_file
-    r_thresh = args.region_threshold
     bowtie_idx = args.bowtie_index
     bt2_k_val = args.bt2_max_align
-    max_pdups_binding = args.max_pdups_binding
     seed_length = args.seed_length
     model_temp = args.model_temp
-    min_on_target = args.min_on_target
-    max_probe_return = args.max_probe_return
-    genomic_bins = args.genomic_bin
-    thresh = args.thresh
-    pdups_p = args.pdups_p
 
     #the bowtie string settings used for running the alignment algorithm
     bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
@@ -1001,16 +624,10 @@ def main():
                                                                strand_conc_a,
                                                                strand_conc_b,
                                                                bowtie_idx,
-                                                               r_thresh,
                                                                bowtie_string,
                                                                NUPACK_MODEL,
                                                                bt2_k_val,
-                                                               max_pdups_binding,
-                                                               seed_length,
-                                                               max_probe_return,
-                                                               min_on_target,
-                                                               genomic_bins,
-                                                               thresh,pdups_p)
+                                                               seed_length)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

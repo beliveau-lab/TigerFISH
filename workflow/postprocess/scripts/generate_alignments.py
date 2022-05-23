@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Created on Tue Mar 15 14:07:16 2022
+
+@author: Robin Aguilar
+
+Purpose: To take each probe in the probe file and generate alignments.
+Should return a dataframe of the alignments as well as a summary of pooled
+probes in aggregate of binding.
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 ##############################################################################
 """
 Created on Thu Jul  1 13:13:48 2021
@@ -32,7 +44,6 @@ def read_probes(file_path,out_path,bowtie_idx,bowtie_string,
     """
     Function implements pairwise alignment once reading in probe file as a 
     dataframe
-
     Parameters
     ----------
     file_path : file
@@ -51,25 +62,35 @@ def read_probes(file_path,out_path,bowtie_idx,bowtie_string,
         model to run NUPACK compute
     bt2_k_val : int
         the max number of alignments to return
-
     Returns
     -------
     None.
     """
 
-    colnames = ["probe_coords","repeat_coords","probe"]
+
+    colnames = ["probe_coords","repeat_coords","probe","Tm","repeat_count",
+                "genome_count","k-binding","k_norm","on_target_sum",
+                "off_target_sum","on_target_prop"]
+
     probe_df = pd.read_csv(file_path, delimiter = '\t', names = colnames)
 
-    probe = probe_df['probe'].tolist()
+    print(probe_df)
+
+    probe_list = probe_df['probe'].tolist()
     probe_coords = probe_df['probe_coords'].tolist()
     
-    probe_alignment = generate_pairwise_df(probe[0],probe_coords[0],
+    for probe,coords in zip(probe_list,probe_coords):
+        
+        probe_alignment = generate_pairwise_df(probe,coords,
                                             bowtie_idx,bowtie_string,
                                             strand_conc_a,strand_conc_b,
                                             NUPACK_MODEL,bt2_k_val,
                                             seed_length)
                     
-    probe_alignment.to_csv(out_path, header=False, index=False, sep="\t")
+        #running with append mode to add alignments for probes from same
+        #region
+        probe_alignment.to_csv(out_path, header=False, index=False, sep="\t",
+                               mode='a')
 
 
 ##############################################################################
@@ -92,12 +113,10 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
         a probe sequence of interest from the filtered probe dataframe
     probe_coords : string
         the coordinates of the probe sequence
-
     Returns
     -------
     pairwise_df : dataframe
         includes parent seq, derived seq, and pdups score
-
     """
 
     #begin looping over each RR to write a tmp file
@@ -182,7 +201,6 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string,seed_length):
     """
     Function runs bowtie2
-
     Parameters
     ----------
     fq_file : fastq file 
@@ -194,12 +212,10 @@ def bt2_call(fq_file,sam_file,k_val,bowtie_idx,bowtie_string,seed_length):
         by bowtie2
     bowtie_idx: path
         the file path to the bt2 idx for a particular genome
-
     Returns
     -------
     sam_file : sam file
         the temp sam file to be generated
-
     """
 
     #use subprocess to call bowtie
@@ -218,7 +234,6 @@ def samtools_call(sam_file,bam_file):
     """
     Function takes the sam file derived and generates a bam file to run
     sam2pairwise
-
     Parameters
     ----------
     sam_file : sam file
@@ -226,13 +241,11 @@ def samtools_call(sam_file,bam_file):
     bam_file : name of output bam file
         bam contains the appropriate format to parse out alignment
         sequences
-
     Returns
     -------
     bam_file : name of output bam file
         bam contains the appropriate format to parse out alignment
         sequences
-
     """
 
     #call subprocess to cast sam file into bam file
@@ -247,17 +260,14 @@ def sam2pairwise_call(bam_file):
     """
     Function calls sam2pairwise to generate derived sequences for each
     recorded alignment from bowtie2 
-
     Parameters
     ----------
     bam_file : bam file
         contains sequences in the appropriate format
-
     Returns
     -------
     s2p : sam to pairwise output
         contains probe sequence and derived alignment sequence
-
     """
 
     #calls on subprocess to generate sam2pairwise output file
@@ -278,19 +288,16 @@ def process_pairwise(pairwise_file):
     sequences into a pandas dataframe. Returns a compact version where
     sequences are collapsed into unique pairs as well as the version
     that is not condensed into unique pairs
-
     Parameters
     ----------
     pairwise_file : sam2pairwise output
         output of running sam2pairiwise
-
     Returns
     -------
     pairwise_df : dataframe
         the full pairwise dataframe of alignments
     unique_probes_df : dataframe
         the collapsed dataframe with unique pairs of alignments
-
     """
 
     #create list to add dictionary of rows
@@ -330,19 +337,16 @@ def pdups(seq1,seq2,strand_conc_a,strand_conc_b,NUPACK_MODEL):
     """
     Function implements NUPACK by invoking the NUPACK model and computing
     pdups over two sequences of interest, taking the RC of seq2
-
     Parameters
     ----------
     seq1 : string
         sequence string 1 (parent probe)
     seq2 : string
         sequence string 2 (derived alignment)
-
     Returns
     -------
     pdups_score : float
         the computed pdups score by nupack
-
     """
 
     a = nupack.Strand(seq1, name='a')
