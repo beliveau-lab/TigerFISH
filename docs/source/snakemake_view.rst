@@ -4,13 +4,6 @@ Snakemake Overview
 Main workflow
 ^^^^^^^^^^^^^
 
-Here is a simplified DAG of how Snakemake implements scripts in the Tigerfish workflow:
-
-.. image:: imgs/snakemake.svg
-      :width: 400
-   :alt: A picture of a DAG of the Tigerfish workflow
-
-
 The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, which files are generated at each snakemake step, and where config parameters are called. 
 
 generate_jf_count
