@@ -61,8 +61,6 @@ To deploy Tigerfish on your own data, update the file paths in config.yml with t
 
 This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html), and distributed according to [best practices](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html). If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started. 
 
-![Tigerfish Pipeline](docs/img/defined_coords_pipeline.svg)
-
 ## Documentation
 
 Additional information is available in the docs for:
