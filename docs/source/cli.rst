@@ -12,6 +12,10 @@ Essentially, each script in the Tigerfish workflow has a set of parameters that 
 Named Arguments in config.yml for main workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. image:: imgs/tigerfish_main_overview.png
+        :width: 500
+  :alt: Tigerfish main workflow overview
+
 **fasta_file**: File path. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format.
 
 **chrom_sizes_file**: File path. The chromosome sizes file containing all scaffolds and scaffold lenths. Take care to make sure **fasta_file** and **chrom_sizes_file** reflect the same genomic version to avoid unexpected behavior.
@@ -539,6 +543,50 @@ Output: A summary file of total candidates found within each repeat region.
 
 
 
+Named Arguments in config.yml for the Post-process workflow
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: imgs/tigerfish_postprocess_overview.png
+           :width: 500
+  :alt: Tigerfish main workflow overview
+
+**probe_file**: File path. A subset output probe file from the main workflow. This file can contain individual or pools of probes from a shared repeat. Multiple chromosomes with unique probes mapping to independent repeat regions are also allowed.
+
+**bowtie2_dir**: File path. The provided file path from the main workflow of when Bowtie2 indices were generated for the entire genome.
+
+**assembly**: String. The name of the assembly used in the main workflow. Should match the assembly in the main config.yml file.
+
+**samples**: String. Can include individual scaffolds or multiple scaffolds in bullet list. See config.yml fro examples.
+
+**chrom_sizes_file**: File path. A file path directing users to the chrom.sizes file that matches the appropriate reference FASTA provided.
+
+**genome_windows**: Integer. The size genome windows desired to be made by BEDtools.
+
+**bt2_alignments**: Integer. The maximum total number of alignments to be returned by Bowtie2.
+
+**seed_length**: Integer. `Tigerfish` implements Bowtie2 to align remaining probes to the entire queried genome to ensure that probes will not bind to unexpected binding sites. As described by Bowtie2, there is a tradeoff between speed and sensitivity/accuracy that can be adjusted by setting the seed length, which is the interval between extracted seeds.
+
+**model_temp**: Float. `Tigerfish` implements NUPACK to compute the predicted thermodynamic likelihood that each alignment pair will form duplexes under FISH conditions. The temperature parameter for this model can be modified as a parameter.
+
+**bin_thresh**: Integer. The provided threshold to note that aggregate thermodynamic binding sites are above this value on any given bin. 
+
+
+.. list-table:: Default parameters used within the test genome containing the DXZ4 and D4Z4 repeat
+      :header-rows: 1
+
+   * - Parameter
+     - DXZ4 and D4Z4 provided test case
+   * - genome_windows
+     - 5000000
+   * - bt2_alignments
+     - 500000
+   * - seed_length
+     - 15
+   * - model_temp
+     - 69.5
+   * - bin_thresh
+     - 100
+
 
 Post-process Workflow
 ^^^^^^^^^^^^^^^^^^^^^
@@ -741,8 +789,6 @@ Output: An image of a chromosome with an annotated color highlighting the repeat
    usage: Rscript --vanilla make_chromomap.R -c {input.chrom_sizes} -r {input.probe_bed} -o {output}
 
 **config.yml parameters**
-
-
 
 If you have more questions about any scripts in particular from the main workflow or post process workflow, be sure to check out our GitHub page. Also check out our `Tigerfish` tutorial to see how these scripts come together to generate example data.
 
