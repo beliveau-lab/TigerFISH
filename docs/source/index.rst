@@ -105,5 +105,6 @@ Do you still have questions after reading the documentation on this site? The be
    Tutorials <tutorials.rst>
    vignettes/index.rst
    cli.rst
+   Default Parameters <parameters.rst>
+   Snakemake workflow <snakemake_view.rst>
    FAQ <faq.rst>
-   Code of Conduct <CODE_OF_CONDUCT.md>
