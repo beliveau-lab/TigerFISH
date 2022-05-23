@@ -3,7 +3,7 @@ Command Line Interface
 
 `Tigerfish` was written by Robin Aguilar while in the Department of Genome Sciences at the University of Washington.
 
-Official code website:
+Official code website: `Tigerfish GitHub Repo <https://github.com/beliveau-lab/TigerFISH>`_
 
 The `Tigerfish` workflow is managed by Snakemake which is used to scale and automatically deploy pipeline jobs in parallel as described in our getting started page.
 
@@ -14,7 +14,7 @@ Named Arguments in config.yml for main workflow
 
 .. image:: imgs/tigerfish_main_overview.png
         :width: 500
-  :alt: Tigerfish main workflow overview
+        :alt: Tigerfish main workflow overview
 
 **fasta_file**: File path. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format.
 
@@ -548,7 +548,7 @@ Named Arguments in config.yml for the Post-process workflow
 
 .. image:: imgs/tigerfish_postprocess_overview.png
            :width: 500
-  :alt: Tigerfish main workflow overview
+           :alt: Tigerfish postprocess workflow overview
 
 **probe_file**: File path. A subset output probe file from the main workflow. This file can contain individual or pools of probes from a shared repeat. Multiple chromosomes with unique probes mapping to independent repeat regions are also allowed.
 
