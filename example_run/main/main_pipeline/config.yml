@@ -29,13 +29,13 @@ composition: 0.25
 file_start: 0
 
 #parameters for probe_design step
-min_length: 25
+min_length: 36
 
-max_length: 50
+max_length: 41
 
 min_temp: 42
 
-max_temp: 52
+max_temp: 47
 
 #parameters for kmer_filter script
 mer_val: 18
@@ -46,9 +46,9 @@ c2_val: 5
 
 
 #parameters used for probe_mer_filter script
-enrich_score: 0.90
+enrich_score: 0.50
 
-copy_num: 100
+copy_num: 10
 
 
 #parameters used in alignment_filter script
@@ -58,18 +58,18 @@ binding_prop: 0.70
 
 target_sum: 5000
 
-off_bin_thresh: 120 
+off_bin_thresh: 100 
 
 mer_cutoff: 0.95
 
 bt2_alignments: 500000
 
-max_pdups_binding: 0.60
+max_pdups_binding: 0.90
 
 seed_length: 15
 
 model_temp: 69.5
 
-min_on_target: 1000
+min_on_target: 25
 
-max_probe_return: 10
+max_probe_return: 40
