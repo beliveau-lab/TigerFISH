@@ -16,6 +16,7 @@ assembly: "chm13"
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
+    - "chr4"
     - "chrX"
 
 #parameters for repeat_ID step
@@ -52,6 +53,8 @@ copy_num: 100
 
 #parameters used in alignment_filter script
 genome_windows: 5000000
+
+binding_prop: 0.70
 
 target_sum: 5000
 

@@ -11,7 +11,7 @@
 CONFIG_FILE='config.yml'
 SNAKE_FILE='../../../workflow/main/main_pipeline/Snakefile'
 CONDA_ENVS='../../../shared_conda_envs'
-WORK_DIR=''
+WORK_DIR='.'
 
 # set working directory
 cd $WORK_DIR
@@ -35,7 +35,9 @@ function run_pipeline() {
         snakemake --snakefile  $SNAKE_FILE --configfile $CONFIG_FILE \
           --conda-prefix $CONDA_ENVS --use-conda \
           --jobs $NUM_JOBS --latency-wait $LATENCY_WAIT --restart-times $RESTART_ATTEMPTS \
-          --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -l centos=7 -R y -e ./pipeline_output/00_logs/stderr.log -o ./pipeline_output/00_logs/stdout.log" --report pipeline_output/report.html --dag | dot -Tsvg > pipeline_output/dag.svg
+          --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -l centos=7 -R y -e ./pipeline_output/00_logs/stderr.log -o ./pipeline_output/00_logs/stdout.log"
+
+        snakemake --report report.html
 }
 
 # run pipeline
@@ -47,3 +49,18 @@ if [[ $? -ne 0 ]]; then
         snakemake --snakefile $SNAKE_FILE --configfile $CONFIG_FILE --cores all --unlock
         run_pipeline
 fi
+
+
+# export svg and PDF DAG and HTML report
+if [ -d $OUTPUT_DIR ] 
+        then
+                echo -e "Exporting pipeline DAG to svg and pdf..."
+                snakemake --snakefile $SNAKE_FILE --configfile $CONFIG_FILE --dag | dot -Tsvg > pipeline_output/dag.svg
+                snakemake --snakefile $SNAKE_FILE --configfile $CONFIG_FILE --dag | dot -Tpdf > pipeline_output/dag.pdf
+                echo -e "Generating pipeline HTML report..."
+                snakemake --snakefile $SNAKE_FILE --configfile $CONFIG_FILE --report pipeline_output/report.html
+        else
+                echo "Error: Directory $OUTPUT_DIR does not exists."
+fi
+
+

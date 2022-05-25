@@ -180,7 +180,7 @@ rule generate_genome_bins:
     output:
         "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
     conda:
-        "envs/tigerfish.yml"
+        "../envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0",
@@ -209,13 +209,14 @@ if config['defined_coords'] == 'TRUE':
             model_temp = config["model_temp"],
             min_on_target = config["min_on_target"],
             max_probe_return = config["max_probe_return"],
-            off_bin_thresh = config["off_bin_thresh"]
+            off_bin_thresh = config["off_bin_thresh"],
+            binding_prop = config['binding_prop']
         benchmark:
             "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
         output:
             "pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh}"
 
 if config['repeat_discovery'] == 'TRUE':
     checkpoint gather_repeat_regions:
@@ -250,13 +251,14 @@ if config['repeat_discovery'] == 'TRUE':
             model_temp = config["model_temp"],
             min_on_target = config["min_on_target"],
             max_probe_return = config["max_probe_return"],
-            off_bin_thresh = config["off_bin_thresh"]
+            off_bin_thresh = config["off_bin_thresh"],
+            binding_prop = config['binding_prop']
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
         output:
             "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh}"
 
     # aggregate paths to dynamically created files
     def aggregate_input(wildcards):
