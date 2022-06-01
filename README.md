@@ -41,7 +41,7 @@ $ git clone https://github.com/beliveau-lab/TigerFISH.git \
 A full tutorial for running Tigerfish using both repeat discovery and probe design from user provided bed coordinates in included to test the pipeline installation. To run the pipeline using both cases on sample files:
 
 ```
-$ cd example_run/main/defined_coords/ && . run_pipeline.sh
+$ cd example_run/main/main_pipeline/ && . run_pipeline.sh
 ```
 
 Repeat_ID mode is set at the default in the [config.yml](example_run/main/main_pipeline/config.yml) file, but the defined_coords mode can also be set to True to enable this run mode. Please see our config.yml file and Read the Docs documentation to learn more about parameters and Tigerfish run modes.
