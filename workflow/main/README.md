@@ -8,7 +8,6 @@
 Here, each directory contains specific file paths to Snakemake files for each implementation of Tigerfish in the main workflow, conda environments used to run scripts, and detailed scripts used in each pipeline.
 
 * [scripts used in Snakefiles](scripts/)
-* [Snakemake file in repeat discovery](repeat_ID/)
-* [Snakemake file in defined coordinates ](defined_coords/)
+* [Snakemake file](Snakefile)
 * [conda environments used](envs/)
 
