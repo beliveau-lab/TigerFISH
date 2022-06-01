@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="#readme"><img src="../../docs/source/imgs/tigerfish_logo.png" width="200"></a>
+    <a href="#readme"><img src="../../../docs/source/imgs/tigerfish_logo.png" width="200"></a>
 </div>
 
 ## Main Internal Workflow: Repeat Identification Test
