@@ -91,7 +91,7 @@ seq2
 
 
 
-Named Arguments in `config.yml<https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/postprocess/config.yml>`_ for the Post-process workflow
+Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/postprocess/config.yml>`_ for the Post-process workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image:: imgs/tigerfish_postprocess_overview.png
