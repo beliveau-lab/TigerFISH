@@ -187,7 +187,7 @@ rule generate_genome_bins:
         genome = config['assembly'],
         window = config['genome_windows']
     benchmark:
-        "pipeline_output/benchmark/01_reference_files/01_bin_genome/genome_bins.txt"
+        "pipeline_output/benchmarks/01_reference_files/01_bin_genome/genome_bins.txt"
     shell:
         'bedtools makewindows -g {input.sizes} -w {params.window} > {output}'
 
