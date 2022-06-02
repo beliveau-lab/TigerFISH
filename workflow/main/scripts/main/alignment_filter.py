@@ -97,7 +97,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                bowtie_idx,r_thresh,bowtie_string,
                                NUPACK_MODEL,bt2_k_val,max_pdups_binding,
                                seed_length,max_probe_return,min_on_target,
-                               genomic_bins,thresh):
+                               genomic_bins,thresh,pdups_p):
     """
     Function implements filter by returning probe cands until on target sum
     for a target region is reached.
@@ -176,7 +176,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
             #and this is the first item  to be added into the empty list
             #evals if any bins are off target
             for key,val in prop_dict.items():
-                if ((signal_pileup_subset['bin_type'] == 1).all() == True and
+                if (val >= float(pdups_p) and (signal_pileup_subset['bin_type'] == 1).all() == True and
                     on_target_dict[key] >= int(min_on_target) and
                     len(keep_probe_names_list) == 0):
 
@@ -194,7 +194,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
 
                 #now if there are new items being added to the keep list
 
-                if ((signal_pileup_subset['bin_type'] == 1).all() == True and
+                if (val >= float(pdups_p) and (signal_pileup_subset['bin_type'] == 1).all() == True and
                     on_target_dict[key] >= int(min_on_target) and
                     len(keep_probe_names_list) >= 1) :
 
@@ -509,6 +509,10 @@ def process_pairwise(pairwise_file):
                                         'align_chr',
                                         'align_start'])
 
+        pairwise_df=pairwise_df[~pairwise_df.parent.str.contains("N")]
+        pairwise_df=pairwise_df[~pairwise_df.derived.str.contains("N")]
+
+
     #collapse duplicates
     unique_probes_df = pairwise_df.drop_duplicates(subset=['parent',
                                                   'derived'],
@@ -782,12 +786,15 @@ def map_alignments_by_bin(chr_track,chr_overlap,repeat_overlap,pairs_pdups,thres
 
     #label columns for matching overlaps
     chr_overlap=chr_overlap[~chr_overlap.chrom.str.contains("M")]
+    chr_overlap=chr_overlap[~chr_overlap.chrom_b.str.contains("M")]
 
     #label columns for matching overlaps
     repeat_overlap=repeat_overlap[~repeat_overlap.chrom.str.contains("M")]
+    repeat_overlap=repeat_overlap[~repeat_overlap.chrom_b.str.contains("M")]
 
     #label columns for data where you have the nupack data
     pairs_pdups=pairs_pdups[~pairs_pdups.derived.str.contains("M")]
+    pairs_pdups=pairs_pdups[~pairs_pdups.align_chr.str.contains("M")]
 
     pairs_pdups = pairs_pdups.drop(['parent', 'derived'], axis = 1)
 
@@ -817,6 +824,8 @@ def map_alignments_by_bin(chr_track,chr_overlap,repeat_overlap,pairs_pdups,thres
         coord_key = str(chrom) + "_" + str(start)
         if coord_key in bin_dict:
             bin_coords_list.append(bin_dict[coord_key])
+        else:
+            print(bin_dict[coord_key])
 
     pairs_pdups['bin_label'] = bin_coords_list
 
@@ -950,7 +959,8 @@ def main():
                            required = True, help = 'genome binned file')
     requiredNamed.add_argument('-th', '--thresh', action='store',
                                required=True, help='pdups >= to subset')
-
+    requiredNamed.add_argument('-p', '--pdups_p', action='store',
+                               required=True, help='pdups prop min')
     args = userInput.parse_args()
     p_file = args.probe_file
     o_file = args.out_file
@@ -964,6 +974,7 @@ def main():
     max_probe_return = args.max_probe_return
     genomic_bins = args.genomic_bin
     thresh = args.thresh
+    pdups_p = args.pdups_p
 
     #the bowtie string settings used for running the alignment algorithm
     bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
@@ -999,7 +1010,7 @@ def main():
                                                                max_probe_return,
                                                                min_on_target,
                                                                genomic_bins,
-                                                               thresh)
+                                                               thresh,pdups_p)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

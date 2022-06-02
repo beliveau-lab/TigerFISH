@@ -31,21 +31,11 @@ if (is.null(opt$repeat_annotation)){
 probe_repeat <- read.table(opt$repeat_annotation, 
                            sep = "\t", header=FALSE)
 
-#name columns
-colnames(probe_repeat)<-c("probe_coords","repeat_coords","probe")
-
-probe_repeat$probe_coords<-NULL
-probe_repeat$probe<-NULL
-
-out<-cSplit(probe_repeat, "repeat_coords", sep="-")
-
-out<-cSplit(out, "repeat_coords_1", sep=":")
-
-renamed_regions <- out %>% 
+renamed_regions <- probe_repeat %>% 
   rename(
-    chrom = repeat_coords_1_1,
-    start = repeat_coords_1_2,
-    stop = repeat_coords_2
+    chrom = V1,
+    start = V2,
+    stop = V3
     
   )
 
@@ -60,16 +50,20 @@ renamed_regions <- as.data.frame(renamed_regions)
 chrom_sizes <- read.table(opt$chrom_sizes, 
                            sep = "\t",header=FALSE)
 
+#subset where chrom in regions is row in chrom_sizes
+
+select_chrom <- subset(chrom_sizes, V1 %in% renamed_regions$chrom)
+
 #name columns
-colnames(chrom_sizes)<-c("chrom","stop")
+colnames(select_chrom)<-c("chrom","stop")
 
 #add start of chrom
-chrom_sizes$start<-1
+select_chrom$start<-1
 
-chrom_sizes<-renamed_regions[,c("chrom","start","stop")]
+select_chrom<-select_chrom[,c("chrom","start","stop")]
 
 #generate chromomap
-map<-chromoMap(list(chrom_sizes),list(renamed_regions))
+map<-chromoMap(list(select_chrom),list(renamed_regions))
 
 #isave as html
 saveWidget(map,opt$out)

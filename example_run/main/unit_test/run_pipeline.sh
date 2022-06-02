@@ -9,9 +9,9 @@
 
 # configure file paths
 CONFIG_FILE='config.yml'
-SNAKE_FILE='../../../workflow/main/unit_test_pipeline/Snakefile'
+SNAKE_FILE='../../../workflow/main/main_pipeline/Snakefile'
 CONDA_ENVS='../../../shared_conda_envs'
-WORK_DIR='/net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_01_10_github_unit_test_integ/git_clone/TigerFISH/example_run/main/unit_test'
+WORK_DIR='.'
 
 # set working directory
 cd $WORK_DIR
@@ -35,7 +35,9 @@ function run_pipeline() {
         snakemake --snakefile  $SNAKE_FILE --configfile $CONFIG_FILE \
           --conda-prefix $CONDA_ENVS --use-conda \
           --jobs $NUM_JOBS --latency-wait $LATENCY_WAIT --restart-times $RESTART_ATTEMPTS \
-          --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -l centos=7 -R y -e ./pipeline_output/00_logs/stderr.log -o ./pipeline_output/00_logs/stdout.log" 
+          --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -l centos=7 -R y -e ./pipeline_output/00_logs/stderr.log -o ./pipeline_output/00_logs/stdout.log"
+
+        snakemake --report report.html
 }
 
 # run pipeline
@@ -48,6 +50,7 @@ if [[ $? -ne 0 ]]; then
         run_pipeline
 fi
 
+
 # export svg and PDF DAG and HTML report
 if [ -d $OUTPUT_DIR ] 
         then
@@ -59,3 +62,5 @@ if [ -d $OUTPUT_DIR ]
         else
                 echo "Error: Directory $OUTPUT_DIR does not exists."
 fi
+
+

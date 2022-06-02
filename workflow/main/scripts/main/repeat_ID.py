@@ -272,7 +272,7 @@ def find_repeats(indices_to_parse,kmer_indices,mer_length):
         index_end.append(int(item))
         end=kmer_indices[item]
         kmer_end.append(int(int(end) + int(mer_length)))
-        
+     
     repeat_ends_df=pd.DataFrame(list(zip(kmer_end,index_end)),
                                 columns=['r_end','r_index_end'])
 

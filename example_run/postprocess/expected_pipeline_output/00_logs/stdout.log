@@ -1,0 +1,32 @@
+---0.00552821159362793 seconds ---
+---0.01070404052734375 seconds ---
+done
+---0.0058138370513916016 seconds ---
+---0.018355369567871094 seconds ---
+Done
+       probe_coords      repeat_coords  ... off_target_sum  on_target_prop
+0  chrX:15770-15810  chrX:10528-181991  ...            0.0             1.0
+
+[1 rows x 11 columns]
+---0.23123478889465332 seconds ---
+done
+---0.006664752960205078 seconds ---
+---0.016171932220458984 seconds ---
+done
+---0.02739095687866211 seconds ---
+---0.03621792793273926 seconds ---
+---0.07725143432617188 seconds ---
+---0.08625650405883789 seconds ---
+---0.9894580841064453 seconds ---
+done
+********************************** __ __ ************
+** __**|__ * __* __ * __ __ * __ *|  |  |* __ * __ **
+**|__**|  |*|  *|__|*|  |  |*|__|*|  |  |*|_ |*|__|**
+***********************************************|   **
+*****************************************************
+OUTPUT: 
+Number of Chromosome sets: 1 
+Number of Chromosomes in set  1 : 1 
+Processing data.. 
+Number of annotations in data set  1 : 1 
+Visualizing..                   

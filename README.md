@@ -15,6 +15,8 @@ Tigerfish is a technology and software tool that enables users to design oligonu
 
 3. An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2022).  
 
+Our documents are publicly found and hosted on Read the Docs.
+
 ## Installation
 
 1. Install [conda](https://docs.conda.io/en/latest/miniconda.html) as needed for your system.
@@ -38,19 +40,14 @@ $ git clone https://github.com/beliveau-lab/TigerFISH.git \
 
 A full tutorial for running Tigerfish using both repeat discovery and probe design from user provided bed coordinates in included to test the pipeline installation. To run the pipeline using both cases on sample files:
 
-When repeat coordinates are provided:
-
 ```
-$ cd example_run/main/defined_coords/ && . run_pipeline.sh
+$ cd example_run/main/main_pipeline/ && . run_pipeline.sh
 ```
 
-When repeat discovery is initiated:
+Repeat_ID mode is set at the default in the [config.yml](example_run/main/main_pipeline/config.yml) file, but the defined_coords mode can also be set to True to enable this run mode. Please see our config.yml file and Read the Docs documentation to learn more about parameters and Tigerfish run modes.
 
-```
-$ cd example_run/main/repeat_ID/ && . run_pipeline.sh
-```
 
-When these examples are run, expected outputs may be compared [here](example_run/main/defined_coords/expected_pipeline_output/) when coordinates are provided and [here](example_run/main/repeat_ID/expected_pipeline_output/) for repeat discovery mode.
+When these examples are run, expected outputs may be compared [here](example_run/main/main_pipeline/expected_pipeline_output/defined_coords_output/) when coordinates are provided and [here](example_run/main/main_pipeline/expected_pipeline_output/repeat_ID_output/) for repeat discovery mode.
 
 To survey how postprocessing is done, a seperate analysis pipeline may be invoked using the command below once both items in the main implementation tutorial have been completed. 
 
@@ -61,15 +58,9 @@ To deploy Tigerfish on your own data, update the file paths in config.yml with t
 
 This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html), and distributed according to [best practices](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html). If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started. 
 
-![Tigerfish Pipeline](docs/img/defined_coords_pipeline.svg)
-
 ## Documentation
 
-Additional information is available in the docs for:
-
-* [Input file specification](docs/main/pipeline_input.md)
-* [Output file specification](docs/main/pipeline_output.md)
-* [Description of pipeline steps](docs/main/pipeline_steps.md)
+Please read our comprehensive Read the Docs page and tutorials to learn more about Tigerfish.
 
 ## Questions
 
