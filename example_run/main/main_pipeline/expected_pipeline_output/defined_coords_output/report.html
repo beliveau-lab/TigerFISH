@@ -404,7 +404,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://snakemake.readthedocs.io">Snakemake Report</a>
       <div class="nav navbar-nav navbar-center" id="brand"></div>
       <ul class="nav navbar-nav navbar-right" style="padding-right: 10px;">
-        <li class="text-white">Wed Sep 15 19:43:37 2021 PST</li>
+        <li class="text-white">Thu Jun  2 09:58:39 2022 PST</li>
         <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 5.20.1</a></li>
       </ul>
       <!--<input id="searchbar" class="invisible form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
@@ -487,7 +487,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
               </thead>
               <tbody>
                   <tr>
-                    <td>../../example_run/main/config.yml</td>
+                    <td>../../../example_run/main/main_pipeline/config.yml</td>
                     <td>
                       <a data-toggle="collapse" role="button" href="#configfile-" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
                       <div class="collapse" id="configfile-">
@@ -548,8 +548,26 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code><span class="c1">#path to genome fasta</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code><span class="c1">#path to genome fasta</span>
 <span class="nt">fasta_file</span><span class="p">:</span> <span class="s">&quot;data/example.fa&quot;</span>
+
+<span class="c1">#path to file containing primary chromosome sizes</span>
+<span class="nt">chrom_sizes_file</span><span class="p">:</span> <span class="s">&quot;data/chm13.chrom.sizes&quot;</span>
 
 <span class="c1">#if coordinates are provided for probe design, file goes here</span>
 <span class="nt">bed_file</span><span class="p">:</span> <span class="s">&quot;data/dxz4_synthetic.bed&quot;</span>
@@ -565,47 +583,59 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     <span class="p p-Indicator">-</span> <span class="s">&quot;chrX&quot;</span>
 
 <span class="c1">#parameters for repeat_ID step</span>
-<span class="nt">window</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">4000</span>
-<span class="nt">threshold</span><span class="p">:</span> 
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="nt">composition</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.25</span>
-<span class="nt">file_start</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="nt">window</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4000</span>
 
+<span class="nt">threshold</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+
+<span class="nt">composition</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.25</span>
+
+<span class="nt">file_start</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="c1">#parameters for probe_design step</span>
+<span class="nt">min_length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">36</span>
+
+<span class="nt">max_length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">41</span>
+
+<span class="nt">min_temp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">42</span>
+
+<span class="nt">max_temp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">47</span>
 
 <span class="c1">#parameters for kmer_filter script</span>
-<span class="nt">mer_val</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">18</span>
-<span class="nt">c1_val</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="nt">c2_val</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">mer_val</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">18</span>
+
+<span class="nt">c1_val</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">c2_val</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
 
 
 <span class="c1">#parameters used for probe_mer_filter script</span>
-<span class="nt">enrich_score</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.50</span>
-<span class="nt">copy_num</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="nt">enrich_score</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.50</span>
+
+<span class="nt">copy_num</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
 
 
 <span class="c1">#parameters used in alignment_filter script</span>
-<span class="nt">pdups</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.95</span>
-<span class="nt">probe_count</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="nt">target_sum</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">5000</span>
-<span class="nt">mer_cutoff</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.95</span>
-<span class="nt">bt2_alignments</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">300000</span>
-<span class="nt">max_off_target</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
-<span class="nt">max_pdups_binding</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">0.60</span>
+<span class="nt">genome_windows</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5000000</span>
+
+<span class="nt">binding_prop</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.70</span>
+
+<span class="nt">target_sum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5000</span>
+
+<span class="nt">off_bin_thresh</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span> 
+
+<span class="nt">mer_cutoff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.95</span>
+
+<span class="nt">bt2_alignments</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">500000</span>
+
+<span class="nt">max_pdups_binding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.90</span>
+
+<span class="nt">seed_length</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15</span>
+
+<span class="nt">model_temp</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">69.5</span>
+
+<span class="nt">min_on_target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">25</span>
+
+<span class="nt">max_probe_return</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>
 </code></pre></div>
 </td></tr></table>
                       </div>
@@ -719,7 +749,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li><function input_for_summary at 0x7f2e80a14b80></li>
+                            <li><function input_for_summary at 0x7f992287f700></li>
                         </ul>
                       </td>
                     </tr>
@@ -759,6 +789,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -768,7 +799,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/finish_summary.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/finish_summary.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -809,6 +840,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.4.bt2</li>
                             <li>pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.rev.1.bt2</li>
                             <li>pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.rev.2.bt2</li>
+                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed</li>
                         </ul>
                       </td>
                     </tr>
@@ -848,6 +880,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -857,7 +890,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/alignment_filter.py -f <span class="o">{</span>input.probe_files<span class="o">}</span> -b <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -r <span class="o">{</span>params.region_thresh<span class="o">}</span> -p <span class="o">{</span>params.pdups_prop<span class="o">}</span> -c <span class="o">{</span>params.probe_count<span class="o">}</span> -k <span class="o">{</span>params.k_val<span class="o">}</span> -ot <span class="o">{</span>params.max_off_target<span class="o">}</span> -pb <span class="o">{</span>params.max_pdups_binding<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/alignment_filter.py -f <span class="o">{</span>input.probe_files<span class="o">}</span> -b <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -r <span class="o">{</span>params.region_thresh<span class="o">}</span> -p <span class="o">{</span>params.binding_prop<span class="o">}</span> -k <span class="o">{</span>params.k_val<span class="o">}</span> -pb <span class="o">{</span>params.max_pdups_binding<span class="o">}</span> -l <span class="o">{</span>params.seed_length<span class="o">}</span> -t <span class="o">{</span>params.model_temp<span class="o">}</span> -moT <span class="o">{</span>params.min_on_target<span class="o">}</span> -Mr <span class="o">{</span>params.max_probe_return<span class="o">}</span> -gb <span class="o">{</span>input.genome_bins<span class="o">}</span> -th <span class="o">{</span>params.off_bin_thresh<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -931,6 +964,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -940,7 +974,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/probe_mer_filter.py -f <span class="o">{</span>input.probes<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -e <span class="o">{</span>params.enrich<span class="o">}</span> -cn <span class="o">{</span>params.copy_num<span class="o">}</span> -m <span class="o">{</span>params.mer_cutoff<span class="o">}</span> -k <span class="o">{</span>params.mer<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/probe_mer_filter.py -f <span class="o">{</span>input.probes<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -e <span class="o">{</span>params.enrich<span class="o">}</span> -cn <span class="o">{</span>params.copy_num<span class="o">}</span> -m <span class="o">{</span>params.mer_cutoff<span class="o">}</span> -k <span class="o">{</span>params.mer<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1019,6 +1053,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1029,6 +1064,90 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     <tr>
                       <td class="rule-property" colspan=2>
                         <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>bowtie2-build --threads <span class="m">4</span> <span class="o">{</span>input<span class="o">}</span> <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span>
+</code></pre></div>
+</td></tr></table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-rule="generate_genome_bins" class="modal rule-properties" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Rule generate_genome_bins</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table w-auto table-sm table-borderless ruletable">
+                  <caption>Rule properties</caption>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Jobs</th><td>1</td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Input files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>data/chm13.chrom.sizes</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Output files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <th scope="row" colspan=2>Conda software stack</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>bedtools=2.29.2</li>
+                            <li>biopython=1.77</li>
+                            <li>bowtie2=2.3.5.1</li>
+                            <li>jellyfish=2.2.10</li>
+                            <li>numpy=1.18.5</li>
+                            <li>pandas=1.0.5</li>
+                            <li>pip=20.1.1</li>
+                            <li>pybedtools=0.8.1</li>
+                            <li>sam2pairwise=1.0.0</li>
+                            <li>samtools=1.9</li>
+                            <li>scikit-learn=0.23.1</li>
+                            <li>scipy=1.5.0</li>
+                            <li>zip=3.0</li>
+                            <li>nupack=4</li>
+                            <li>python=3.7.8</li>
+                            <li>matplotlib=3.3.4</li>
+                            <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Code</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools makewindows -g <span class="o">{</span>input.sizes<span class="o">}</span> -w <span class="o">{</span>params.window<span class="o">}</span> &gt; <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1104,6 +1223,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1113,7 +1233,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/kmer_filter.py -p <span class="o">{</span>input.probes<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -j <span class="o">{</span>input.jf<span class="o">}</span> -f <span class="o">{</span>input.region_fa<span class="o">}</span> -m <span class="o">{</span>params.mer<span class="o">}</span> -c1 <span class="o">{</span>params.c1<span class="o">}</span> -c2 <span class="o">{</span>params.c2<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/kmer_filter.py -p <span class="o">{</span>input.probes<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -j <span class="o">{</span>input.jf<span class="o">}</span> -f <span class="o">{</span>input.region_fa<span class="o">}</span> -m <span class="o">{</span>params.mer<span class="o">}</span> -c1 <span class="o">{</span>params.c1<span class="o">}</span> -c2 <span class="o">{</span>params.c2<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1190,6 +1310,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1199,7 +1320,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/generate_jf_idx.py -f <span class="o">{</span>input.fasta_file<span class="o">}</span> -j <span class="o">{</span>input.jf<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span> -m <span class="o">{</span>params.mer<span class="o">}</span> -f_o <span class="o">{</span>output.chrom_fa<span class="o">}</span> -j_o <span class="o">{</span>output.jf_count<span class="o">}</span> -i <span class="o">{</span>output.chrom_idx<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/generate_jf_idx.py -f <span class="o">{</span>input.fasta_file<span class="o">}</span> -j <span class="o">{</span>input.jf<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span> -m <span class="o">{</span>params.mer<span class="o">}</span> -f_o <span class="o">{</span>output.chrom_fa<span class="o">}</span> -j_o <span class="o">{</span>output.jf_count<span class="o">}</span> -i <span class="o">{</span>output.chrom_idx<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1233,7 +1354,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li><function input_for_design_probes at 0x7f2e80a14820></li>
+                            <li><function input_for_design_probes at 0x7f992287f820></li>
                             <li>pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/{sample}.fa</li>
                         </ul>
                       </td>
@@ -1275,6 +1396,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1284,7 +1406,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/design_probes.py -b <span class="o">{</span>input.region_bed<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span> -g <span class="o">{</span>input.chr_path<span class="o">}</span> -p_o <span class="o">{</span>output.designed_probes<span class="o">}</span> -r_o <span class="o">{</span>output.probe_fa<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/design_probes.py -b <span class="o">{</span>input.region_bed<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span> -g <span class="o">{</span>input.chr_path<span class="o">}</span> -p_o <span class="o">{</span>output.designed_probes<span class="o">}</span> -r_o <span class="o">{</span>output.probe_fa<span class="o">}</span> -l <span class="o">{</span>params.min_length<span class="o">}</span> -L <span class="o">{</span>params.max_length<span class="o">}</span> -t <span class="o">{</span>params.min_temp<span class="o">}</span> -T <span class="o">{</span>params.max_temp<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1358,6 +1480,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1441,6 +1564,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1450,7 +1574,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/main/scripts/split_bed.py -b <span class="o">{</span>input.bed_file<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span> -o <span class="o">{</span>output.chrom_region<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../../workflow/main/scripts/main/split_bed.py -b <span class="o">{</span>input.bed_file<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span> -o <span class="o">{</span>output.chrom_region<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -2116,7 +2240,7 @@ if (typeof module !== 'undefined') {
 
       var rulegraph_spec = {
         "$schema": "https://vega.github.io/schema/vega/v5.json",
-        "width": 432.74,
+        "width": 639.74,
         "height": 614.0,
         "padding": 0,
         "autosize": "none",
@@ -2129,11 +2253,11 @@ if (typeof module !== 'undefined') {
         "data": [
           {
             "name": "node-data",
-            "values": [{'rule': 'alignment_filter', 'fx': 176.74, 'fy': 378.0}, {'rule': 'all', 'fx': 176.74, 'fy': 594.0}, {'rule': 'design_probes', 'fx': 221.74, 'fy': 162.0}, {'rule': 'finish', 'fx': 176.74, 'fy': 522.0}, {'rule': 'generate_bt2_indices', 'fx': 87.742, 'fy': 306.0}, {'rule': 'generate_jf_count', 'fx': 312.74, 'fy': 18.0}, {'rule': 'generate_jf_idx', 'fx': 312.74, 'fy': 90.0}, {'rule': 'kmer_filter', 'fx': 266.74, 'fy': 234.0}, {'rule': 'probe_mer_filter', 'fx': 266.74, 'fy': 306.0}, {'rule': 'split_bed', 'fx': 181.74, 'fy': 90.0}, {'rule': 'summary', 'fx': 176.74, 'fy': 450.0}]
+            "values": [{'rule': 'alignment_filter', 'fx': 287.74, 'fy': 378.0}, {'rule': 'all', 'fx': 287.74, 'fy': 594.0}, {'rule': 'design_probes', 'fx': 428.74, 'fy': 162.0}, {'rule': 'finish', 'fx': 287.74, 'fy': 522.0}, {'rule': 'generate_bt2_indices', 'fx': 87.742, 'fy': 306.0}, {'rule': 'generate_genome_bins', 'fx': 287.74, 'fy': 306.0}, {'rule': 'generate_jf_count', 'fx': 519.74, 'fy': 18.0}, {'rule': 'generate_jf_idx', 'fx': 519.74, 'fy': 90.0}, {'rule': 'kmer_filter', 'fx': 473.74, 'fy': 234.0}, {'rule': 'probe_mer_filter', 'fx': 473.74, 'fy': 306.0}, {'rule': 'split_bed', 'fx': 388.74, 'fy': 90.0}, {'rule': 'summary', 'fx': 287.74, 'fy': 450.0}]
           },
           {
             "name": "link-data",
-            "values": [{'target': 0, 'source': 10, 'value': 1}, {'target': 2, 'source': 7, 'value': 1}, {'target': 3, 'source': 1, 'value': 1}, {'target': 4, 'source': 0, 'value': 1}, {'target': 5, 'source': 6, 'value': 1}, {'target': 6, 'source': 7, 'value': 1}, {'target': 6, 'source': 2, 'value': 1}, {'target': 7, 'source': 8, 'value': 1}, {'target': 8, 'source': 0, 'value': 1}, {'target': 9, 'source': 2, 'value': 1}, {'target': 10, 'source': 3, 'value': 1}]
+            "values": [{'target': 0, 'source': 11, 'value': 1}, {'target': 2, 'source': 8, 'value': 1}, {'target': 3, 'source': 1, 'value': 1}, {'target': 4, 'source': 0, 'value': 1}, {'target': 5, 'source': 0, 'value': 1}, {'target': 6, 'source': 7, 'value': 1}, {'target': 7, 'source': 8, 'value': 1}, {'target': 7, 'source': 2, 'value': 1}, {'target': 8, 'source': 9, 'value': 1}, {'target': 9, 'source': 0, 'value': 1}, {'target': 10, 'source': 2, 'value': 1}, {'target': 11, 'source': 3, 'value': 1}]
           }
         ],
 
@@ -2241,7 +2365,7 @@ if (typeof module !== 'undefined') {
       var runtimes_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Runtimes of jobs.",
-        "data": {"values": [{'rule': 'alignment_filter', 'runtime': 258.6724076271057}, {'rule': 'design_probes', 'runtime': 21.934349298477173}, {'rule': 'finish', 'runtime': 0.0060291290283203125}, {'rule': 'generate_bt2_indices', 'runtime': 69.54651737213135}, {'rule': 'generate_jf_count', 'runtime': 131.8224699497223}, {'rule': 'generate_jf_idx', 'runtime': 11.078165769577026}, {'rule': 'kmer_filter', 'runtime': 3.8505196571350098}, {'rule': 'probe_mer_filter', 'runtime': 3.4959754943847656}, {'rule': 'split_bed', 'runtime': 87.92995429039001}, {'rule': 'summary', 'runtime': 4.003822565078735}]},
+        "data": {"values": [{'rule': 'alignment_filter', 'runtime': 4.641808748245239}, {'rule': 'design_probes', 'runtime': 7.355639219284058}, {'rule': 'finish', 'runtime': 7.5856592655181885}, {'rule': 'generate_bt2_indices', 'runtime': 6.273755788803101}, {'rule': 'generate_genome_bins', 'runtime': 9.868896961212158}, {'rule': 'generate_jf_count', 'runtime': 8.47055697441101}, {'rule': 'generate_jf_idx', 'runtime': 9.601567268371582}, {'rule': 'kmer_filter', 'runtime': 10.062500715255737}, {'rule': 'probe_mer_filter', 'runtime': 9.948375940322876}, {'rule': 'split_bed', 'runtime': 9.009286880493164}, {'rule': 'summary', 'runtime': 0.24371767044067383}]},
         "mark": "point",
         "encoding": {
           "x": {"field": "runtime", "type": "quantitative",
@@ -2258,7 +2382,7 @@ if (typeof module !== 'undefined') {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Timeline of jobs.",
         "data": {
-          "values": [{'rule': 'alignment_filter', 'starttime': '2021-09-15T19:38:23.118961', 'endtime': '2021-09-15T19:42:41.791368'}, {'rule': 'design_probes', 'starttime': '2021-09-15T19:37:53.749602', 'endtime': '2021-09-15T19:38:15.683951'}, {'rule': 'finish', 'starttime': '2021-09-15T19:42:45.852617', 'endtime': '2021-09-15T19:42:45.858646'}, {'rule': 'generate_bt2_indices', 'starttime': '2021-09-15T19:35:30.885216', 'endtime': '2021-09-15T19:36:40.431734'}, {'rule': 'generate_jf_count', 'starttime': '2021-09-15T19:35:30.737213', 'endtime': '2021-09-15T19:37:42.559683'}, {'rule': 'generate_jf_idx', 'starttime': '2021-09-15T19:37:42.632221', 'endtime': '2021-09-15T19:37:53.710387'}, {'rule': 'kmer_filter', 'starttime': '2021-09-15T19:38:15.708064', 'endtime': '2021-09-15T19:38:19.558584'}, {'rule': 'probe_mer_filter', 'starttime': '2021-09-15T19:38:19.598798', 'endtime': '2021-09-15T19:38:23.094774'}, {'rule': 'split_bed', 'starttime': '2021-09-15T19:35:30.848994', 'endtime': '2021-09-15T19:36:58.778949'}, {'rule': 'summary', 'starttime': '2021-09-15T19:42:41.818606', 'endtime': '2021-09-15T19:42:45.822429'}]
+          "values": [{'rule': 'alignment_filter', 'starttime': '2022-06-02T09:57:56.551808', 'endtime': '2022-06-02T09:58:01.193617'}, {'rule': 'design_probes', 'starttime': '2022-06-02T09:56:03.647629', 'endtime': '2022-06-02T09:56:11.003268'}, {'rule': 'finish', 'starttime': '2022-06-02T09:58:13.669021', 'endtime': '2022-06-02T09:58:21.254680'}, {'rule': 'generate_bt2_indices', 'starttime': '2022-06-02T09:54:24.490196', 'endtime': '2022-06-02T09:54:30.763952'}, {'rule': 'generate_genome_bins', 'starttime': '2022-06-02T09:54:20.930055', 'endtime': '2022-06-02T09:54:30.798952'}, {'rule': 'generate_jf_count', 'starttime': '2022-06-02T09:55:12.415553', 'endtime': '2022-06-02T09:55:20.886110'}, {'rule': 'generate_jf_idx', 'starttime': '2022-06-02T09:55:31.336606', 'endtime': '2022-06-02T09:55:40.938173'}, {'rule': 'kmer_filter', 'starttime': '2022-06-02T09:56:20.995831', 'endtime': '2022-06-02T09:56:31.058332'}, {'rule': 'probe_mer_filter', 'starttime': '2022-06-02T09:56:41.151019', 'endtime': '2022-06-02T09:56:51.099395'}, {'rule': 'split_bed', 'starttime': '2022-06-02T09:54:21.806665', 'endtime': '2022-06-02T09:54:30.815952'}, {'rule': 'summary', 'starttime': '2022-06-02T09:58:10.982931', 'endtime': '2022-06-02T09:58:11.226649'}]
         },
         "mark": "point",
         "encoding": {
