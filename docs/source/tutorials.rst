@@ -78,7 +78,7 @@ In addition to the genomic FASTA and chrom.sizes file, users also specify that a
 
 **Pipeline output**
 
-Similar to that of `repeat_discovery` mode, an independent directory contains the probes of interest that map to the repeat region provided in the input BED file.
+Similar to that of `repeat_discovery` mode, an independent directory contains the probes of interest that map to the repeat region provided in the input BED file. This output directory can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/expected_pipeline_output/repeat_ID_output>`_. 
 
 
 
