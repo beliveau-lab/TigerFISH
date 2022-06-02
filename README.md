@@ -60,7 +60,7 @@ This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/
 
 ## Documentation
 
-Please read our comprehensive Read the Docs page and tutorials to learn more about Tigerfish.
+Please read our comprehensive [Read the Docs page and tutorials to learn more about Tigerfish](https://beliveau-lab-tigerfish.readthedocs-hosted.com/en/latest/).
 
 ## Questions
 
