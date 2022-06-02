@@ -9,7 +9,7 @@
 
 # configure file paths
 CONFIG_FILE='config.yml'
-SNAKE_FILE='../../../workflow/main/main_pipeline/Snakefile'
+SNAKE_FILE='../../workflow/postprocess/Snakefile'
 CONDA_ENVS='../../../shared_conda_envs'
 WORK_DIR='.'
 
