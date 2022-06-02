@@ -134,23 +134,24 @@ Table of default parameters for post process workflow
    * - bin_thresh
      - 5
      
-    For larger genomes, specifically for use in CHM13, we recommend the folling parameters instead. You must also change the `bowtie2_dir` parameter to map to the entire derived Bowtie2 alignment indices for the selected genome as well as the full genome's chrom.sizes file in the `chrom_sizes_file` parameter.
-    
-   .. list-table:: Default parameters used within the CHM13 genome
-     :header-rows: 1
 
-     * - Parameter
-       - CHM13
-     * - genome_windows
-       - 5000000
-     * - bt2_alignments
-       - 500000
-    * - seed_length
-       - 15
-     * - model_temp
-       - 69.5
-     * - bin_thresh
-       - 100
+For larger genomes, specifically for use in CHM13, we recommend the folling parameters instead. You must also change the `bowtie2_dir` parameter to map to the entire derived Bowtie2 alignment indices for the selected genome as well as the full genome's chrom.sizes file in the `chrom_sizes_file` parameter.
+    
+.. list-table:: Default parameters used within the CHM13 genome
+   :header-rows: 1
+
+   * - Parameter
+     - CHM13
+   * - genome_windows
+     - 5000000
+   * - bt2_alignments
+     - 500000
+   * - seed_length
+     - 15
+   * - model_temp
+     - 69.5
+   * - bin_thresh
+     - 100
      
     
 
