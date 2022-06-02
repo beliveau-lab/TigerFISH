@@ -40,8 +40,13 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
 
 
 </style>
-    <style>.source .hll { background-color: #ffffcc }
-.source  { background: #ffffff; }
+    <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.source .hll { background-color: #ffffcc }
+.source { background: #ffffff; }
 .source .c { color: #999988; font-style: italic } /* Comment */
 .source .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .source .k { font-weight: bold } /* Keyword */
@@ -399,8 +404,8 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://snakemake.readthedocs.io">Snakemake Report</a>
       <div class="nav navbar-nav navbar-center" id="brand"></div>
       <ul class="nav navbar-nav navbar-right" style="padding-right: 10px;">
-        <li class="text-white">Fri Sep 17 11:05:41 2021 PST</li>
-        <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 5.24.0</a></li>
+        <li class="text-white">Thu Jun  2 11:34:20 2022 PST</li>
+        <li><a class="text-white" href="https://snakemake.readthedocs.io">Snakemake 5.20.1</a></li>
       </ul>
       <!--<input id="searchbar" class="invisible form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
     </nav>
@@ -420,12 +425,6 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                 <a class="nav-link panel-link" data-panel="statistics" href="javascript:void(0)">
                   <span data-feather="bar-chart-2"></span>
                   Statistics
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link panel-link" data-panel="configuration" href="javascript:void(0)">
-                  <span data-feather="settings"></span>
-                  Configuration
                 </a>
               </li>
             </ul>
@@ -470,63 +469,6 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
             </div>
           </div>
 
-          <div class="panel" id="configuration">
-            <h2>Configuration</h2>
-            <table class="table">
-              <caption>Configuration files</caption>
-              <thead>
-                <tr>
-                  <th scope="col">File</th>
-                  <th scope="col">Code</th>
-                </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                    <td>../../example_run/postprocess/config.yml</td>
-                    <td>
-                      <a data-toggle="collapse" role="button" href="#configfile-" aria-expanded="false" aria-controls="collapse-env"><span data-feather="plus-circle"></span></a>
-                      <div class="collapse" id="configfile-">
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17</pre></div></td><td class="code"><div class="source"><pre><span></span><code><span class="c1">#path to genome fasta</span>
-<span class="c1">#the input genome chrom sizes file</span>
-<span class="nt">genome_windows</span><span class="p">:</span> <span class="s">&quot;data/chm13.chrom.sizes&quot;</span>
-
-<span class="c1">#the output file of interest from probe design</span>
-<span class="nt">probe_file</span><span class="p">:</span> <span class="s">&quot;data/dxz4_test_probe.tsv&quot;</span>
-
-<span class="nt">fasta_file</span><span class="p">:</span> <span class="s">&quot;data/example.fa&quot;</span>
-
-<span class="nt">assembly</span><span class="p">:</span> <span class="s">&quot;chm13&quot;</span>
-
-<span class="c1">#scaffolds present in output file</span>
-<span class="nt">samples</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="s">&quot;chrX&quot;</span>
-
-<span class="nt">bt2_alignments</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">300000</span>
-</code></pre></div>
-</td></tr></table>
-                      </div>
-                    </td>
-                  </tr>
-              </tbody>
-            </table>
-          </div>
 
           <div class="panel" id="panel-loading-screen">
             <p class="animation">Loading...</p>
@@ -552,11 +494,11 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
           </div>
         </div>
 
-        <div data-rule="bin_genome" class="modal rule-properties" tabindex="-1" role="dialog">
+        <div data-rule="finish" class="modal rule-properties" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Rule bin_genome</h5>
+                <h5 class="modal-title">Rule finish</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -575,7 +517,11 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>data/chm13.chrom.sizes</li>
+                            <li>pipeline_output/02_intermediate_files/02_alignment/{sample}_alignment.txt</li>
+                            <li>pipeline_output/03_output_files/02_chromomap/{sample}_chromomap.html</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/genome_wide/{sample}_alignment_binding.tsv</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/threshold/{sample}_thresh_binding.tsv</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/plots/{sample}_genome_view.png</li>
                         </ul>
                       </td>
                     </tr>
@@ -586,45 +532,19 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed</li>
+                            <li>pipeline_output/finished/DONE_{sample}.txt</li>
                         </ul>
                       </td>
                     </tr>
 
 
-                    <tr>
-                      <th scope="row" colspan=2>Conda software stack</th>
-                    </tr>
-                    <tr>
-                      <td class="rule-property" colspan=2>
-                        <ul>
-                            <li>bedtools=2.29.2</li>
-                            <li>biopython=1.77</li>
-                            <li>bowtie2=2.3.5.1</li>
-                            <li>jellyfish=2.2.10</li>
-                            <li>numpy=1.18.5</li>
-                            <li>pandas=1.0.5</li>
-                            <li>pip=20.1.1</li>
-                            <li>pybedtools=0.8.1</li>
-                            <li>sam2pairwise=1.0.0</li>
-                            <li>samtools=1.9</li>
-                            <li>scikit-learn=0.23.1</li>
-                            <li>scipy=1.5.0</li>
-                            <li>zip=3.0</li>
-                            <li>nupack=4</li>
-                            <li>python=3.7.8</li>
-                            <li>matplotlib=3.3.4</li>
-                            <li>seaborn=0.11.1</li>
-                        </ul>
-                      </td>
-                    </tr>
 
                     <tr>
                       <th scope="row" colspan=2>Code</th>
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools makewindows -g <span class="o">{</span>input<span class="o">}</span> -w <span class="m">1000000</span> &gt; <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>touch <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -635,11 +555,11 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
             </div>
           </div>
         </div>
-        <div data-rule="final" class="modal rule-properties" tabindex="-1" role="dialog">
+        <div data-rule="align_probes" class="modal rule-properties" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Rule final</h5>
+                <h5 class="modal-title">Rule align_probes</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -658,7 +578,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li><function aggregate_map at 0x7fd64ac70b00></li>
+                            <li>pipeline_output/02_intermediate_files/01_split_regions/{sample}_probes.txt</li>
                         </ul>
                       </td>
                     </tr>
@@ -669,7 +589,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/final/{sample}_done.txt</li>
+                            <li>pipeline_output/02_intermediate_files/02_alignment/{sample}_alignment.txt</li>
                         </ul>
                       </td>
                     </tr>
@@ -698,6 +618,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -707,7 +628,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>touch <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/generate_alignments.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -b <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span> -k <span class="o">{</span>params.k_val<span class="o">}</span> -l <span class="o">{</span>params.seed_length<span class="o">}</span> -t <span class="o">{</span>params.model_temp<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -742,8 +663,8 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                       <td class="rule-property" colspan=2>
                         <ul>
                             <li>data/chm13.chrom.sizes</li>
-                            <li>pipeline_output/02_intermediate_files/02_split_regions/{sample}/{probe_coords}.bed</li>
-                            <li><function aggregate_input at 0x7fd64ac36b00></li>
+                            <li>pipeline_output/02_intermediate_files/05_get_repeat_bed/{sample}.bed</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/plots/{sample}_genome_view.png</li>
                         </ul>
                       </td>
                     </tr>
@@ -754,7 +675,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/03_output_files/02_chromomap/{sample}/{probe_coords}_chromomap.html</li>
+                            <li>pipeline_output/03_output_files/02_chromomap/{sample}_chromomap.html</li>
                         </ul>
                       </td>
                     </tr>
@@ -781,7 +702,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>Rscript --vanilla ../../workflow/postprocess/scripts/make_chromomap.R -c <span class="o">{</span>input.chrom_sizes<span class="o">}</span> -r <span class="o">{</span>input.probe_bed<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>Rscript --vanilla ../../workflow/postprocess/scripts/make_chromomap.R -c <span class="o">{</span>input.chrom_sizes<span class="o">}</span> -r <span class="o">{</span>input.region_bed<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -792,11 +713,11 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
             </div>
           </div>
         </div>
-        <div data-rule="generate_plots" class="modal rule-properties" tabindex="-1" role="dialog">
+        <div data-rule="get_alignments" class="modal rule-properties" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Rule generate_plots</h5>
+                <h5 class="modal-title">Rule get_alignments</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -815,9 +736,10 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed</li>
-                            <li>pipeline_output/02_intermediate_files/05_bedtools_intersect/{sample}/{probe_coords}_intersect.txt</li>
-                            <li>pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt</li>
+                            <li>pipeline_output/02_intermediate_files/04_bedtools_intersect/{sample}_intersect.txt</li>
+                            <li>pipeline_output/02_intermediate_files/04_bedtools_intersect/{sample}_repeat_intersect.txt</li>
+                            <li>pipeline_output/02_intermediate_files/02_alignment/{sample}_alignment.txt</li>
+                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_bins.bed</li>
                         </ul>
                       </td>
                     </tr>
@@ -828,7 +750,9 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/03_output_files/01_plot_alignment/{sample}/{probe_coords}_plot.png</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/genome_wide/{sample}_alignment_binding.tsv</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/threshold/{sample}_thresh_binding.tsv</li>
+                            <li>pipeline_output/03_output_files/01_generate_probe_binding/plots/{sample}_genome_view.png</li>
                         </ul>
                       </td>
                     </tr>
@@ -857,6 +781,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -866,7 +791,175 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/generate_bins_plots.py -c_t <span class="o">{</span>input.genome_bin<span class="o">}</span> -c_o <span class="o">{</span>input.bedtools_out<span class="o">}</span> -p <span class="o">{</span>input.pairwise_out<span class="o">}</span> -pl <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/get_alignments.py -c_t <span class="o">{</span>input.genome_bin<span class="o">}</span> -c_o <span class="o">{</span>input.alignment_intersect<span class="o">}</span> -p <span class="o">{</span>input.probes_alignment<span class="o">}</span> -r_o <span class="o">{</span>input.region_intersect<span class="o">}</span> -pl <span class="o">{</span>output.binding_maps<span class="o">}</span> -t <span class="o">{</span>params.thresh<span class="o">}</span> -t_s <span class="o">{</span>output.thresh_binding<span class="o">}</span> -c_s <span class="o">{</span>output.target_binding<span class="o">}</span>
+</code></pre></div>
+</td></tr></table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-rule="gather_repeat_regions" class="modal rule-properties" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Rule gather_repeat_regions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table w-auto table-sm table-borderless ruletable">
+                  <caption>Rule properties</caption>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Jobs</th><td>1</td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Input files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>data/dxz4_test_probe.tsv</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Output files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>pipeline_output/02_intermediate_files/01_split_regions/{sample}_probes.txt</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <th scope="row" colspan=2>Conda software stack</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>bedtools=2.29.2</li>
+                            <li>biopython=1.77</li>
+                            <li>bowtie2=2.3.5.1</li>
+                            <li>jellyfish=2.2.10</li>
+                            <li>numpy=1.18.5</li>
+                            <li>pandas=1.0.5</li>
+                            <li>pip=20.1.1</li>
+                            <li>pybedtools=0.8.1</li>
+                            <li>sam2pairwise=1.0.0</li>
+                            <li>samtools=1.9</li>
+                            <li>scikit-learn=0.23.1</li>
+                            <li>scipy=1.5.0</li>
+                            <li>zip=3.0</li>
+                            <li>nupack=4</li>
+                            <li>python=3.7.8</li>
+                            <li>matplotlib=3.3.4</li>
+                            <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Code</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/split_filter_region.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -c <span class="o">{</span>params.chrom_name<span class="o">}</span>
+</code></pre></div>
+</td></tr></table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-rule="get_region_bed" class="modal rule-properties" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Rule get_region_bed</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <table class="table w-auto table-sm table-borderless ruletable">
+                  <caption>Rule properties</caption>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Jobs</th><td>1</td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Input files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>pipeline_output/02_intermediate_files/01_split_regions/{sample}_probes.txt</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Output files</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>pipeline_output/02_intermediate_files/05_get_repeat_bed/{sample}.bed</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <th scope="row" colspan=2>Conda software stack</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <ul>
+                            <li>bedtools=2.29.2</li>
+                            <li>biopython=1.77</li>
+                            <li>bowtie2=2.3.5.1</li>
+                            <li>jellyfish=2.2.10</li>
+                            <li>numpy=1.18.5</li>
+                            <li>pandas=1.0.5</li>
+                            <li>pip=20.1.1</li>
+                            <li>pybedtools=0.8.1</li>
+                            <li>sam2pairwise=1.0.0</li>
+                            <li>samtools=1.9</li>
+                            <li>scikit-learn=0.23.1</li>
+                            <li>scipy=1.5.0</li>
+                            <li>zip=3.0</li>
+                            <li>nupack=4</li>
+                            <li>python=3.7.8</li>
+                            <li>matplotlib=3.3.4</li>
+                            <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th scope="row" colspan=2>Code</th>
+                    </tr>
+                    <tr>
+                      <td class="rule-property" colspan=2>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/get_region_bed.py -i <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -900,8 +993,9 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/02_intermediate_files/04_derived_beds/{sample}/{probe_coords}_derived.bed</li>
-                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed</li>
+                            <li>pipeline_output/02_intermediate_files/03_derived_beds/{sample}_derived.bed</li>
+                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_bins.bed</li>
+                            <li>pipeline_output/02_intermediate_files/05_get_repeat_bed/{sample}.bed</li>
                         </ul>
                       </td>
                     </tr>
@@ -912,7 +1006,8 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/02_intermediate_files/05_bedtools_intersect/{sample}/{probe_coords}_intersect.txt</li>
+                            <li>pipeline_output/02_intermediate_files/04_bedtools_intersect/{sample}_intersect.txt</li>
+                            <li>pipeline_output/02_intermediate_files/04_bedtools_intersect/{sample}_repeat_intersect.txt</li>
                         </ul>
                       </td>
                     </tr>
@@ -941,6 +1036,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -950,7 +1046,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools intersect -wa -wb -a <span class="o">{</span>input.derived_bed<span class="o">}</span> -b <span class="o">{</span>input.genome_bin<span class="o">}</span> &gt; <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools intersect -wa -wb -a <span class="o">{</span>input.derived_bed<span class="o">}</span> -b <span class="o">{</span>input.genome_bin<span class="o">}</span> &gt; <span class="o">{</span>output.alignments_out<span class="o">}</span> <span class="p">|</span>bedtools intersect -wa -wb -a <span class="o">{</span>input.repeat_bed<span class="o">}</span> -b <span class="o">{</span>input.genome_bin<span class="o">}</span> &gt; <span class="o">{</span>output.repeat_out<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -961,11 +1057,11 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
             </div>
           </div>
         </div>
-        <div data-rule="align_probes" class="modal rule-properties" tabindex="-1" role="dialog">
+        <div data-rule="bin_genome" class="modal rule-properties" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Rule align_probes</h5>
+                <h5 class="modal-title">Rule bin_genome</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -984,7 +1080,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/02_intermediate_files/02_split_regions/{sample}/{probe_coords}.bed</li>
+                            <li>data/chm13.chrom.sizes</li>
                         </ul>
                       </td>
                     </tr>
@@ -995,7 +1091,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt</li>
+                            <li>pipeline_output/01_reference_files/01_bin_genome/genome_bins.bed</li>
                         </ul>
                       </td>
                     </tr>
@@ -1024,6 +1120,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1033,7 +1130,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/pairwise_alignment.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span> -b <span class="o">{</span>BOWTIE2_DIR<span class="o">}</span>/<span class="o">{</span>ASSEMBLY<span class="o">}</span> -k <span class="o">{</span>params.k_val<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>bedtools makewindows -g <span class="o">{</span>input.sizes<span class="o">}</span> -w <span class="o">{</span>params.window<span class="o">}</span> &gt; <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1067,7 +1164,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/02_intermediate_files/03_alignment/{sample}/{probe_coords}_alignment.txt</li>
+                            <li>pipeline_output/02_intermediate_files/02_alignment/{sample}_alignment.txt</li>
                         </ul>
                       </td>
                     </tr>
@@ -1078,7 +1175,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     <tr>
                       <td class="rule-property" colspan=2>
                         <ul>
-                            <li>pipeline_output/02_intermediate_files/04_derived_beds/{sample}/{probe_coords}_derived.bed</li>
+                            <li>pipeline_output/02_intermediate_files/03_derived_beds/{sample}_derived.bed</li>
                         </ul>
                       </td>
                     </tr>
@@ -1107,6 +1204,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                             <li>python=3.7.8</li>
                             <li>matplotlib=3.3.4</li>
                             <li>seaborn=0.11.1</li>
+                            <li>pytest=6.2</li>
                         </ul>
                       </td>
                     </tr>
@@ -1116,7 +1214,7 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{background-
                     </tr>
                     <tr>
                       <td class="rule-property" colspan=2>
-                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/make_derived_bed.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
+                        <table class="sourcetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div class="source"><pre><span></span><code>python ../../workflow/postprocess/scripts/make_derived_beds.py -f <span class="o">{</span>input<span class="o">}</span> -o <span class="o">{</span>output<span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
                       </td>
@@ -1782,8 +1880,8 @@ if (typeof module !== 'undefined') {
 
       var rulegraph_spec = {
         "$schema": "https://vega.github.io/schema/vega/v5.json",
-        "width": 352.84000000000003,
-        "height": 470.0,
+        "width": 518.0,
+        "height": 542.0,
         "padding": 0,
         "autosize": "none",
 
@@ -1795,11 +1893,11 @@ if (typeof module !== 'undefined') {
         "data": [
           {
             "name": "node-data",
-            "values": [{'rule': 'align_probes', 'fx': 57.845, 'fy': 18.0}, {'rule': 'all', 'fx': 215.84, 'fy': 450.0}, {'rule': 'bedtools_intersect', 'fx': 118.84, 'fy': 162.0}, {'rule': 'bin_genome', 'fx': 232.84, 'fy': 90.0}, {'rule': 'derived_beds', 'fx': 100.84, 'fy': 90.0}, {'rule': 'final', 'fx': 171.84, 'fy': 378.0}, {'rule': 'generate_chromomap', 'fx': 136.84, 'fy': 306.0}, {'rule': 'generate_plots', 'fx': 124.84, 'fy': 234.0}]
+            "values": [{'rule': 'align_probes', 'fx': 146.0, 'fy': 90.0}, {'rule': 'all', 'fx': 80.0, 'fy': 522.0}, {'rule': 'bedtools_intersect', 'fx': 240.0, 'fy': 234.0}, {'rule': 'bin_genome', 'fx': 122.0, 'fy': 162.0}, {'rule': 'derived_beds', 'fx': 254.0, 'fy': 162.0}, {'rule': 'finish', 'fx': 80.0, 'fy': 450.0}, {'rule': 'gather_repeat_regions', 'fx': 189.0, 'fy': 18.0}, {'rule': 'generate_chromomap', 'fx': 198.0, 'fy': 378.0}, {'rule': 'get_alignments', 'fx': 122.0, 'fy': 306.0}, {'rule': 'get_region_bed', 'fx': 398.0, 'fy': 162.0}]
           },
           {
             "name": "link-data",
-            "values": [{'target': 0, 'source': 7, 'value': 1}, {'target': 0, 'source': 4, 'value': 1}, {'target': 2, 'source': 7, 'value': 1}, {'target': 3, 'source': 1, 'value': 1}, {'target': 3, 'source': 7, 'value': 1}, {'target': 3, 'source': 2, 'value': 1}, {'target': 4, 'source': 2, 'value': 1}, {'target': 5, 'source': 1, 'value': 1}, {'target': 6, 'source': 5, 'value': 1}, {'target': 7, 'source': 6, 'value': 1}]
+            "values": [{'target': 0, 'source': 5, 'value': 1}, {'target': 0, 'source': 8, 'value': 1}, {'target': 0, 'source': 4, 'value': 1}, {'target': 2, 'source': 8, 'value': 1}, {'target': 3, 'source': 8, 'value': 1}, {'target': 3, 'source': 2, 'value': 1}, {'target': 4, 'source': 2, 'value': 1}, {'target': 5, 'source': 1, 'value': 1}, {'target': 6, 'source': 0, 'value': 1}, {'target': 6, 'source': 9, 'value': 1}, {'target': 7, 'source': 5, 'value': 1}, {'target': 8, 'source': 5, 'value': 1}, {'target': 8, 'source': 7, 'value': 1}, {'target': 9, 'source': 7, 'value': 1}, {'target': 9, 'source': 2, 'value': 1}]
           }
         ],
 
@@ -1907,7 +2005,7 @@ if (typeof module !== 'undefined') {
       var runtimes_spec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Runtimes of jobs.",
-        "data": {"values": [{'rule': 'align_probes', 'runtime': 7.820497512817383}, {'rule': 'bedtools_intersect', 'runtime': 3.000739336013794}, {'rule': 'bin_genome', 'runtime': 5.55327296257019}, {'rule': 'derived_beds', 'runtime': 3.502903938293457}, {'rule': 'final', 'runtime': 3.3985610008239746}, {'rule': 'generate_chromomap', 'runtime': 17.273869276046753}, {'rule': 'generate_plots', 'runtime': 14.711380243301392}]},
+        "data": {"values": [{'rule': 'align_probes', 'runtime': 10.050480842590332}, {'rule': 'bedtools_intersect', 'runtime': -0.00904703140258789}, {'rule': 'bin_genome', 'runtime': -0.007934093475341797}, {'rule': 'derived_beds', 'runtime': 10.042042255401611}, {'rule': 'finish', 'runtime': 7.574093818664551}, {'rule': 'gather_repeat_regions', 'runtime': 10.001128196716309}, {'rule': 'generate_chromomap', 'runtime': 9.564066410064697}, {'rule': 'get_alignments', 'runtime': 8.240841388702393}, {'rule': 'get_region_bed', 'runtime': -0.04257798194885254}]},
         "mark": "point",
         "encoding": {
           "x": {"field": "runtime", "type": "quantitative",
@@ -1924,7 +2022,7 @@ if (typeof module !== 'undefined') {
         "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
         "description": "Timeline of jobs.",
         "data": {
-          "values": [{'rule': 'align_probes', 'starttime': '2021-09-17T11:04:45.861246', 'endtime': '2021-09-17T11:04:53.681744'}, {'rule': 'bedtools_intersect', 'starttime': '2021-09-17T11:04:57.238969', 'endtime': '2021-09-17T11:05:00.239708'}, {'rule': 'bin_genome', 'starttime': '2021-09-17T11:04:12.916367', 'endtime': '2021-09-17T11:04:18.469640'}, {'rule': 'derived_beds', 'starttime': '2021-09-17T11:04:53.711932', 'endtime': '2021-09-17T11:04:57.214836'}, {'rule': 'final', 'starttime': '2021-09-17T11:05:32.347780', 'endtime': '2021-09-17T11:05:35.746341'}, {'rule': 'generate_chromomap', 'starttime': '2021-09-17T11:05:15.033643', 'endtime': '2021-09-17T11:05:32.307512'}, {'rule': 'generate_plots', 'starttime': '2021-09-17T11:05:00.262813', 'endtime': '2021-09-17T11:05:14.974193'}]
+          "values": [{'rule': 'align_probes', 'starttime': '2022-06-02T11:32:16.862205', 'endtime': '2022-06-02T11:32:26.912686'}, {'rule': 'bedtools_intersect', 'starttime': '2022-06-02T11:32:56.050754', 'endtime': '2022-06-02T11:32:56.041707'}, {'rule': 'bin_genome', 'starttime': '2022-06-02T11:31:56.132585', 'endtime': '2022-06-02T11:31:56.124651'}, {'rule': 'derived_beds', 'starttime': '2022-06-02T11:32:36.910680', 'endtime': '2022-06-02T11:32:46.952722'}, {'rule': 'finish', 'starttime': '2022-06-02T11:33:49.553757', 'endtime': '2022-06-02T11:33:57.127851'}, {'rule': 'gather_repeat_regions', 'starttime': '2022-06-02T11:31:56.860521', 'endtime': '2022-06-02T11:32:06.861649'}, {'rule': 'generate_chromomap', 'starttime': '2022-06-02T11:33:37.533766', 'endtime': '2022-06-02T11:33:47.097832'}, {'rule': 'get_alignments', 'starttime': '2022-06-02T11:33:08.798936', 'endtime': '2022-06-02T11:33:17.039777'}, {'rule': 'get_region_bed', 'starttime': '2022-06-02T11:32:16.664317', 'endtime': '2022-06-02T11:32:16.621739'}]
         },
         "mark": "point",
         "encoding": {
