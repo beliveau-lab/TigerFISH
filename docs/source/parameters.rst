@@ -10,7 +10,7 @@ We also share that these parameters may *not* equally map across genome size. Fo
 
 
 .. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
-      :header-rows: 1
+   :header-rows: 1
 
    * - Parameter
      - Strict high copy repeat probe search mode
@@ -119,7 +119,7 @@ Table of default parameters for post process workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. list-table:: Default parameters used within the test genome containing the DXZ4 and D4Z4 repeat
-         :header-rows: 1
+   :header-rows: 1
 
    * - Parameter
      - DXZ4 and D4Z4 provided test case
