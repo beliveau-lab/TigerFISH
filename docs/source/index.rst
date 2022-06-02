@@ -60,7 +60,7 @@ A full tutorial for running **Tigerfish** via command line using both repeat dis
 
 .. code-block:: bash
 
-   $ cd example_run/main/defined_coords/ && . run_pipeline.sh
+   $ cd example_run/main/main_pipeline/ && . run_pipeline.sh
 
 Repeat_ID mode is set at the default in the `config.yml file <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_, but the defined_coords mode can also be set to True to enable this run mode. Please see our config.yml file and tutorials  to learn more about parameters and Tigerfish run modes.
 
