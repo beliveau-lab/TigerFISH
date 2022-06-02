@@ -1,7 +1,7 @@
 Snakemake Overview
 ##################
 
-Main workflow
+`Main workflow <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/main_pipeline/Snakefile>`_
 ^^^^^^^^^^^^^
 
 The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, which files are generated at each snakemake step, and where config parameters are called. 
@@ -54,7 +54,7 @@ generate_bt2_indices
 
 
 
-generate_jf_idx
+`generate_jf_idx <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/generate_jf_idx.py>`_
 -----------------
 
 **Purpose**: To generate k-mer count index files using the derived jellyfish hash table from the `generate_jf_count` step. Generates independent k-mer count index files for each scaffold. 
@@ -84,7 +84,7 @@ generate_jf_idx
 
 
 
-split_bed
+`split_bed <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/split_bed.py>`_
 ---------
 
 **Purpose**: Reads a bed file provided by the user containing coordinates of regions for probe design. If regions on different chromosomes exist,this script will generate independent files for different regions based on chromosome.
@@ -108,7 +108,7 @@ split_bed
 
 
 
-repeat_ID
+`repeat_ID <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/repeat_ID.py>`_
 ---------
 
 **Purpose**: Reads a jellyfish count file of a given scaffold, a chrom index file to account for base location, as well as the path to the chromosome FASTA to generate BED files of genomic regions that have been flagged as having elevated k-mer counts based on user parameters.
@@ -139,7 +139,7 @@ repeat_ID
 * BED_FILE
 
 
-design_probes
+`design_probes <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/design_probes.py>`_
 -------------
 
 **Purpose**: Designs oligo probes against identified repeat regions if `repeat_ID` = TRUE. If repeat coordinates provided, probes will be designed here against those regions.
@@ -171,7 +171,7 @@ design_probes
 
 
 
-kmer_filter
+`kmer_filter <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/kmer_filter.py>`_
 -----------
 
 Purpose: Takes a probe file generated from design_probes and computes each probe's aggregate on-target region k-mer count and k-mer counts that occur in the whole genome. Rank orders probes based on this on target binding proportion and aggregate on-target region k-mer count. 
@@ -199,7 +199,7 @@ Output: A probe file with oligos provided in ranked order based on user paramete
 
 
 
-probe_mer_filter
+`probe_mer_filter <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/probe_mer_filter.py>`_
 ----------------
 
 Purpose: Takes a probe file that undergoes rank sorting in kmer_filter to cull probes based on user parameters.
@@ -252,7 +252,7 @@ Output: A file containing the chromosome and bin position in a tab seperated fil
 
 
 
-alignment_filter
+`alignment_filter <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/alignment_filter.py>`_
 ----------------
 
 Purpose: Takes probes filtered from probe_mer_split after undergoing repeat region split in gather_repeat_regions. Aligns candidate probes to entire reference genome and takes pairwise derived sequences to compute predicted thermodynamic duplexing probability. This means Tigerfish uses this probabilities to aggregate which alignments match to the target repeat region vs elsewhere in the target genome. This is just to ensure that final candidate probes are able to bind to targets of interest. 
@@ -287,7 +287,7 @@ Output: Select repeat specific probes based on user specified filtering paramete
 * (BOWTIE_INDEX)
 * genome_windows (GENOMIC_BIN)
 
-gather_repeat_regions (checkpoint)
+`gather_repeat_regions (checkpoint) <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/split_filter.py>`_
 ---------------------
 
 Purpose: Before alignment, to parallelize multiple repeat regions found within each scaffold, all repeats are split into independent files for parallel computing.
@@ -311,7 +311,7 @@ Output: A series of probe files split by each repeat region and grouped within a
 
 
 
-summary
+`summary <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main/scripts/main/finish_summary.py>`_
 -------
 
 Purpose: Following alignment of all regions, all seperate repeat files are merged into an aggregate probe file. From this probe file statistics are computed that summarizes the total probes per repreat region and their aggregate on and off-target binding. 
@@ -335,7 +335,7 @@ Output: A summary file of total candidates found within each repeat region.
 
 
 
-Post-process Workflow
+`Post-process Workflow <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/Snakefile>`_
 ^^^^^^^^^^^^^^^^^^^^^
 
 The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, w
@@ -365,7 +365,7 @@ Output: A file containing the chromosome and bin position in a tab seperated fil
 
 
 
-gather_repeat_regions
+`gather_repeat_regions <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/scripts/split_filter_region.py>`_
 ---------------------
 
 Purpose: If in final set of probes that undergo processing contains repeat regions from multiple chromosomes, they are split by scaffold.
@@ -391,7 +391,7 @@ Output:
 * OUT_PATH
 
 
-align_probes
+`align_probes <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/scripts/generate_alignments.py>`_
 ------------
 
 Purpose: Takes probes from split files and aligns them to generated genome-wide Bowtie2 indices created during previous run for probe generation in the main workflow. Note: it is important that the whole genome FASTA is provided as the **fasta_file** to ensure that a correct genome wide Bowtie2 index is made.
@@ -418,7 +418,7 @@ Output: An alignment file containing the derived mapped alignments for each prob
 * OUT_PATH
 
 
-derived_beds
+`derived_beds <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/scripts/make_derived_beds.py>`_
 ------------
 
 Purpose: Takes the output of the alignment file to generate a BED file of all derived alignment locations.
@@ -442,7 +442,7 @@ Output: A BED file containing the coords of all mapped genome wide alignments.
 
 
 
-get_region_bed
+`get_region_bed <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/scripts/get_region_bed.py>`_
 --------------
 
 Purpose: Takes the subset probe file and generates a BED file from the repeat target coordinates.
@@ -493,7 +493,7 @@ Output: An intersected BEDtools file containing the coordinates of each mapped B
 
 
 
-get_alignments
+`get_alignments <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/scripts/get_alignments.py>`_
 --------------
 
 Purpose: For all alignments, predicted duplexing (pDups) values are computed to assess how likely a probe is to bind at a mapped genomic region. This is then used to compute aggregate on-target vs off-target based on the genomic windows computed. 
@@ -522,7 +522,7 @@ Output: An annotated probe file summarizing all true on and off target alignment
 * (THRESH_SUMM)
 * (CHROM_SUMM)
 
-generate_chromomap
+`generate_chromomap <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/postprocess/scripts/make_chromomap.R>`_
 ------------------
 
 Purpose: Implements an R library, chromoMap, to plot where target probes are ancitipated to make FISH signal. These are especially helpful to validate binding sites based on morphology if validating probes via metaphase FISH assay.
