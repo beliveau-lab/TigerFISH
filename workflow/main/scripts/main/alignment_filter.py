@@ -20,6 +20,7 @@ import subprocess
 from subprocess import Popen
 import itertools
 from Bio.Seq import Seq
+import os
 
 ##############################################################################
 
@@ -97,7 +98,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                bowtie_idx,r_thresh,bowtie_string,
                                NUPACK_MODEL,bt2_k_val,max_pdups_binding,
                                seed_length,max_probe_return,min_on_target,
-                               genomic_bins,thresh,pdups_p):
+                               genomic_bins,thresh,pdups_p,ref_flag):
     """
     Function implements filter by returning probe cands until on target sum
     for a target region is reached.
@@ -157,7 +158,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                                       strand_conc_a,
                                                       strand_conc_b,
                                                       NUPACK_MODEL,
-                                                      bt2_k_val,seed_length)
+                                                      bt2_k_val,seed_length,ref_flag)
 
             #compute the on target sum for the top probe
             prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
@@ -166,10 +167,10 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
             #function that makes a temp .bed of alignments and gets overlap
             #embedded function that takes both overlap inputs to return pileup
             #returns: agg by chrom, and pileup subset if pileup ok, then proceed
-            signal_pileup_subset,chrom_summ_df = get_bedtools_map(name,
+            signal_pileup_subset,chrom_summ_df = get_bedtools_map(name,probe_coords_list[0],
                                                                   genomic_bins,
                                                                   top_probe_al,
-                                                                  thresh)
+                                                                  thresh,ref_flag)
 
 
             #checks the items in the proportion dictionary
@@ -282,9 +283,10 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     keep_probes_df.to_csv(o_file, header=False, index=False, sep="\t")
 
 ##############################################################################
+
 def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
                          strand_conc_a,strand_conc_b,NUPACK_MODEL,
-                         bt2_k_val,seed_length):
+                         bt2_k_val,seed_length,ref_flag):
     """
     Function will take a probe sequence and generate an alignment against
     the entire genome with given bowtie2 string and indices. Then, 
@@ -309,8 +311,14 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
     #begin looping over each RR to write a tmp file
     with tempfile.TemporaryDirectory() as tmpdir:
 
-        #make temporary file name
-        fastq_filename = tmpdir + '/region.fastq'
+        #make temporary file name if ref_flag != 1 to save memory
+        #intermediate files saved to demonstrate test functionality
+        if int(ref_flag) == 1: 
+            fastq_dir = "pipeline_output/02_intermediate_files/05_alignment_files/fastq/"
+            create_dir(fastq_dir)
+            fastq_filename = fastq_dir + str(probe_coords) + ".fastq"
+        else:
+            fastq_filename = tmpdir + '/region.fastq'
 
         #reads the file to start writing
         fastq = open(fastq_filename,'w')
@@ -328,7 +336,13 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
         sam_file = bt2_call(fastq_filename,sam_file,bt2_k_val,
                             bowtie_idx,bowtie_string,seed_length)
 
-        bam_file = tmpdir + '/derived.bam'
+        if int(ref_flag) == 1:
+            bam_dir = "pipeline_output/02_intermediate_files/05_alignment_files/bam/"
+            create_dir(bam_dir)
+            bam_file = bam_dir + str(probe_coords) + ".bam" 
+        else:
+            bam_file = tmpdir + '/derived.bam'
+
         bam_file = samtools_call(sam_file,bam_file)
 
         #now make the pairwise file
@@ -381,7 +395,23 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 
         pairwise_df['pdups'] = all_pdups_list
 
+        if int(ref_flag) == 1:
+            pairwise_df_dir = "pipeline_output/02_intermediate_files/05_alignment_files/pairwise_df_out/"
+            create_dir(pairwise_df_dir)
+            pairwise_df_file = pairwise_df_dir + str(probe_coords) + ".tsv"
+            pairwise_df.to_csv(pairwise_df_file, header=False, index=False, sep="\t")
+
         return pairwise_df
+
+##############################################################################
+
+def create_dir(dir):
+   """
+   Function creates directories without throwing an error
+   """
+   if not os.path.exists(dir):
+      os.makedirs(dir)
+   return dir
 
 ##############################################################################
 
@@ -671,14 +701,32 @@ def nupack_sum(pairwise_df,probe_region_dict):
 
 ##############################################################################
 
-def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
+def get_bedtools_map(probe_region,probe_coords,genome_bin_file,top_probe_al,thresh,ref_flag):
 
     with tempfile.TemporaryDirectory() as tmpdir:
 
-        #the file for the bed file overlap
-        repeat_filename = tmpdir + '/region.bed'
+        if int(ref_flag) == 1:
+            #makes intermediate file for the repeat region
+            repeat_dir = "pipeline_output/02_intermediate_files/05_alignment_files/region_bed/"
+            create_dir(repeat_dir) 
+            repeat_filename = repeat_dir + str(probe_region) + ".bed"
+            
+            #creates a bed file for all of the reported alignment overlaps with repeat region
+            repeat_overlap_dir = "pipeline_output/02_intermediate_files/05_alignment_files/region_overlap/"
+            create_dir(repeat_overlap_dir)
+            repeat_overlap_out = repeat_overlap_dir + str(probe_region) + "_overlap.bed"
 
-        repeat_overlap_out = tmpdir + '/overlap_out.bed'
+            #creates a bed of probe overlaps
+            probe_overlap_dir = "pipeline_output/02_intermediate_files/05_alignment_files/probe_overlap/"
+            create_dir(probe_overlap_dir)
+            probe_overlap_out = probe_overlap_dir + str(probe_coords) + "_overlap.bed"
+
+        else:
+            #the file for the bed file overlap
+            repeat_filename = tmpdir + '/region.bed'
+            repeat_overlap_out = tmpdir + '/overlap_out.bed'
+            probe_overlap_out = tmpdir + '/probe_overlap_out.bed'
+
 
         #write the repeat contents as a bed file
         repeat_bed = open(repeat_filename, 'w')
@@ -689,7 +737,6 @@ def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
 
         #write repeat into file format
         repeat_bed.write(str(probe_region))
-
         repeat_bed.close()
 
         #subprocess call to get overlap file
@@ -703,8 +750,10 @@ def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
                                             names=colnames,header=None,
                             sep='\t')
 
-       #the tmp file for the alignments
+
+        #the tmp file for the alignments
         alignment_file = tmpdir + '/probe_alignments.tsv'
+
 
         #drop cols
         columns = ['probe_ID', 'parent', 'derived', 'pdups', 
@@ -716,8 +765,6 @@ def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
         #write contents of df to file
         top_probe_al_coords.to_csv(alignment_file, header=False,
                                    index=False, sep="\t")
-
-        probe_overlap_out = tmpdir + '/probe_overlap_out.bed'
 
         #subprocess call to get overlap file
         subprocess.call(['bedtools', 'intersect', '-wa', '-wb', '-a',
@@ -747,6 +794,22 @@ def get_bedtools_map(probe_region,genome_bin_file,top_probe_al,thresh):
                                                                    probe_overlap_out_df,
                                                                    repeat_overlap_out_df,
                                                                    top_probe_al_map,thresh)
+
+        
+        #output sums binned sum locations and scores
+        if int(ref_flag) == 1:
+            signal_pileup_dir = "pipeline_output/02_intermediate_files/05_alignment_files/signal_pileup_subset/"
+            create_dir(signal_pileup_dir)
+
+            chrom_summ_dir = "pipeline_output/02_intermediate_files/05_alignment_files/chrom_summ_df/"
+            create_dir(chrom_summ_dir)
+
+            signal_pileup_file = signal_pileup_dir + str(probe_coords) + ".tsv"
+            signal_pileup_subset.to_csv(signal_pileup_file, header=False, index=False, sep="\t")
+
+
+            chrom_summ_file = chrom_summ_dir + str(probe_coords) + ".tsv"
+            chrom_summ_df.to_csv(chrom_summ_file, header=False, index=False, sep="\t")
 
         return signal_pileup_subset,chrom_summ_df
 
@@ -961,6 +1024,9 @@ def main():
                                required=True, help='pdups >= to subset')
     requiredNamed.add_argument('-p', '--pdups_p', action='store',
                                required=True, help='pdups prop min')
+    requiredNamed.add_argument('-rf', '--ref_flag', action='store',
+                               required=True, help='reference flag',default = 0)
+
     args = userInput.parse_args()
     p_file = args.probe_file
     o_file = args.out_file
@@ -975,6 +1041,7 @@ def main():
     genomic_bins = args.genomic_bin
     thresh = args.thresh
     pdups_p = args.pdups_p
+    ref_flag = args.ref_flag
 
     #the bowtie string settings used for running the alignment algorithm
     bowtie_string = "--local -N 1 -R 3 -D 20 -i C,4 --score-min G,1,4"
@@ -1010,7 +1077,7 @@ def main():
                                                                max_probe_return,
                                                                min_on_target,
                                                                genomic_bins,
-                                                               thresh,pdups_p)
+                                                               thresh,pdups_p,ref_flag)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
