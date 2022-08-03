@@ -1,0 +1,2 @@
+
+python ../../../../workflow/main/scripts/main/check_defined_coords.py -xt ../pipeline_output/03_output_files/01_all_probes/chrX_all_probes.tsv -xe ../expected_pipeline_output/repeat_ID_output/03_output_files/01_all_probes/chrX_all_probes.tsv
