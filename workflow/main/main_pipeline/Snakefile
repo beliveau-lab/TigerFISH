@@ -1,7 +1,8 @@
-configfile: "../../../example_run/main/main_pipeline/config.yml"
+configfile: "config.yml"
 
 SAMPLES = config["samples"]
 ASSEMBLY = config["assembly"]
+BOWTIE2_DIR = config["bowtie2_dir"]
 
 rule all:
     input:
@@ -21,28 +22,37 @@ rule generate_jf_count:
     output:
         'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
     shell:
-        "jellyfish count -s 3300M -m {params.mer} -o {output} {input.fasta_file}"
+        "jellyfish count -s 3300M -m {params.mer} -o {output} -C {input.fasta_file}"
 
-BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
-rule generate_bt2_indices:
-    input:
-        fasta_file = config["fasta_file"]
-    conda:
-        "../envs/tigerfish.yml"
-    params:
-        mfree="60G",
-        h_rt = "20:0:0"
-    benchmark:
-        'pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log'
-    output:
-        f'{BOWTIE2_DIR}/{ASSEMBLY}.1.bt2',
-        f'{BOWTIE2_DIR}/{ASSEMBLY}.2.bt2',
-        f'{BOWTIE2_DIR}/{ASSEMBLY}.3.bt2',
-        f'{BOWTIE2_DIR}/{ASSEMBLY}.4.bt2',
-        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.1.bt2',
-        f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.2.bt2',
-    shell:
-        'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
+def input_for_bowtie(wildcards):
+    # requires a config containing switches for the whole workflow
+    if config["bowtie2_indices_given"]=='TRUE':
+        return BOWTIE2_DIR
+    elif config["bowtie2_indices_given"]=='FALSE':
+        return rules.generate_bt2_indices.output
+
+if config['bowtie2_indices_given'] == 'FALSE':
+
+    BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+    rule generate_bt2_indices:
+        input:
+            fasta_file = config["fasta_file"]
+        conda:
+            "../envs/tigerfish.yml"
+        params:
+            mfree="60G",
+            h_rt = "20:0:0"
+        benchmark:
+            'pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log'
+        output:
+            f'{BOWTIE2_DIR}/{ASSEMBLY}.1.bt2',
+            f'{BOWTIE2_DIR}/{ASSEMBLY}.2.bt2',
+            f'{BOWTIE2_DIR}/{ASSEMBLY}.3.bt2',
+            f'{BOWTIE2_DIR}/{ASSEMBLY}.4.bt2',
+            f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.1.bt2',
+            f'{BOWTIE2_DIR}/{ASSEMBLY}.rev.2.bt2',
+        shell:
+            'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
 
 rule generate_jf_idx:
     input:
@@ -195,8 +205,8 @@ if config['defined_coords'] == 'TRUE':
     rule alignment_filter:
         input:
             probe_files = rules.probe_mer_filter.output,
-            bt2_idx = rules.generate_bt2_indices.output,
-            genome_bins = rules.generate_genome_bins.output
+            genome_bins = rules.generate_genome_bins.output,
+            BOWTIE2_DIR = input_for_bowtie
         conda:
             "../envs/tigerfish.yml"
         params:
@@ -211,13 +221,13 @@ if config['defined_coords'] == 'TRUE':
             max_probe_return = config["max_probe_return"],
             off_bin_thresh = config["off_bin_thresh"],
             binding_prop = config['binding_prop'],
-            ref_files = config['ref_files']
+            ref_flag = config['ref_flag']
         benchmark:
             "pipeline_output/benchmarks/03_output_files/01_final_probes/{sample}.log"
         output:
             "pipeline_output/03_output_files/01_final_probes/{sample}_all_probes.tsv"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_files}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
 
 if config['repeat_discovery'] == 'TRUE':
     checkpoint gather_repeat_regions:
@@ -238,8 +248,8 @@ if config['repeat_discovery'] == 'TRUE':
     rule alignment_filter:
         input:
             probe_files = "pipeline_output/02_intermediate_files/05_split_regions/{sample}/{region}.txt",
-            bt2_idx = rules.generate_bt2_indices.output,
-            genome_bins = rules.generate_genome_bins.output
+            genome_bins = rules.generate_genome_bins.output,
+            BOWTIE2_DIR = input_for_bowtie
         conda:
             "../envs/tigerfish.yml"
         params:
@@ -254,13 +264,13 @@ if config['repeat_discovery'] == 'TRUE':
             max_probe_return = config["max_probe_return"],
             off_bin_thresh = config["off_bin_thresh"],
             binding_prop = config['binding_prop'],
-            ref_files = config['ref_files']
+            ref_flag = config['ref_flag']
         benchmark:
             "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
         output:
             "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
         shell:
-            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_files}"
+            "python ../../../workflow/main/scripts/main/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
 
     # aggregate paths to dynamically created files
     def aggregate_input(wildcards):
