@@ -14,7 +14,7 @@ rule bin_genome:
     output:
         "pipeline_output/01_reference_files/01_bin_genome/genome_bins.bed"
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0",
@@ -33,7 +33,7 @@ rule gather_repeat_regions:
     input:
         config['probe_file']
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="10G",
         h_rt="200:0:0",
@@ -52,7 +52,7 @@ rule align_probes:
     output:
         "pipeline_output/02_intermediate_files/02_alignment/{sample}_alignment.txt"
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0",
@@ -71,7 +71,7 @@ rule derived_beds:
     output:
         "pipeline_output/02_intermediate_files/03_derived_beds/{sample}_derived.bed"
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
@@ -86,7 +86,7 @@ rule get_region_bed:
     output:
         "pipeline_output/02_intermediate_files/05_get_repeat_bed/{sample}.bed"
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
@@ -105,7 +105,7 @@ rule bedtools_intersect:
         alignments_out = "pipeline_output/02_intermediate_files/04_bedtools_intersect/{sample}_intersect.txt",
         repeat_out = "pipeline_output/02_intermediate_files/04_bedtools_intersect/{sample}_repeat_intersect.txt"
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "320:0:0"
@@ -127,7 +127,7 @@ rule get_alignments:
         thresh_binding = "pipeline_output/03_output_files/01_generate_probe_binding/threshold/{sample}_thresh_binding.tsv",
         binding_maps = "pipeline_output/03_output_files/01_generate_probe_binding/plots/{sample}_genome_view.png"
     conda:
-        "envs/tigerfish.yml"
+        "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "320:0:0",
@@ -143,7 +143,7 @@ rule generate_chromomap:
     output:
         "pipeline_output/03_output_files/02_chromomap/{sample}_chromomap.html"
     conda:
-        "envs/chromomap_env.yml"
+        "../../shared_conda_envs/chromomap_env.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"

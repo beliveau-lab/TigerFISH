@@ -12,7 +12,7 @@ rule generate_jf_count:
     input:
         fasta_file = config["fasta_file"]
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         mer = config["mer_val"],
         mfree="60G",
@@ -38,7 +38,7 @@ if config['bowtie2_indices_given'] == 'FALSE':
         input:
             fasta_file = config["fasta_file"]
         conda:
-            "../envs/tigerfish.yml"
+            "../../../shared_conda_envs/tigerfish.yml"
         params:
             mfree="60G",
             h_rt = "20:0:0"
@@ -59,7 +59,7 @@ rule generate_jf_idx:
         fasta_file = config["fasta_file"],
         jf = rules.generate_jf_count.output
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         chrom_name = "{sample}",
         mer = config["mer_val"],
@@ -79,7 +79,7 @@ if config['defined_coords'] == 'TRUE':
         input:
             bed_file = config["bed_file"]
         conda:
-            "../envs/tigerfish.yml"
+            "../../../shared_conda_envs/tigerfish.yml"
         params:
             chrom_name = "{sample}",
             mfree="10G",
@@ -98,7 +98,7 @@ if config['repeat_discovery'] == 'TRUE':
             chrom_index = rules.generate_jf_idx.output.chrom_idx,
             chr_path = rules.generate_jf_idx.output.chrom_fa
         conda:
-            "../envs/tigerfish.yml"
+            "../../../shared_conda_envs/tigerfish.yml"
         params:
             window = config["window"],
             threshold = config["threshold"],
@@ -127,7 +127,7 @@ rule design_probes:
         region_bed = input_for_design_probes,
         chr_path = rules.generate_jf_idx.output.chrom_fa
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="60G",
         h_rt="200:0:0",
@@ -150,7 +150,7 @@ rule kmer_filter:
         probes = rules.design_probes.output.designed_probes,
         region_fa = rules.design_probes.output.probe_fa
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="50G",
         h_rt="200:0:0",
@@ -169,7 +169,7 @@ rule probe_mer_filter:
     input:
         probes = rules.kmer_filter.output
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="50G",
         h_rt="200:0:0",
@@ -190,7 +190,7 @@ rule generate_genome_bins:
     output:
         "pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed"
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0",
@@ -208,7 +208,7 @@ if config['defined_coords'] == 'TRUE':
             genome_bins = rules.generate_genome_bins.output,
             BOWTIE2_DIR = input_for_bowtie
         conda:
-            "../envs/tigerfish.yml"
+            "../../../shared_conda_envs/tigerfish.yml"
         params:
             mfree="12G",
             h_rt="350:0:0",
@@ -234,7 +234,7 @@ if config['repeat_discovery'] == 'TRUE':
         input:
             rules.probe_mer_filter.output
         conda:
-            "../envs/tigerfish.yml"
+            "../../../shared_conda_envs/tigerfish.yml"
         params:
             mfree="5G",
             h_rt="350:0:0"
@@ -251,7 +251,7 @@ if config['repeat_discovery'] == 'TRUE':
             genome_bins = rules.generate_genome_bins.output,
             BOWTIE2_DIR = input_for_bowtie
         conda:
-            "../envs/tigerfish.yml"
+            "../../../shared_conda_envs/tigerfish.yml"
         params:
             mfree="12G",
             h_rt="350:0:0",
@@ -317,7 +317,7 @@ rule summary:
     output:
         "pipeline_output/03_output_files/02_probe_summary/{sample}_probe_summary.txt"
     conda:
-        "../envs/tigerfish.yml"
+        "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt="200:0:0"
