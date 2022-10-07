@@ -9,7 +9,7 @@ source activate snakemake_env
 
 # run the pipeline
 snakemake --configfile config.yml --snakefile $SNAKE_FILE \
-    --use-conda --conda-prefix $CONDA_ENVS --cores \
+    --use-conda --conda-frontend mamba --conda-prefix $CONDA_ENVS --cores \
     --restart-times 3
 
 # export PDF and svg visualizations of the DAG structure of pipeline steps
