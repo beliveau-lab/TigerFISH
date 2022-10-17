@@ -1,0 +1,25 @@
+
+#path to genome fasta
+probe_file: "data/chm13_chr9_hsat_subset.tsv"
+
+#option for probe design that directs pipeline implementation
+assembly: "chm13"
+
+#directory for bowtie2 test alignment, replace path with entire genome bowtie2 build for expected behavior
+bowtie2_dir: "../../main/main_pipeline/probe_design_chm13/pipeline_output/"
+
+#all chromosomes present in bed file or required for probe discovery are listed here
+samples:
+    - "chr9"
+
+chrom_sizes_file: "data/chm13.chrom.sizes"
+
+genome_windows: 5000000
+
+bt2_alignments: 500000
+
+seed_length: 15
+
+model_temp: 69.5
+
+bin_thresh: 100
