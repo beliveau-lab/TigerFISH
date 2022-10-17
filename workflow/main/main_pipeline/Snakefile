@@ -1,3 +1,5 @@
+import os
+
 configfile: "config.yml"
 
 SAMPLES = config["samples"]
@@ -7,6 +9,10 @@ BOWTIE2_DIR = config["bowtie2_dir"]
 rule all:
     input:
         expand("pipeline_output/finished/DONE_{sample}.txt",sample=SAMPLES)
+
+if (config['defined_coords'] == TRUE and config['repeat_discovery'] == TRUE) or (config['defined_coords'] == FALSE and config['repeat_discovery'] == FALSE):
+    print("Repeat_Discovery Mode and Probe_Design Mode can only be run independently. Please select TRUE for desired workflow and FALSE for the other process. Exiting ...")
+    exit()
 
 rule generate_jf_count:
     input:

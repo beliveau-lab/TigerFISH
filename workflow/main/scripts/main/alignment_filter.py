@@ -888,7 +888,9 @@ def map_alignments_by_bin(chr_track,chr_overlap,repeat_overlap,pairs_pdups,thres
         if coord_key in bin_dict:
             bin_coords_list.append(bin_dict[coord_key])
         else:
-            print(bin_dict[coord_key])
+            print("Genomic bin missing... Check if chrom.sizes file is made correctly...")
+            print("Missing bin coordinate: " + str(bin_dict[coord_key]))
+            exit()
 
     pairs_pdups['bin_label'] = bin_coords_list
 
