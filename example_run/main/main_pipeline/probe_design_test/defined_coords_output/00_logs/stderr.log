@@ -1,0 +1,1203 @@
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	generate_jf_count
+	1
+
+[Thu Jun  2 09:54:13 2022]
+rule generate_jf_count:
+    input: data/example.fa
+    output: pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log
+
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	generate_bt2_indices
+	1
+
+[Thu Jun  2 09:54:13 2022]
+rule generate_bt2_indices:
+    input: data/example.fa
+    output: pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.1.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.2.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.3.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.4.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.rev.1.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.rev.2.bt2
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log
+
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	generate_genome_bins
+	1
+
+[Thu Jun  2 09:54:14 2022]
+rule generate_genome_bins:
+    input: data/chm13.chrom.sizes
+    output: pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmark/01_reference_files/01_bin_genome/genome_bins.txt
+
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	split_bed
+	1
+
+[Thu Jun  2 09:54:14 2022]
+rule split_bed:
+    input: data/dxz4_synthetic.bed
+    output: pipeline_output/02_intermediate_files/01_split_bed/chrX_regions.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/01_split_bed/chrX_log.log
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+Building a SMALL index
+[Thu Jun  2 09:54:20 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Jun  2 09:54:21 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Jun  2 09:54:24 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Jun  2 09:55:12 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	generate_jf_idx
+	1
+
+[Thu Jun  2 09:55:23 2022]
+rule generate_jf_idx:
+    input: data/example.fa, pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf
+    output: pipeline_output/01_reference_files/03_jf_idx/chrX_jf_temp.txt, pipeline_output/01_reference_files/03_jf_idx/chrX_index.txt, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/03_jf_idx/chrX_log.log
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+[Thu Jun  2 09:55:31 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	design_probes
+	1
+
+[Thu Jun  2 09:55:43 2022]
+rule design_probes:
+    input: pipeline_output/02_intermediate_files/01_split_bed/chrX_regions.bed, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa
+    output: pipeline_output/02_intermediate_files/02_designed_probes/chrX_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chrX_probe_regions.fa
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/chrX_log.log
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+index file pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa.fai not found, generating...
+[Thu Jun  2 09:56:03 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	kmer_filter
+	1
+
+[Thu Jun  2 09:56:13 2022]
+rule kmer_filter:
+    input: pipeline_output/01_reference_files/03_jf_idx/chrX_jf_temp.txt, pipeline_output/02_intermediate_files/02_designed_probes/chrX_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chrX_probe_regions.fa
+    output: pipeline_output/02_intermediate_files/03_pre_filter/chrX_probes_pre_filter.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/chrX_log.log
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+[Thu Jun  2 09:56:20 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	probe_mer_filter
+	1
+
+[Thu Jun  2 09:56:33 2022]
+rule probe_mer_filter:
+    input: pipeline_output/02_intermediate_files/03_pre_filter/chrX_probes_pre_filter.txt
+    output: pipeline_output/02_intermediate_files/04_post_mer_filter/chrX_probes_mer_filter.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/chrX_log.log
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+[Thu Jun  2 09:56:41 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	alignment_filter
+	1
+
+[Thu Jun  2 09:56:53 2022]
+rule alignment_filter:
+    input: pipeline_output/02_intermediate_files/04_post_mer_filter/chrX_probes_mer_filter.txt, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.1.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.2.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.3.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.4.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.rev.1.bt2, pipeline_output/01_reference_files/02_bt2_idx/chm13/chm13.rev.2.bt2, pipeline_output/01_reference_files/01_bin_genome/genome_1MB_bins.bed
+    output: pipeline_output/03_output_files/01_final_probes/chrX_all_probes.tsv
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_output_files/01_final_probes/chrX.log
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Jun  2 09:57:56 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	summary
+	1
+
+[Thu Jun  2 09:58:03 2022]
+rule summary:
+    input: pipeline_output/03_output_files/01_final_probes/chrX_all_probes.tsv
+    output: pipeline_output/03_output_files/02_probe_summary/chrX_probe_summary.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_output_files/02_probe_summary/chrX_probe_summary.txt
+    wildcards: sample=chrX
+
+Activating conda environment: /net/beliveau/vol1/home/eaguil/tigerfish/software_patches/2022_05_25_Tigerfish_git_testing/TigerFISH/shared_conda_envs/169fcfa2
+[Thu Jun  2 09:58:10 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	finish
+	1
+
+[Thu Jun  2 09:58:13 2022]
+rule finish:
+    input: pipeline_output/03_output_files/02_probe_summary/chrX_probe_summary.txt
+    output: pipeline_output/finished/DONE_chrX.txt
+    jobid: 0
+    wildcards: sample=chrX
+
+[Thu Jun  2 09:58:13 2022]
+Finished job 0.
+1 of 1 steps (100%) done

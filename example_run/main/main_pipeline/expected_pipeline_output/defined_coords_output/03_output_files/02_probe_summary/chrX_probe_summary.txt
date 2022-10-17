@@ -1,2 +1,0 @@
-repeat_coords	probe_count	on_target_sum	off_target_sum
-chrX:10528-181991	35	3019.083815528118	5.83137351999409
