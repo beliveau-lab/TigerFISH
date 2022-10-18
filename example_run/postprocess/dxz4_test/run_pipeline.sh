@@ -8,8 +8,8 @@ source activate snakemake_env
 
 # run pipeline
 snakemake --snakefile  $SNAKE_FILE --configfile $CONFIG_FILE \
-          --conda-prefix $CONDA_ENVS --use-conda --conda-frontend mamba \
-          --jobs $NUM_JOBS --latency-wait $LATENCY_WAIT --restart-times $RESTART_ATTEMPTS 3
+          --conda-prefix $CONDA_ENVS --use-conda --conda-frontend mamba --cores \
+          --restart-times 3
 
 echo -e "Exporting pipeline DAG to svg and pdf..."
 snakemake --snakefile $SNAKE_FILE --configfile $CONFIG_FILE --dag | dot -Tsvg > pipeline_output/dag.svg
