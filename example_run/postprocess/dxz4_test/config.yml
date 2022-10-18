@@ -3,7 +3,7 @@
 probe_file: "data/dxz4_test_probe.tsv"
 
 #directory for bowtie2 test alignment, replace path with entire genome bowtie2 build for expected behavior
-bowtie2_dir: "../../main/main_pipeline/repeat_discovery_test/data/bt2/chm13"
+bowtie2_dir: "../../main/main_pipeline/repeat_discovery_test/data/bt2/"
 
 #option for probe design that directs pipeline implementation
 assembly: "chm13"
