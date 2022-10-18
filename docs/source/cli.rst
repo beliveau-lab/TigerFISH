@@ -7,11 +7,11 @@ Official code website: `Tigerfish GitHub Repo <https://github.com/beliveau-lab/T
 
 The `Tigerfish` workflow is managed by Snakemake which is used to scale and automatically deploy pipeline jobs in parallel as described in our getting started page.
 
-Essentially, each script in the Tigerfish workflow has a set of parameters that may be modified by users. Each script in the main workflow implements these parameters which are called from the pipeline's `config.yml` file. 
+Essentially, each script in the `Tigerfish` workflow has a set of parameters that may be modified by users. Each script in the main workflow implements these parameters which are called from the pipeline's `config.yml` file. 
 
-As a user, one would only need to modify arguments from the `config.yml` file in order to get Tigerfish working. Named arguments for each script are defined in detail below. 
+As a user, one would only need to modify arguments from the `config.yml` file in order to get `Tigerfish` working. Named arguments for each script are defined in detail below. 
 
-Recommended default parameters are also provided that were used for probe mining in the latest version of the CHM13 (V2.0)genome.  
+Recommended default parameters are also provided that were used for probe mining in the latest version of the CHM13 (V2.0) genome.  
 
 Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_ for main workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -27,7 +27,7 @@ Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/m
 **chrom_sizes_file**: *File path*. The chromosome sizes file containing all scaffolds and scaffold lenths. Take care to make sure **fasta_file** and **chrom_sizes_file** reflect the same genomic version to avoid unexpected behavior. If one is unsure of whether they have the correct `chrom.sizes` file for a given genome build, it may be derived using the following command on a Linux terminal:
 
 ```
-pip install pyfaidx<br/>
+pip install pyfaidx | 
 faidx input.fasta -i chromsizes > sizes.genome
 ```
 
