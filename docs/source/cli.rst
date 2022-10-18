@@ -27,7 +27,7 @@ Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/m
 **chrom_sizes_file**: *File path*. The chromosome sizes file containing all scaffolds and scaffold lenths. Take care to make sure **fasta_file** and **chrom_sizes_file** reflect the same genomic version to avoid unexpected behavior. If one is unsure of whether they have the correct `chrom.sizes` file for a given genome build, it may be derived using the following command on a Linux terminal:
 
 ```
-pip install pyfaidx  
+pip install pyfaidx<br/>
 faidx input.fasta -i chromsizes > sizes.genome
 ```
 
@@ -49,16 +49,16 @@ faidx input.fasta -i chromsizes > sizes.genome
 
 Example format in config.yml:
 
-sample:  
-- "chr1"  
-- "chr2"
+sample:<br/>
+- "chr1"<br/>
+- "chr2"<br/>
 
 Example format in FASTA file:
 
->chr1  
-seq1  
->chr2  
-seq2
+>chr1<br/>
+seq1<br/>
+>chr2<br/>
+seq2<br/>
 
 **threshold**: *Integer*. `Tigerfish` identifies regions of elevated k-mer counts where these integers are binarized using a user-specified threshold. K-mer counts are computed using Jellyfish. If k-mer counts are >= to this threshold value, they will be assigned a value of 1 while all others receive a 0. This value is only used if **repeat_discovery** is invoked.   
 
