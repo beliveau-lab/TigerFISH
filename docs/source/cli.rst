@@ -47,16 +47,16 @@ faidx input.fasta -i chromsizes > sizes.genome
 
 Example format in config.yml:
 
-sample:<br/>
-- "chr1"<br/>
-- "chr2"<br/>
+sample: |br|
+- "chr1" |br|
+- "chr2" |br|
 
 Example format in FASTA file:
 
->chr1<br/>
-seq1<br/>
->chr2<br/>
-seq2<br/>
+>chr1 |br|
+seq1 |br|
+>chr2 |br|
+seq2 |br|
 
 **threshold**: *Integer*. `Tigerfish` identifies regions of elevated k-mer counts where these integers are binarized using a user-specified threshold. K-mer counts are computed using Jellyfish. If k-mer counts are >= to this threshold value, they will be assigned a value of 1 while all others receive a 0. This value is only used if **repeat_discovery** is invoked.   
 
