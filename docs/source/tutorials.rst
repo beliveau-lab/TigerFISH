@@ -101,6 +101,65 @@ To check if the expected output files match to what is generated after you run t
      
 **Let's walkthrough**
 
+1. Begin by opening your command line terminal and making sure that conda is installed for your system as described in the Install section on our Getting Started page. Please proceed with installing Mamba as needed to assist with Snakemake installation.
+
+2. Clone the Tigerfish repo into an empty directory and create the active environment as shown on the Installation page to activate the snakemake_env. Here, I already have this conda environment installed which is why I received the `CondaValueError`. But now we are ready to navigate to our test directory!
+
+.. image:: imgs/step_2_repeat_disc.png
+     :width: 500
+     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+
+3. Navigate to the repeat discovery test directory which may be found here relative to the Tigerfish home directory:
+
+.. code-block:: bash
+
+     cd example_run/main/main_pipeline/repeat_discovery_test/
+
+4. Within the `repeat_discovery_test` directory, you should be met with the following sub-directories and files once this command is executed:
+
+.. image:: imgs/step_4_repeat_disc.png
+     :width: 500
+     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+
+5. Now all that is needed is to execute the run_pipelin.sh. This may be done by entering the following command:
+
+.. code-block:: bash
+
+     . run_pipeline.sh
+     
+You will see that Tigerfish is solving and downloading relevant remote packages. This may take a few minutes to resolve before execution.
+
+.. image:: imgs/step_5_repeat_disc.png
+     :width: 500
+     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+
+6. Now you can see that Tigerfish is successfully running! Output files will be populated in the `pipeline_output/` directory. Which will be shown when you are greeted with the "DONE!" message. 
+
+.. image:: imgs/step_6_repeat_disc.png
+     :width: 500
+     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+
+7. If you want to compare if your files match what should be found in the expected output directories, you can run this check script like so: 
+
+.. code-block:: bash
+
+     . run_check_repeatID.sh
+
+If everything is correct, this script will provide a message declaring: "Test run matches Tigerfish expected output!". This is shown below:
+
+.. image:: imgs/step_7_repeat_disc.png
+     :width: 500
+     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+
+8. Now you're done! Congrats on running *Repeat Discovery Mode*! |:tada:|
+
+If you happen to want to see a video of this happening as a real-time demo, you can watch this example below:
+
+[video coming soon]
+
+
+Now you're ready to move into the *Probe Design Mode* tutorial!
+
 Probe Design Mode
 -----------------
 
