@@ -23,11 +23,11 @@ Users will download the full CHM13 V2.0 reference file later in this tutorial, t
      :width: 500
      :alt: Tigerfish tutorials overview
 
-For the test genome cases, there are two static directories that exist which will be referenced in this tutorial. First, we will walk through *Repeat Identification Mode* on a Test Genome and this directory is located `_here<https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/repeat_discovery_test>`_. 
+For the test genome cases, there are two static directories that exist which will be referenced in this tutorial. First, we will walk through *Repeat Identification Mode* on a Test Genome and this directory is located `here<https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/repeat_discovery_test>`_. 
 
-Next, we will move through the *Probe Design Mode* directory which can be found `_here<https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/probe_design_test>`_. 
+Next, we will move through the *Probe Design Mode* directory which can be found `here<https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/probe_design_test>`_. 
 
-Following execution of both run-modes in the main pipeline, we will proceed with the *post-process pipeline* which exists `_here<https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test>`_. 
+Following execution of both run-modes in the main pipeline, we will proceed with the *post-process pipeline* which exists `here<https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test>`_. 
 
 Lastly, we will move into the real-world examples in the main pipeline with CHM13 V2.0 using *Probe Design Mode* and relevant post-process data on real oligo probes mined from the newly annotated chr9 HSAT repeat. 
 
