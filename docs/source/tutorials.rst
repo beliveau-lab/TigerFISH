@@ -1,10 +1,14 @@
 
-Tigerfish Command Line Tutorials
+Tigerfish User Tutorials
 ################################
 
 Overview
 --------
-These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using repeat identification mode and probe design mode. Additionally, all default parameters, config file usage, and parameters implemented in the workflow will be documented for further exploration. Similarly, the post process pipeline used to provide in silico predictions of probe binding in FISH experiments is documented for user implementation. Following this tutorial, users will have the resources to run **Tigerfish** for their own research applications.
+These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using repeat identification mode and probe design mode. Additionally, all default parameters, config file usage, and parameters implemented in the workflow will be documented for further exploration. 
+
+Similarly, the post process pipeline used to provide in silico predictions of probe binding in FISH experiments is documented for user implementation. Following this tutorial, users will have the resources to run **Tigerfish** for their own research applications.
+
+These tutorials were also written in mind for those who are newer to running these scripts in a command line environment! 
 
 Main Pipeline
 =============
