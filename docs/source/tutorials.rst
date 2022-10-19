@@ -8,7 +8,9 @@ These tutorials for **Tigerfish** are intended to provide users with an overview
 
 Similarly, the post process pipeline used to provide in silico predictions of probe binding in FISH experiments is documented for user implementation. Following this tutorial, users will have the resources to run **Tigerfish** for their own research applications.
 
-These tutorials were also written in mind for those who are newer to running these scripts in a command line environment! 
+These tutorials were also written in mind for those who are newer to running these scripts in a command line environment! Here, you will follow tutorials on how to make sure that you have installed tool correctly and this will walk you through test cases and how to get Tigerfish started on generating real data in the CHM13 v2.0 genome. 
+
+So let's get started! |:microscope:| |:tiger:|
 
 Main Pipeline
 =============
