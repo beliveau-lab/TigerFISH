@@ -53,28 +53,6 @@ Installation
     && mamba env create -f snakemake_env.yml \
     && conda activate snakemake_env
 
-Basic usage
------------
-
-A full tutorial for running **Tigerfish** via command line using both repeat discovery and probe design from user provided bed coordinates in included to test the pipeline installation. To run the pipeline using both cases on sample files:
-
-.. code-block:: bash
-
-   $ cd example_run/main/main_pipeline/ && . run_pipeline.sh
-
-Repeat_ID mode is set at the default in the `config.yml file <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_, but the defined_coords mode can also be set to True to enable this run mode. Please see our config.yml file and tutorials  to learn more about parameters and Tigerfish run modes.
-
-When these examples are run, expected outputs may be compared `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/expected_pipeline_output/defined_coords_output>`_ when coordinates are provided and `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/expected_pipeline_output/repeat_ID_output>`_ for repeat discovery mode.
-
-When selected probes undergo post-processing:
-#############################################
-
-To survey how postprocessing is done, a seperate analysis pipeline may be invoked using the command below once both items in the main implementation tutorial have been completed.
-
-.. code-block:: bash
-
-   $ cd example_run/postprocess/ && . run_pipeline.sh
-
 Further tutorials on usage
 --------------------------
 
