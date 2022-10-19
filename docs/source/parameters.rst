@@ -13,106 +13,80 @@ We also share that these parameters may *not* equally map across genome size. Fo
    :header-rows: 1
 
    * - Parameter
-     - Strict high copy repeat probe search mode
-     - Flexible repeat probe search mode
-     - Panel featured in Tigerfish paper      
+     - Conservative
+     - Permissive  
    * - threshold
-     - 5
      - 5
      - 5
    * - window
      - 4000
      - 4000
-     - 4000
    * - composition
-     - 0.25
      - 0.25
      - 0.25
    * - file_start
      - 0
      - 0
-     - 0
    * - min_length
-     - 25
      - 25
      - 36
    * - max_length
-     - 50
      - 50
      - 41
    * - min_temp
      - 42
      - 42
-     - 42
    * - max_temp
-     - 52
      - 52
      - 47
    * - mer_val
      - 18
      - 18
-     - 18
    * - enrich_score
      - 0.80
-     - 0.70
      - 0.50
    * - copy_num
      - 100
-     - 40
      - 10
    * - c1_val
-     - 1
      - 1
      - 1
    * - c2_val
      - 5
      - 5
-     - 5
    * - genome_windows
-     - 5000000
      - 5000000
      - 5000000
    * - target_sum
      - 20000
      - 20000
-     - 20000
    * - off_bin_thresh
-     - 100
      - 100
      - 100
    * - binding_prop
      - 0.70
      - 0.70
-     - 0.70
    * - mer_cutoff
-     - 0.95
      - 0.95
      - 0.95
    * - bt2_alignment
      - 500000
      - 500000
-     - 500000
    * - max_pdups_binding
-     - 0.90
      - 0.90
      - 0.90
    * - seed_length
      - 15
      - 15
-     - 15
    * - model_temp
-     - 69.5
      - 69.5
      - 69.5
    * - min_on_target
      - 500
      - 25
-     - 25
    * - max_probe_return
      - 25
-     - 20
      - 40
-
 
 
 Table of default parameters for post process workflow
