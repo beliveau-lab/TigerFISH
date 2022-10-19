@@ -39,11 +39,11 @@ For more information on the input and output file formats, please consider readi
 How do I do <insert task> with Tigerfish?
 ---------------------------------------
 
-The best way to get help with these kinds of questions is to reach out directly to the project's GitHub repo and submit questions to Robin. We are in the process of constructing a Tigerfish discusion board so that all users can benegit from the answers to your questions and others. 
+The best way to get help with these kinds of questions is to reach out directly to the project's GitHub repo and submit questions to Robin. We are in the process of constructing a Tigerfish discusion board so that all users can benefit from Q&A. 
 
 Help, I just got a weird error! What should I do?
 -------------------------------------------------
 
 First, make sure that you have read the documentation on this site and can't find an answer to what went wrong. Also verify that you wete able to get Tigerfish installed properly through your command line system. Finally, reach out to Robin describing your error and in the future, please check the Tigerfish discussion board to see if anyone else has encountered your error.
 
-If you still have a problem, please don't hesitate to file an issue on our GitHub page. It may very well be tha you found lapses in our documentation or a bug that would also be frustrating for others to navigate. When you do open an issue, pelase make every effort to provide reproducible examples that can demonstrate this error you've run into. Having examples that are easy to document and read will make bug fixes much faster and easier to communicate what went wrong. 
+If you still have a problem, please don't hesitate to file an issue on our GitHub page. It may very well be that you found lapses in our documentation or a bug that would also be frustrating for others to navigate. When you do open an issue, please make every effort to provide reproducible examples that can demonstrate this error you've run into. Having examples that are easy to document with screenshots if possible will make bug fixes much faster and easier to communicate what went wrong. 
