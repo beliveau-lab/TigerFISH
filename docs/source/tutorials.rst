@@ -163,6 +163,8 @@ If everything is correct, this script will provide a message declaring: "Test ru
 
 If you happen to want to see a video of this happening as a real-time demo, you can watch this example below:
 
+.. raw:: html 
+
 <video src="_static/repeat_disc_video.mp4">   
 
 Now you're ready to move into the *Probe Design Mode* tutorial!
