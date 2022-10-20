@@ -1,12 +1,12 @@
 
 #path to genome fasta
-probe_file: "data/chm13_chr9_hsat_subset.tsv"
+probe_file: "data/chr9_all_probes.tsv"
 
 #option for probe design that directs pipeline implementation
 assembly: "chm13"
 
 #directory for bowtie2 test alignment, replace path with entire genome bowtie2 build for expected behavior
-bowtie2_dir: "../../main/main_pipeline/probe_design_chm13/pipeline_output/"
+bowtie2_dir: ""
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
