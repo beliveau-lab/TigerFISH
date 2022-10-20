@@ -13,7 +13,7 @@ Tigerfish is a technology and software tool that enables users to design oligonu
 
 2. A post processing pipeline, where users may perform analysis on probes of interest to determine on and off target probe specificity in silico and generate karyoplots using ChromoMaps.
 
-3. An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2022).  
+3. An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2023).  
 
 Our documents are publicly found and hosted on Read the Docs.
 
@@ -35,27 +35,6 @@ $ git clone https://github.com/beliveau-lab/TigerFISH.git \
     && mamba env create -f snakemake_env.yml \
     && conda activate snakemake_env
 ```
-
-## Running the pipeline
-
-A full tutorial for running Tigerfish using both repeat discovery and probe design from user provided bed coordinates in included to test the pipeline installation. To run the pipeline using both cases on sample files:
-
-```
-$ cd example_run/main/main_pipeline/ && . run_pipeline.sh
-```
-
-Repeat_ID mode is set at the default in the [config.yml](example_run/main/main_pipeline/config.yml) file, but the defined_coords mode can also be set to True to enable this run mode. Please see our config.yml file and Read the Docs documentation to learn more about parameters and Tigerfish run modes.
-
-
-When these examples are run, expected outputs may be compared [here](example_run/main/main_pipeline/expected_pipeline_output/defined_coords_output/) when coordinates are provided and [here](example_run/main/main_pipeline/expected_pipeline_output/repeat_ID_output/) for repeat discovery mode.
-
-To survey how postprocessing is done, a seperate analysis pipeline may be invoked using the command below once both items in the main implementation tutorial have been completed. 
-
-```
-$ cd example_run/postprocess/ && . run_pipeline.sh
-```
-To deploy Tigerfish on your own data, update the file paths in config.yml with the paths to your genome assembly. For more information on input and output files, please read more of our documentation on our [Read the Docs page](https://beliveau-lab-tigerfish.readthedocs-hosted.com/en/latest/index.html)
-This pipeline is implemented using [Snakemake](https://snakemake.readthedocs.io/en/stable/index.html), and distributed according to [best practices](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html). If you are interested in learning more about Snakemake, please follow their tutorials to learn more about their resources for getting started. 
 
 ## Documentation
 
