@@ -161,11 +161,7 @@ If everything is correct, this script will provide a message declaring: "Test ru
 
 8. Now you're done! Congrats on running *Repeat Discovery Mode*! |:tada:|
 
-If you happen to want to see a video of this happening as a real-time demo, you can watch this example below:
-
-.. image:: imgs/probe_design_video.gif
-     :width: 500
-     :alt: Screenshot showing that Tigerfish outputs match expected output behavior.
+If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <vimeo.com/user172350444/>`_. . 
 
 Now you're ready to move into the *Probe Design Mode* tutorial!
 
@@ -244,13 +240,7 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
 
 5. Great work! Congrats on running *Probe Design Mode*! This means that both run modes of Tigerfish have passed! |:tada:| |:sparkles:|
 
-Here's a video of this tutorial:
-
-.. video:: imgs/probe_design_video.mp4
-   :width: 500
-   :height: 300
-   :autoplay:
-   :nocontrols:
+If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <vimeo.com/user172350444/>`_. . 
    
 
 Comparing config.yml files between *Repeat Discovery Mode* and *Probe Design Mode*
@@ -348,14 +338,7 @@ This concludes the Tigerfish pipeline tests on the mock chr4 and chrX genome.
 
 Next, we will move into generating real-data on the chr9 HSAT repeat in the CHM13 v2.0 genome.
 
-Here's a video recapping these actions we performed above:
-
-.. video:: imgs/postprocess_video.mp4
-   :width: 500
-   :height: 300
-   :autoplay:
-   :nocontrols:
-   
+If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <vimeo.com/user172350444/>`_. .    
 
 
 Probe Design Mode on chr9 HSAT in CHM13. v2.0
