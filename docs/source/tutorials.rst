@@ -344,22 +344,46 @@ If you happen to want to see a video of this happening as a real-time demo, you 
 Probe Design Mode on chr9 HSAT in CHM13. v2.0
 ---------------------------------------------
 
+For this portion of the tutorial, we will be implementing probe design mode on real-world data using the CHM13 v2.0 genome to mine probes from the newly annotated chr9 human satellite (HSAT) repeat. Since we've already done a walkthrough of probe design mode on our test files, we will just begin with a walkthrough of how to begin running this process and what files need to me modified for this exercise.
 
-Config file
-===========
+**Note**: In the data directory you will see that the chrom.sizes file for this genome assembly and BED file with the chr9 HSAT coordinates are already provided.
 
-This `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/postprocess/config.yml>`_ file summarizes parameters that users are able to modify for their own research. This workflow is also implemented in Snakemake and provides example outputs that users may compare.
+For reference, we will be working in this directory shown here: 
 
-Implementing the workflow
-=========================
+.. image:: imgs/chm13_probe_design_dir.png
+     :width: 500
+     :alt: Overview of real world example directory. 
 
-**Pipeline input**
+**Let's walkthrough**
 
-To implement the post process workflow, users must provide a probe file that was derived as the output from the main workflow. An example probe that is used for testing is one generated for DXZ4. Here, users may provide collections of probes that map to the same repeat, or those that map to different repeats on different scaffolds of interest. 
+1. From the Tigerfish home directory, navigate to the following path:
 
-Users must also provide the directory for where Bowtie2 indices were generated from the main pipeline and a chrom.sizes file. These test files may be viewed within the provided paths shown within the config.yml provided.
+.. code-block:: bash
 
-**Pipeline output**
+     cd example_run/main/main_pipeline/probe_design_chm13/data
+     
+     
+2. Next, we will download the CHM13 v2.0 genome into this directory. This genome build is found `here <https://github.com/marbl/CHM13>`_. Under assembly releases, be sure to get the link for the file chm13v2.0.fa.gz. You can download the file using the following command. This may take a few moments. 
 
-Here, users will receive a directory containing genome wide binding maps of aggregate binding for each chromosome repeat target, a summary of which genome bins map to binding signal reported by thermodynamic data, as well as a chromoMap to demonstrate where binding is anticipated to occur during a FISH experiment. These expected outputs can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/expected_pipeline_output>`_, for user comparison.
+.. code-block:: bash
+
+     wget https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/analysis_set/chm13v2.0.fa.gz
+
+3. You can unzip this file by entering:
+
+.. code-block:: bash
+
+     gunzip chm13v2.0.fa.gz
+     
+3. Now you need to update the path in the config.yml to execute the pipeline with the proper genome build path. So return out one directory to the config.yml file and include the path to the chm13 genome. This will look like the following: 
+
+
+.. image:: imgs/chm13_yaml.png
+     :width: 500
+     :alt: Overview of real world example config.yml. 
+     
+4. Now you are ready to run this process! For Sun Grid users, it is recommended that you submit this as a cluster job. Templates of how to do this to your shell script to make it executable for cluster job submissions in provided in the Tigerfish home directory. 
+
+
+5. Once completed, you can check this job process based on expected output. Here only the probe file was kept from the full expected output to minimize memory use. 
 
