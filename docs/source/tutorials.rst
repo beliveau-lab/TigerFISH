@@ -163,7 +163,7 @@ If everything is correct, this script will provide a message declaring: "Test ru
 
 If you happen to want to see a video of this happening as a real-time demo, you can watch this example below:
 
-.. video:: img/repeat_disc_video.mp4
+.. video:: imgs/repeat_disc_video.mp4
    :width: 500
    :height: 300
    :autoplay:
@@ -248,7 +248,7 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
 
 Here's a video of this tutorial:
 
-.. video:: img/probe_design_video.mp4
+.. video:: imgs/probe_design_video.mp4
    :width: 500
    :height: 300
    :autoplay:
@@ -352,7 +352,7 @@ Next, we will move into generating real-data on the chr9 HSAT repeat in the CHM1
 
 Here's a video recapping these actions we performed above:
 
-.. video:: img/postprocess_video.mp4
+.. video:: imgs/postprocess_video.mp4
    :width: 500
    :height: 300
    :autoplay:
