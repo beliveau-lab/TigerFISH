@@ -244,7 +244,7 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
 
 
 Comparing config.yml files between *Repeat Discovery Mode* and *Probe Design Mode*
-==================================================================================
+----------------------------------------------------------------------------------
 
 It's important to understand the distinct parameters that are being changed to toggle between *Repeat Discovery Mode* and *Probe Design Mode*. The key distinction are which parameters are being toggled to "TRUE" and "FALSE" for expected behavior. Let's take a look at where these config.yml files differ:
 
@@ -263,7 +263,7 @@ It's important to understand the distinct parameters that are being changed to t
 Here, the key difference in behavior can be controlled based on whether `defined_coords` = "TRUE" and `repeat_discovery` = "FALSE" to drive *Probe Design Mode* and vice versa for *Repeat Discovery Mode*. Be mindful that if one of these parameters is set to TRUE, the other must be set to FALSE or else the pipeline will be exited.
 
 Post-process Pipeline
-====================
+---------------------
 
 The Tigerfish post-process pipeline is intended for analysis of specific oligo probes of interest after Tigerfish has been successfully run. Here, users may take selected probes directly from the final Tigerfish probe output file and generate plots of predicted thermodynamic binding sites for each scaffold. Maps of repeat location on each target scaffold are also generated using `chromoMap <https://cran.r-project.org/web/packages/chromoMap/vignettes/chromoMap.html>`_. Output bedgraphs of normalized alignment pileup over 5 Mb bins may be useful for other genomic analyses beyond Tigerfish use. Here, collections or individual designed probes are validated to check each probe(s) predicted binding behavior.
 
