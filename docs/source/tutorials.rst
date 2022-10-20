@@ -53,6 +53,10 @@ Here's a walkthrough of all the input files provided to get started with running
 
 **Pipeline input**
 
+- Genome FASTA reference file
+- chrom.sizes file
+- Bowtie2 indices (optional)
+
 The test genome file described as **example.fa**: 
 
 .. image:: imgs/repeat_disc_fasta.png
@@ -71,6 +75,8 @@ The Bowtie2 directories for this test genome reference which are found in the pa
      :width: 500
      :alt: Tigerfish Bowtie2 indices for example genome
 
+**Note**: Bowtie2 directories against the queried genome are optional to provide. If you want this made de novo, you can specify this by toggling the relevant Bowtie2 flag in the config.yml file as shown below. 
+
 **Pipeline output**
 
 All expected output files can be found within `this directory <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/repeat_discovery_test/repeat_ID_output>`_. 
@@ -84,6 +90,8 @@ The **config.yml** file which has preset parameters that **do not** need to be m
 .. image:: imgs/repeat_discovery_config.png
      :width: 500
      :alt: Tigerfish config.yml file for test genome
+     
+**Note**: It's *extremely* important to list all specific scaffolds of interest where repeat discovery will happen. In this case since we are interested in designing probes against this entire test genome, we list both chromosomes as their names are found within the genome FASTA file. Here, you can see that "chr4" and "chrX" are listed appropriately. If one wanted to perform repeat discovery on just one of these scaffolds, the others need not be listed.
      
 The **run_pipeline.sh** script is what is used to execute the pipeline:
 
@@ -107,7 +115,7 @@ To check if the expected output files match to what is generated after you run t
 
 .. image:: imgs/step_2_repeat_disc.png
      :width: 500
-     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+     :alt: Screenshot declaring that the conda environment is installed.
 
 3. Navigate to the repeat discovery test directory which may be found here relative to the Tigerfish home directory:
 
@@ -119,7 +127,7 @@ To check if the expected output files match to what is generated after you run t
 
 .. image:: imgs/step_4_repeat_disc.png
      :width: 500
-     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+     :alt: Screenshot demonstrating that the correct repeat discovery directory has been entered
 
 5. Now all that is needed is to execute the run_pipelin.sh. This may be done by entering the following command:
 
@@ -131,13 +139,13 @@ You will see that Tigerfish is solving and downloading relevant remote packages.
 
 .. image:: imgs/step_5_repeat_disc.png
      :width: 500
-     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+     :alt: Screenshot showing that the remote packages are solved and that Tigerfish is running. 
 
 6. Now you can see that Tigerfish is successfully running! Output files will be populated in the `pipeline_output/` directory. Which will be shown when you are greeted with the "DONE!" message. 
 
 .. image:: imgs/step_6_repeat_disc.png
      :width: 500
-     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+     :alt: Screenshot showing that Tigerfish is successfully running and has completed.
 
 7. If you want to compare if your files match what should be found in the expected output directories, you can run this check script like so: 
 
@@ -149,7 +157,7 @@ If everything is correct, this script will provide a message declaring: "Test ru
 
 .. image:: imgs/step_7_repeat_disc.png
      :width: 500
-     :alt: Tigerfish check if repeat discovery mode outputs are as expected
+     :alt: Screenshot showing that Tigerfish outputs match expected output behavior.
 
 8. Now you're done! Congrats on running *Repeat Discovery Mode*! |:tada:|
 
@@ -157,45 +165,182 @@ If you happen to want to see a video of this happening as a real-time demo, you 
 
 [video coming soon]
 
-
 Now you're ready to move into the *Probe Design Mode* tutorial!
 
-Probe Design Mode
------------------
+Probe Design Mode on a Test Genome
+----------------------------------
 
-Here, a test file approximating the location of the DXZ4 within this test FASTA file is provided so that the `repeat_discovery` mode is skipped so probes are directly mined and mapped within the defined coordinates provided. The specifications for the config.yml file should be modified as such:
+*Probe Design Mode* is intended for users who know where their repeat target is and they are interested in probe design against a specific region or set of regions. 
 
+**Pipeline Input**
+
+- Genome FASTA reference file
+- chrom.sizes file
+- Bowtie2 indices (optional)
+- BED file of repeat region coordinates
+
+To implement this run mode, users must also provide a BED file as the **only** additional input to what is described in the *Repeat Identification Mode* tutorial. Here, this BED file can be viewed in this directory. In this exercise, probes will only be designed against the selected DXZ4 repeat section.
+
+**Pipeline Output**
+
+All expected output files can be found within `this directory <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/probe_design_test/defined_coords_output>`_. 
+
+Here, a collection of probes for the desired repeat region is provided in its own directory.
+
+**Pipeline executable**
+
+The **config.yml** file which has preset parameters that **do not** need to be modified for proper execution:
+
+.. image:: imgs/probe_design_config.png
+     :width: 500
+     :alt: Tigerfish config.yml file for test genome using probe design mode
+
+**Note**: It's *extremely* important to list all specific scaffolds of interest where probe design will happen. In this case since we are interested in designing probes against chrX, we list this chromosome only as "chrX" as shown in the config.yml file. 
+
+Here, the provided organization of this directory where the *Probe Design Mode* tutorial takes place also contains a `run_pipeline.sh` script and `run_check_defined_coords.sh`. This structure mirrors the organization of the *Repeat Discovery Mode* test tutorial making this walkthrough fairly similar in behavior.
+
+**Let's walkthrough**
+
+1. Return to the main home directory in the Tigerfish directory structure to enter the probe design mode test directory using the following command:
 
 .. code-block:: bash
 
-    #path to genome fasta
-    fasta_file: "data/example.fa"
+     cd example_run/main/main_pipeline/probe_design_test/
 
-    #path to file containing primary chromosome sizes
-    chrom_sizes_file: "data/chm13.chrom.sizes"
+.. image:: imgs/step_1_probe_design.png
+     :width: 500
+     :alt: Screenshot showing that the directory for the probe design test. 
+     
+     
+2. Enter the following command to execute the pipeline. 
 
-    #if coordinates are provided for probe design, file goes here
-    bed_file: "data/dxz4_synthetic.bed"
+.. code-block:: bash
 
-    #option for probe design that directs pipeline implementation
-    defined_coords: "TRUE"
-    repeat_discovery: "FALSE"
+     . run_pipeline.sh
+
+.. image:: imgs/step_2_probe_design.png
+     :width: 500
+     :alt: Screenshot showing that probe design test is being executed. 
+     
+     
+3. Now you will see that this pipeline has completed execution and you will receive a message declaring "DONE"!
+
+.. image:: imgs/step_3_probe_design.png
+     :width: 500
+     :alt: Screenshot showing that probe design test has been completed.
+    
+    
+4. To check if the pipeline output matches expected behavior, enter the following command to return the checked statement. 
+
+.. code-block:: bash
+
+     . run_check_defined_coords.sh
+
+.. image:: imgs/step_4_probe_design.png
+     :width: 500
+     :alt: Screenshot showing that probe design test matched expected behavior. 
+
+5. Great work! Congrats on running *Probe Design Mode*! This means that both run modes of Tigerfish have passed! |:tada:| |:sparkles:|
 
 
-**Pipeline input**
+Comparing config.yml files between *Repeat Discovery Mode* and *Probe Design Mode*
+==================================================================================
 
-In addition to the genomic FASTA and chrom.sizes file, users also specify that a BED file containing the coordinates of the repeat(s) of interest are provided.
+It's important to understand the distinct parameters that are being changed to toggle between *Repeat Discovery Mode* and *Probe Design Mode*. The key distinction are which parameters are being toggled to "TRUE" and "FALSE" for expected behavior. Let's take a look at where these config.yml files differ:
 
-**Pipeline output**
+*Repeat Discovery Mode*
 
-Similar to that of `repeat_discovery` mode, an independent directory contains the probes of interest that map to the repeat region provided in the input BED file. This output directory can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/expected_pipeline_output/repeat_ID_output>`_. 
+.. image:: imgs/rd_params.png
+     :width: 500
+     :alt: Screenshot showing the repeat discovery mode config.yml params to toggle. 
 
+*Probe Design Mode*
 
+.. image:: imgs/pd_params.png
+     :width: 500
+     :alt: Screenshot showing the probe design mode config.yml params to toggle. 
 
-Postprocess Pipeline
+Here, the key difference in behavior can be controlled based on whether `defined_coords` = "TRUE" and `repeat_discovery` = "FALSE" to drive *Probe Design Mode* and vice versa for *Repeat Discovery Mode*. Be mindful that if one of these parameters is set to TRUE, the other must be set to FALSE or else the pipeline will be exited.
+
+Post-process Pipeline
 ====================
 
-The Tigerfish postprocess pipeline is intended for analysis of specific oligo probes of interest after Tigerfish has been successfully run. Here, users may take selected probes directly from the final Tigerfish probe output file and generate plots of predicted thermodynamic binding sites for each scaffold. Maps of repeat location on each target scaffold are also generated using `chromoMap <https://cran.r-project.org/web/packages/chromoMap/vignettes/chromoMap.html>`_. Output bedgraphs of normalized alignment pileup over 1Mb bins may be useful for other genomic analyses beyond Tigerfish use. Here, collections or individual designed probes are validated to check each probe(s) predicted binding behavior.
+The Tigerfish post-process pipeline is intended for analysis of specific oligo probes of interest after Tigerfish has been successfully run. Here, users may take selected probes directly from the final Tigerfish probe output file and generate plots of predicted thermodynamic binding sites for each scaffold. Maps of repeat location on each target scaffold are also generated using `chromoMap <https://cran.r-project.org/web/packages/chromoMap/vignettes/chromoMap.html>`_. Output bedgraphs of normalized alignment pileup over 5 Mb bins may be useful for other genomic analyses beyond Tigerfish use. Here, collections or individual designed probes are validated to check each probe(s) predicted binding behavior.
+
+The post-process pipeline directory for execution can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test>`_.
+
+**Pipeline Inputs**
+
+- Probe file.
+- Bowtie2 indices dir (the Bowtie2 indices directory which is the same genome wide directory used in *Repeat Discovery Mode*)
+- chrom.sizes file (the same genome wide chrom.sizes file used in *Repeat Discovery Mode*)
+
+The test probe file described as **dxz4_test_probe.tsv**: 
+
+.. image:: imgs/sample_out_probe.png
+     :width: 500
+     :alt: Screenshot showing the probe design mode config.yml params to toggle. 
+
+**Pipeline Outputs**
+
+Output files can be found in their corresponding expected ouput directory `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test/expected_pipeline_output/03_output_files>`_. 
+
+- Genome wide binding summary
+- Genome wide binding plots
+- Genomic bins with binding sites above threshold
+- chromomap karyoplot
+
+**Pipeline Executable**
+
+The **config.yml** file which has preset parameters that **do not** need to be modified for proper execution:
+
+.. image:: imgs/postprocess_config.png
+     :width: 500
+     :alt: Tigerfish config.yml file for test genome to run the post-process pipeline
+     
+**Note**: It's *extremely* important to list all specific scaffolds of interest where post-process analyses will happen. In this case we are just interested in the resulting output probe derived from chrX so we list this scaffold in the config.yml only. 
+     
+The **run_pipeline.sh** script is what is used to execute the pipeline:
+
+.. image:: imgs/postprocess_run.png
+     :width: 500
+     :alt: Tigerfish run pipeline executable shell script
+
+**Let's walkthrough**
+
+1. From the Tigerfish home directory, navigate to the post-process pipeline directory by entering:
+
+.. code-block:: bash
+
+     cd example_run/postprocess/dxz4_test/
+     
+2. Next, enter the following command to execute the post-process pipeline. 
+
+.. code-block:: bash
+
+     . run_pipeline.sh
+     
+You will see the pipeline begin to start and execute as expected once the chromomap_env.yml is created. 
+
+.. image:: imgs/postprocess_step_2.png
+     :width: 500
+     :alt: Tigerfish run pipeline executable shell script
+     
+3. Once the pipeline is completed, you will be greeted with the message "DONE!" as shown.
+
+.. image:: imgs/postprocess_step_3.png
+     :width: 500
+     :alt: Tigerfish run pipeline executable shell script
+
+Congrats! Your output files now contain analyses on genome wide binding and anticipated in silico binding for this particular probe sequence.
+
+This concludes the Tigerfish pipeline tests on the mock chr4 and chrX genome.
+
+Next, we will move into generating real-data on the chr9 HSAT repeat in the CHM13 v2.0 genome.
+
+Probe Design Mode on chr9 HSAT in CHM13. v2.0
+---------------------------------------------
+
 
 Config file
 ===========
