@@ -97,7 +97,7 @@ exclude_patterns = ["build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 #
 html_theme = 'sphinx_rtd_theme'
 
-html_static_path = "_static"
+html_static_path = ["_static"]
 
 master_doc = "index"
 source_suffix = [".rst", ".md"]
