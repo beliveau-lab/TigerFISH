@@ -384,7 +384,6 @@ For reference, we will be working in this directory shown here:
      
 4. Now you are ready to run this process! For Sun Grid users, it is recommended that you submit this as a cluster job. Templates of how to do this to your shell script to make it executable for cluster job submissions in provided in the Tigerfish home directory. 
 
-
 5. Once completed, you can check this job process based on expected output. Here only the probe file was kept from the full expected output to minimize memory use. To check if the output matches what is in the expected output directory, simply run the following command:
 
 .. code-block:: bash
@@ -416,6 +415,36 @@ Post-process on chr9 HSAT in CHM13. v2.0
 .. code-block:: bash
 
      . run_pipeline.sh
+     
+3. Once the pipeline is completed, there are a few things we can learn about this probe from the output files
 
+*Genome Wide Binding*
 
+When we navigate to this output directory, we see an overwhelming predicted binding enrichment on chr9. 
 
+.. image:: imgs/genome_wide_binding_chr9.png
+     :width: 500
+     :alt: Overview of chr9 probe genome wide binding.
+
+*Threshold binding*
+
+Upon further inspection, we see which bins were flagged to have predicting binding scores above our flagged threshold of 100. 
+
+.. image:: imgs/genome_threshold_chr9.png
+     :width: 500
+     :alt: Overview of thresholded binding.
+
+*Genome View*
+
+This plot demonstrates the general location of where signals are expected to pile up over the entirety of the genome.
+
+.. image:: imgs/chr9_genome_view.png
+     :width: 500
+     :alt: Overview of thresholded binding.
+
+Lastly, the chromomap file presents as an .html which can easily be translated into a .PNG via file conversion. 
+
+Final thoughts
+--------------
+
+We hope this tutorial provides a comprehensive overview of what is needed to get users started with Tigerfish. Happy FISHing for new repeats!
