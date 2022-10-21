@@ -438,6 +438,8 @@ Upon further inspection, we see which bins were flagged to have predicting bindi
 
 This plot demonstrates the general location of where signals are expected to pile up over the entirety of the genome.
 
+**Note**: For better visualization, this image should be downloaded and taken to a black background because the background was set to be transparent for easier portability between users. 
+
 .. image:: imgs/chr9_genome_view.png
      :width: 500
      :alt: Overview of thresholded binding.
