@@ -385,5 +385,37 @@ For reference, we will be working in this directory shown here:
 4. Now you are ready to run this process! For Sun Grid users, it is recommended that you submit this as a cluster job. Templates of how to do this to your shell script to make it executable for cluster job submissions in provided in the Tigerfish home directory. 
 
 
-5. Once completed, you can check this job process based on expected output. Here only the probe file was kept from the full expected output to minimize memory use. 
+5. Once completed, you can check this job process based on expected output. Here only the probe file was kept from the full expected output to minimize memory use. To check if the output matches what is in the expected output directory, simply run the following command:
+
+.. code-block:: bash
+
+     . run_check_defined_coords.sh 
+     
+     
+Congrats! You've designed a real probe that will work to visualize the chr9 HSAT array uniquely! 
+
+Now let's see what else we can learn from this repeat array by pursuing post-process analysis.
+
+Post-process on chr9 HSAT in CHM13. v2.0
+----------------------------------------
+
+1. First we will navigate to the directory where the post-process analysis will begin. Relative to the home directory, the command you should enter is:
+
+.. code-block:: bash
+
+     cd example_run/postprocess/chm13_postprocess/
+     
+2. Next, you want to modify the config.yml to have a bowtie2 index path to the chm13 v2.0 genome build that was just made to mine this probe. Once you append the path relative to this directory, the path in the config.yml file should look like this:
+
+.. image:: imgs/chm13_chr9_yaml.png
+     :width: 500
+     :alt: Overview of real world example config.yml for post-process.
+     
+3. Now you can run the pipeline by entering:
+
+.. code-block:: bash
+
+     . run_pipeline.sh
+
+
 
