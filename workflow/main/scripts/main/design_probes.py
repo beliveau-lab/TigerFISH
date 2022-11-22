@@ -25,7 +25,7 @@ from Bio import SeqIO
 
 ##############################################################################
 
-def make_fasta_from_bed(bed, region_fa, genome_fa):
+def make_fasta_from_bed(bed, region_fa, genome_fa, name):
     """
     This function will run a bedtools process on a genomic fasta provided,
     from a bed file to return a fasta of the bed file regions listed.
@@ -48,6 +48,9 @@ def make_fasta_from_bed(bed, region_fa, genome_fa):
     -------
     genome_fa described above
     """
+
+    if str(genome_fa[-3:]) != ".fa":
+        genome_fa = str(genome_fa) + "/" + str(name) + ".fa"
 
     subprocess.call(['bedtools', 'getfasta', '-fi', genome_fa, '-bed',
                      bed, '-fo', region_fa], stderr=None, shell=False)
@@ -161,7 +164,7 @@ def main():
     max_temp = args.max_temp
     
     
-    make_fasta_from_bed(bed,region_fa,genome_fa)
+    make_fasta_from_bed(bed,region_fa,genome_fa,name)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

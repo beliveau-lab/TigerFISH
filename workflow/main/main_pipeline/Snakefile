@@ -5,6 +5,10 @@ configfile: "config.yml"
 SAMPLES = config["samples"]
 ASSEMBLY = config["assembly"]
 BOWTIE2_DIR = config["bowtie2_dir"]
+JF_HASH = config['jf_hash_dir']
+JF_COUNT = config['jf_count_dir']
+CHROM_IDX = config['chrom_idx_dir']
+CHROM_FASTA = config['chrom_fasta_dir']
 
 rule all:
     input:
@@ -14,30 +18,38 @@ if (config['defined_coords'] == "TRUE" and config['repeat_discovery'] == "TRUE")
     print("Repeat_Discovery Mode and Probe_Design Mode can only be run independently. Please select TRUE for desired workflow and FALSE for the other process. Exiting ...")
     exit()
 
-rule generate_jf_count:
-    input:
-        fasta_file = config["fasta_file"]
-    conda:
-        "../../../shared_conda_envs/tigerfish.yml"
-    params:
-        mer = config["mer_val"],
-        mfree="60G",
-        h_rt = "20:0:0"
-    benchmark:
-        'pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log'
-    output:
-        'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
-    shell:
-        "jellyfish count -s 3300M -m {params.mer} -o {output} -C {input.fasta_file}"
+if config['jf_hash_given'] == "FALSE":
+    rule generate_jf_count:
+        input:
+            fasta_file = config["fasta_file"]
+        conda:
+            "../../../shared_conda_envs/tigerfish.yml"
+        params:
+            mer = config["mer_val"],
+            mfree="60G",
+            h_rt = "20:0:0"
+        benchmark:
+            'pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log'
+        output:
+            'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
+        shell:
+            "jellyfish count -s 3300M -m {params.mer} -o {output} -C {input.fasta_file}"
 
 def input_for_bowtie(wildcards):
     # requires a config containing switches for the whole workflow
-    if config["bowtie2_indices_given"]=='TRUE':
+    if config["bowtie2_indices_given"]=="TRUE":
         return BOWTIE2_DIR
-    elif config["bowtie2_indices_given"]=='FALSE':
+    elif config["bowtie2_indices_given"]=="FALSE":
         return rules.generate_bt2_indices.output
 
-if config['bowtie2_indices_given'] == 'FALSE':
+def input_for_jf_idx(wildcards):
+    #requires a config containing switches for the workflow
+    if config['jf_hash_given'] == "TRUE":
+        return JF_HASH
+    elif config['jf_hash_given'] == "FALSE":
+        return rules.generate_jf_count.output
+
+if config['bowtie2_indices_given'] == "FALSE":
 
     BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
     rule generate_bt2_indices:
@@ -60,27 +72,49 @@ if config['bowtie2_indices_given'] == 'FALSE':
         shell:
             'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
 
-rule generate_jf_idx:
-    input:
-        fasta_file = config["fasta_file"],
-        jf = rules.generate_jf_count.output
-    conda:
-        "../../../shared_conda_envs/tigerfish.yml"
-    params:
-        chrom_name = "{sample}",
-        mer = config["mer_val"],
-        mfree="60G",
-        h_rt = "20:0:0"
-    benchmark:
-        'pipeline_output/benchmarks/01_reference_files/03_jf_idx/{sample}_log.log'
-    output:
-        jf_count = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_jf_temp.txt',
-        chrom_idx = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_index.txt',
-        chrom_fa = 'pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/{sample}.fa'
-    shell:
-        "python ../../../../workflow/main/scripts/main/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
+def input_for_jf_count_file(wildcards):
+    #requires config containing switches for the workflow
+    if config['jf_count_given'] == "TRUE":
+        return JF_COUNT
+    elif config['jf_count_given'] == "FALSE":
+        return rules.generate_jf_idx.output.jf_count
 
-if config['defined_coords'] == 'TRUE':
+def input_for_chrom_idx_file(wildcards):
+    #requires config containing switches for the workflow
+    if config['chrom_idx_given']  == "TRUE":
+        return CHROM_IDX
+    elif config['chrom_idx_given'] == "FALSE":
+        return rules.generate_jf_idx.output.chrom_idx
+
+def input_for_chrom_fasta_file(wildcards):
+    #requires config containing switches for the workflow
+    if config['chrom_fasta_given']  == "TRUE":
+        return CHROM_FASTA
+    elif config['chrom_fasta_given'] == "FALSE":
+        return rules.generate_jf_idx.output.chrom_fa
+
+if config['jf_hash_given'] == 'FALSE':
+    rule generate_jf_idx:
+        input:
+            fasta_file = config["fasta_file"],
+            jf = input_for_jf_idx
+        conda:
+            "../../../shared_conda_envs/tigerfish.yml"
+        params:
+            chrom_name = "{sample}",
+            mer = config["mer_val"],
+            mfree="60G",
+            h_rt = "20:0:0"
+        benchmark:
+            'pipeline_output/benchmarks/01_reference_files/03_jf_idx/{sample}_log.log'
+        output:
+            jf_count = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_jf_temp.txt',
+            chrom_idx = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_index.txt',
+            chrom_fa = 'pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/{sample}.fa'
+        shell:
+            "python ../../../../workflow/main/scripts/main/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
+
+if config['defined_coords'] == "TRUE":
     rule split_bed:
         input:
             bed_file = config["bed_file"]
@@ -97,12 +131,11 @@ if config['defined_coords'] == 'TRUE':
         shell:
             "python ../../../../workflow/main/scripts/main/split_bed.py -b {input.bed_file} -c {params.chrom_name} -o {output.chrom_region}"
 
-if config['repeat_discovery'] == 'TRUE':
+if config['repeat_discovery'] == "TRUE":
     rule repeat_ID:
         input:
-            jf_count = rules.generate_jf_idx.output.jf_count,
-            chrom_index = rules.generate_jf_idx.output.chrom_idx,
-            chr_path = rules.generate_jf_idx.output.chrom_fa
+            jf_count = input_for_jf_count_file,
+            chrom_index = input_for_chrom_idx_file
         conda:
             "../../../shared_conda_envs/tigerfish.yml"
         params:
@@ -131,7 +164,7 @@ def input_for_design_probes(wildcards):
 rule design_probes:
     input:
         region_bed = input_for_design_probes,
-        chr_path = rules.generate_jf_idx.output.chrom_fa
+        chr_path = input_for_chrom_fasta_file
     conda:
         "../../../shared_conda_envs/tigerfish.yml"
     params:
@@ -152,7 +185,7 @@ rule design_probes:
 
 rule kmer_filter:
     input:
-        jf = rules.generate_jf_idx.output.jf_count,
+        jf = input_for_jf_count_file,
         probes = rules.design_probes.output.designed_probes,
         region_fa = rules.design_probes.output.probe_fa
     conda:
@@ -169,7 +202,7 @@ rule kmer_filter:
     output:
         "pipeline_output/02_intermediate_files/03_pre_filter/{sample}_probes_pre_filter.txt"
     shell:
-        "python ../../../../workflow/main/scripts/main/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2}"
+        "python ../../../../workflow/main/scripts/main/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2} -c {params.chrom_name}"
 
 rule probe_mer_filter:
     input:

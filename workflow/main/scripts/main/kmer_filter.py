@@ -76,7 +76,7 @@ def read_fasta_dict(fasta_file):
 
 ##############################################################################
 
-def repeat_count(probe_df,seq_dict,jf_file,MERLENGTH):
+def repeat_count(probe_df,seq_dict,jf_file,MERLENGTH,chrom):
     
     """
     This function takes the probes from probes data, and generates indep.
@@ -104,6 +104,10 @@ def repeat_count(probe_df,seq_dict,jf_file,MERLENGTH):
 
     #make dictionary ot read jellyfish file into k-mer (key) and count (val)
     jf_dict = {}
+
+    if str(jf_file[-4:]) != ".txt":
+
+        jf_file = str(jf_file) + "/" + str(chrom) + "_jf_temp.txt"
 
     #read jellyfish file into two lists
     with open(jf_file) as jf:
@@ -408,6 +412,8 @@ def main():
     requiredNamed.add_argument('-c2', '--c2_value', action='store', 
                                required=True, type=int,help='weight 2 used'
                                'to compute normalized binding score')
+    requiredNamed.add_argument('-c', '--chrom', action='store',
+                               required=True,help='scaffold name')
 
     args = userInput.parse_args()
     
@@ -418,6 +424,7 @@ def main():
     o_path = args.out_path
     c1_val = args.c1_value
     c2_val = args.c2_value
+    chrom = args.chrom
 
 
     probe_df = read_probe_file(probe_file)
@@ -431,7 +438,7 @@ def main():
     all_repeat_counts,all_genome_counts = repeat_count(probe_df,
                                                              seq_dict,
                                                              jf_file,
-                                                             MERLENGTH)
+                                                             MERLENGTH,chrom)
 
     print("---%s seconds ---"%(time.time()-start_time))
     

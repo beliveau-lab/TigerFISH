@@ -38,7 +38,7 @@ import re
 
 ##############################################################################
 
-def open_index_file(index_file):
+def open_index_file(index_file,chrom):
     """
     This function will take the two columns from the normal ranges DF and then 
     append these ranges to a list. This list is then written out as a file    
@@ -55,6 +55,10 @@ def open_index_file(index_file):
         file is read into a list
     """
     
+    if str(index_file[-4:]) != ".txt":
+
+        index_file = str(index_file) + "/" + str(chrom) + "_index.txt"
+
     #open index file and add to list
     with open(index_file, "r") as idx_f:
         kmer_indices = [line.rstrip('\n') for line in idx_f]
@@ -67,7 +71,7 @@ def open_index_file(index_file):
 
 ##############################################################################
 
-def generate_kmer_count_lists(jf_count):
+def generate_kmer_count_lists(jf_count,chrom):
     """
     This function will store the values from the jf query file into a list for 
     the k_mers and the corresponding count
@@ -90,6 +94,10 @@ def generate_kmer_count_lists(jf_count):
     k_mer=[]
     count=[]
     
+    if str(jf_count[-4:]) != ".txt":
+
+        jf_count = str(jf_count) + "/" + str(chrom) + "_jf_temp.txt"
+
     with open(jf_count, "r") as jf:
         for line in jf:
             k_mer.append(line.replace(" ","\t").split()[0])
@@ -402,11 +410,11 @@ def main():
 
     #the names of output files to be generated
     
-    kmer_indices=open_index_file(index_file)
+    kmer_indices=open_index_file(index_file,chrom)
     
     print("---%s seconds ---"%(time.time()-start_time))
 
-    k_mer,count=generate_kmer_count_lists(jf_count)
+    k_mer,count=generate_kmer_count_lists(jf_count,chrom)
 
     print("---%s seconds ---"%(time.time()-start_time))
 

@@ -12,9 +12,17 @@ bed_file: "data/dxz4_synthetic.bed"
 defined_coords: "FALSE"
 repeat_discovery: "TRUE"
 bowtie2_indices_given: "TRUE"
+jf_hash_given: "FALSE"
+jf_count_given: "FALSE"
+chrom_idx_given: "FALSE"
+chrom_fasta_given: "FALSE"
 
 assembly: "chm13"
 bowtie2_dir: "data/bt2/"
+jf_hash_dir: ""
+jf_count_dir: ""
+chrom_idx_dir: ""
+chrom_fasta_dir: ""
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
