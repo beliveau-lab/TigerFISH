@@ -64,6 +64,8 @@ copy_num: 10
 #parameters used in alignment_filter script
 genome_windows: 5000000
 
+thresh_window: 100000
+
 binding_prop: 0.70
 
 target_sum: 5000
@@ -83,5 +85,7 @@ model_temp: 69.5
 min_on_target: 25
 
 max_probe_return: 40
+
+align_thresh: 10
 
 ref_flag: 0

@@ -41,12 +41,12 @@ renamed_regions <- probe_repeat %>%
     
   )
 
-renamed_regions$annot<-"annot"
-
+renamed_regions$annot <- "tigerfish"
 #drop and reorder cols
 renamed_regions<-renamed_regions[,c("annot","chrom","start","stop")]
 renamed_regions <- as.data.frame(renamed_regions)
 
+print(renamed_regions)
 
 #read in chrom length file
 chrom_sizes <- read.table(opt$chrom_sizes, 
@@ -64,13 +64,14 @@ select_chrom$start<-1
 
 select_chrom<-select_chrom[,c("chrom","start","stop")]
 
+print(select_chrom)
+
 #generate chromomap
 map<-chromoMap(list(select_chrom),list(renamed_regions),
-          data_based_color_map = T,
-          data_colors = list(c("magenta")),
+          anno_col = c("magenta"),
           segment_annotation = T,
           data_type = "categorical",
-          chr_length = 3,
+          chr_length = 6,
           chr_width = 25,
           canvas_width = 800,
           label_font = 12,

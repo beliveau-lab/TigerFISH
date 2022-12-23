@@ -12,8 +12,16 @@ bed_file: "data/chm13_chr9_hsat_array.bed"
 defined_coords: "TRUE"
 repeat_discovery: "FALSE"
 bowtie2_indices_given: "FALSE"
+jf_hash_given: "FALSE"
+jf_count_given: "FALSE"
+chrom_idx_given: "FALSE"
+chrom_fasta_given: "FALSE"
 
 assembly: "chm13"
+jf_hash_dir: ""
+jf_count_dir: ""
+chrom_idx_dir: ""
+chrom_fasta_dir: ""
 bowtie2_dir: ""
 
 #all chromosomes present in bed file or required for probe discovery are listed here
@@ -55,6 +63,8 @@ copy_num: 40
 #parameters used in alignment_filter script
 genome_windows: 5000000
 
+thresh_window: 100000
+
 binding_prop: 0.70
 
 off_bin_thresh: 100
@@ -74,5 +84,7 @@ model_temp: 69.5
 min_on_target: 25
 
 max_probe_return: 20
+
+align_thresh: 10
 
 ref_flag: 0
