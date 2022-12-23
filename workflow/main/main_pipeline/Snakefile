@@ -343,7 +343,7 @@ rule get_region_bed:
     benchmark:
         "pipeline_output/benchmarks/02_intermediate_files/09_get_repeat_bed/{sample}/{region}.txt"
     shell:
-        "python ../../../../workflow/postprocess/scripts/get_region_bed.py -i {input} -o {output}"
+        "python ../../../../workflow/main/scripts/main/get_region_bed.py -i {input} -o {output}"
 
 rule bedtools_intersect:
     input:
