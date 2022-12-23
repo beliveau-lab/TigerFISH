@@ -259,7 +259,7 @@ checkpoint make_chrom_dir:
         region_split = directory("pipeline_output/02_intermediate_files/05_split_regions/{sample}/")
     shell:
         """
-        python ../../../../workflow/main/scripts/main/split_filter.py -f {input.probes} -o {output}
+        python ../../../../workflow/main/scripts/split_filter.py -f {input.probes} -o {output}
         """
 
 rule alignment_filter:
