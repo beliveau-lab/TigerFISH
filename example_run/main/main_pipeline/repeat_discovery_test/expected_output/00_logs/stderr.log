@@ -1,0 +1,2574 @@
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:33:56 2022]
+rule generate_jf_count:
+    input: data/example.fa
+    output: pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log
+    reason: Missing output files: pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf, pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948762.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:34:48 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:35:07 2022]
+rule generate_jf_idx:
+    input: data/example.fa, pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf
+    output: pipeline_output/01_reference_files/03_jf_idx/chrX_jf_temp.txt, pipeline_output/01_reference_files/03_jf_idx/chrX_index.txt, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/03_jf_idx/chrX_log.log
+    reason: Missing output files: pipeline_output/benchmarks/01_reference_files/03_jf_idx/chrX_log.log, pipeline_output/01_reference_files/03_jf_idx/chrX_index.txt, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa, pipeline_output/01_reference_files/03_jf_idx/chrX_jf_temp.txt
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948771.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:35:07 2022]
+rule generate_jf_idx:
+    input: data/example.fa, pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf
+    output: pipeline_output/01_reference_files/03_jf_idx/chr4_jf_temp.txt, pipeline_output/01_reference_files/03_jf_idx/chr4_index.txt, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chr4.fa
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/03_jf_idx/chr4_log.log
+    reason: Missing output files: pipeline_output/benchmarks/01_reference_files/03_jf_idx/chr4_log.log, pipeline_output/01_reference_files/03_jf_idx/chr4_index.txt, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chr4.fa, pipeline_output/01_reference_files/03_jf_idx/chr4_jf_temp.txt
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948772.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:35:09 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:35:09 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:35:26 2022]
+rule repeat_ID:
+    input: pipeline_output/01_reference_files/03_jf_idx/chrX_jf_temp.txt, pipeline_output/01_reference_files/03_jf_idx/chrX_index.txt
+    output: pipeline_output/02_intermediate_files/01_repeat_ID/chrX_regions.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/01_repeat_ID/chrX_log.log
+    reason: Missing output files: pipeline_output/02_intermediate_files/01_repeat_ID/chrX_regions.bed, pipeline_output/benchmarks/02_intermediate_files/01_repeat_ID/chrX_log.log
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948774.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:35:27 2022]
+rule repeat_ID:
+    input: pipeline_output/01_reference_files/03_jf_idx/chr4_jf_temp.txt, pipeline_output/01_reference_files/03_jf_idx/chr4_index.txt
+    output: pipeline_output/02_intermediate_files/01_repeat_ID/chr4_regions.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/01_repeat_ID/chr4_log.log
+    reason: Missing output files: pipeline_output/02_intermediate_files/01_repeat_ID/chr4_regions.bed, pipeline_output/benchmarks/02_intermediate_files/01_repeat_ID/chr4_log.log
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948775.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:35:29 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:35:29 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:35:46 2022]
+rule design_probes:
+    input: pipeline_output/02_intermediate_files/01_repeat_ID/chrX_regions.bed, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa
+    output: pipeline_output/02_intermediate_files/02_designed_probes/chrX_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chrX_probe_regions.fa
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/chrX_log.log
+    reason: Missing output files: pipeline_output/02_intermediate_files/02_designed_probes/chrX_probe_regions.fa, pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/chrX_log.log, pipeline_output/02_intermediate_files/02_designed_probes/chrX_blockParse_probe_df.bed
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948778.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:35:47 2022]
+rule design_probes:
+    input: pipeline_output/02_intermediate_files/01_repeat_ID/chr4_regions.bed, pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chr4.fa
+    output: pipeline_output/02_intermediate_files/02_designed_probes/chr4_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chr4_probe_regions.fa
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/chr4_log.log
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/chr4_log.log, pipeline_output/02_intermediate_files/02_designed_probes/chr4_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chr4_probe_regions.fa
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948779.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+index file pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chrX.fa.fai not found, generating...
+index file pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/chr4.fa.fai not found, generating...
+[Thu Dec 22 17:36:00 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:36:01 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:17 2022]
+rule kmer_filter:
+    input: pipeline_output/01_reference_files/03_jf_idx/chr4_jf_temp.txt, pipeline_output/02_intermediate_files/02_designed_probes/chr4_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chr4_probe_regions.fa
+    output: pipeline_output/02_intermediate_files/03_pre_filter/chr4_probes_pre_filter.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/chr4_log.log
+    reason: Missing output files: pipeline_output/02_intermediate_files/03_pre_filter/chr4_probes_pre_filter.txt, pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/chr4_log.log
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948787.1.beliveau-long.q
+
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:17 2022]
+rule kmer_filter:
+    input: pipeline_output/01_reference_files/03_jf_idx/chrX_jf_temp.txt, pipeline_output/02_intermediate_files/02_designed_probes/chrX_blockParse_probe_df.bed, pipeline_output/02_intermediate_files/02_designed_probes/chrX_probe_regions.fa
+    output: pipeline_output/02_intermediate_files/03_pre_filter/chrX_probes_pre_filter.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/chrX_log.log
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/chrX_log.log, pipeline_output/02_intermediate_files/03_pre_filter/chrX_probes_pre_filter.txt
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948786.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:36:19 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:36:19 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:36 2022]
+rule probe_mer_filter:
+    input: pipeline_output/02_intermediate_files/03_pre_filter/chrX_probes_pre_filter.txt
+    output: pipeline_output/02_intermediate_files/04_post_mer_filter/chrX_probes_mer_filter.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/chrX_log.log
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/chrX_log.log, pipeline_output/02_intermediate_files/04_post_mer_filter/chrX_probes_mer_filter.txt
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948790.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:36 2022]
+rule probe_mer_filter:
+    input: pipeline_output/02_intermediate_files/03_pre_filter/chr4_probes_pre_filter.txt
+    output: pipeline_output/02_intermediate_files/04_post_mer_filter/chr4_probes_mer_filter.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/chr4_log.log
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/chr4_log.log, pipeline_output/02_intermediate_files/04_post_mer_filter/chr4_probes_mer_filter.txt
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948791.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:36:37 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:36:38 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:46 2022]
+checkpoint make_chrom_dir:
+    input: pipeline_output/02_intermediate_files/04_post_mer_filter/chrX_probes_mer_filter.txt
+    output: pipeline_output/02_intermediate_files/05_split_regions/chrX
+    jobid: 0
+    reason: Missing output files: pipeline_output/02_intermediate_files/05_split_regions/chrX
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948793.1.beliveau-long.q
+DAG of jobs will be updated after completion.
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:46 2022]
+checkpoint make_chrom_dir:
+    input: pipeline_output/02_intermediate_files/04_post_mer_filter/chr4_probes_mer_filter.txt
+    output: pipeline_output/02_intermediate_files/05_split_regions/chr4
+    jobid: 0
+    reason: Missing output files: pipeline_output/02_intermediate_files/05_split_regions/chr4
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948794.1.beliveau-long.q
+DAG of jobs will be updated after completion.
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:36:48 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:36:48 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:36:57 2022]
+rule generate_genome_bins:
+    input: data/test_chrom.sizes
+    output: pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_alignment.bed, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/01_reference_files/01_bin_genome/genome_bins.txt
+    reason: Missing output files: pipeline_output/benchmarks/01_reference_files/01_bin_genome/genome_bins.txt, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_alignment.bed, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948797.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:36:57 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:37:06 2022]
+rule alignment_filter:
+    input: pipeline_output/02_intermediate_files/05_split_regions/chrX/chrX:10524-181991.txt, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_alignment.bed, data/bt2
+    output: pipeline_output/02_intermediate_files/06_alignment/chrX/chrX:10524-181991_alignment.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/06_alignment/chrX/chrX:10524-181991.log
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/06_alignment/chrX/chrX:10524-181991.log, pipeline_output/02_intermediate_files/06_alignment/chrX/chrX:10524-181991_alignment.txt
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948800.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:37:07 2022]
+rule alignment_filter:
+    input: pipeline_output/02_intermediate_files/05_split_regions/chr4/chr4:507-110000.txt, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_alignment.bed, data/bt2
+    output: pipeline_output/02_intermediate_files/06_alignment/chr4/chr4:507-110000_alignment.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/06_alignment/chr4/chr4:507-110000.log
+    reason: Missing output files: pipeline_output/02_intermediate_files/06_alignment/chr4/chr4:507-110000_alignment.txt, pipeline_output/benchmarks/02_intermediate_files/06_alignment/chr4/chr4:507-110000.log
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948801.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Dec 22 17:37:23 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:37:37 2022]
+rule align_probes:
+    input: pipeline_output/02_intermediate_files/06_alignment/chr4/chr4:507-110000_alignment.txt
+    output: pipeline_output/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_probe_alignment.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_alignment.txt
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_alignment.txt, pipeline_output/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_probe_alignment.txt
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948803.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:37:37 2022]
+rule get_region_bed:
+    input: pipeline_output/02_intermediate_files/06_alignment/chr4/chr4:507-110000_alignment.txt
+    output: pipeline_output/02_intermediate_files/09_get_repeat_bed/chr4/chr4:507-110000.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/09_get_repeat_bed/chr4/chr4:507-110000.txt
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/09_get_repeat_bed/chr4/chr4:507-110000.txt, pipeline_output/02_intermediate_files/09_get_repeat_bed/chr4/chr4:507-110000.bed
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948804.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Dec 22 17:37:39 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Dec 22 17:37:41 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:37:57 2022]
+rule derived_beds:
+    input: pipeline_output/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_probe_alignment.txt
+    output: pipeline_output/02_intermediate_files/08_derived_beds/chr4/chr4:507-110000_derived.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/08_derived_beds/chr4/chr4:507-110000_derived.txt
+    reason: Missing output files: pipeline_output/02_intermediate_files/08_derived_beds/chr4/chr4:507-110000_derived.bed, pipeline_output/benchmarks/02_intermediate_files/08_derived_beds/chr4/chr4:507-110000_derived.txt
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948807.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Dec 22 17:37:58 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:38:07 2022]
+rule bedtools_intersect:
+    input: pipeline_output/02_intermediate_files/08_derived_beds/chr4/chr4:507-110000_derived.bed, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed, pipeline_output/02_intermediate_files/09_get_repeat_bed/chr4/chr4:507-110000.bed
+    output: pipeline_output/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_intersect.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_repeat_intersect.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_derived.txt
+    reason: Missing output files: pipeline_output/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_repeat_intersect.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_intersect.txt, pipeline_output/benchmarks/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_derived.txt
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948808.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Dec 22 17:38:08 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    1 (100.00%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+[Thu Dec 22 17:38:10 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:38:17 2022]
+rule get_alignments:
+    input: pipeline_output/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_intersect.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chr4/chr4:507-110000_repeat_intersect.txt, pipeline_output/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_probe_alignment.txt, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed
+    output: pipeline_output/03_output_files/02_generate_probe_binding/01_genome_wide/chr4/chr4:507-110000_alignment_binding.tsv, pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/chr4/chr4:507-110000_thresh_binding.tsv, pipeline_output/03_output_files/02_generate_probe_binding/03_plots/chr4/chr4:507-110000_genome_view.png
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_output_files/02_get_alignments/chr4/chr4:507-110000_alignments.txt
+    reason: Missing output files: pipeline_output/03_output_files/02_generate_probe_binding/03_plots/chr4/chr4:507-110000_genome_view.png, pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/chr4/chr4:507-110000_thresh_binding.tsv, pipeline_output/03_output_files/02_generate_probe_binding/01_genome_wide/chr4/chr4:507-110000_alignment_binding.tsv, pipeline_output/benchmarks/03_output_files/02_get_alignments/chr4/chr4:507-110000_alignments.txt
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948811.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+../../../../workflow/main/scripts/main/get_alignments.py:351: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("Blues"))
+  cmap.set_bad(color='w')
+[Thu Dec 22 17:38:20 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:38:27 2022]
+rule get_region_bed:
+    input: pipeline_output/02_intermediate_files/06_alignment/chrX/chrX:10524-181991_alignment.txt
+    output: pipeline_output/02_intermediate_files/09_get_repeat_bed/chrX/chrX:10524-181991.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/09_get_repeat_bed/chrX/chrX:10524-181991.txt
+    reason: Missing output files: pipeline_output/02_intermediate_files/09_get_repeat_bed/chrX/chrX:10524-181991.bed, pipeline_output/benchmarks/02_intermediate_files/09_get_repeat_bed/chrX/chrX:10524-181991.txt
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948812.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:38:27 2022]
+rule align_probes:
+    input: pipeline_output/02_intermediate_files/06_alignment/chrX/chrX:10524-181991_alignment.txt
+    output: pipeline_output/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_probe_alignment.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_alignment.txt
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_alignment.txt, pipeline_output/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_probe_alignment.txt
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948813.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:38:28 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:38:37 2022]
+rule generate_chromomap:
+    input: data/test_chrom.sizes, pipeline_output/02_intermediate_files/09_get_repeat_bed/chr4/chr4:507-110000.bed, pipeline_output/03_output_files/02_generate_probe_binding/03_plots/chr4/chr4:507-110000_genome_view.png
+    output: pipeline_output/03_output_files/06_chromomap/chr4/chr4:507-110000_chromomap.html
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_pipeline_output/06_chromomap/chr4/chr4:507-110000_plots.txt
+    reason: Missing output files: pipeline_output/benchmarks/03_pipeline_output/06_chromomap/chr4/chr4:507-110000_plots.txt, pipeline_output/03_output_files/06_chromomap/chr4/chr4:507-110000_chromomap.html
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948814.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/b36a2c7187f33834683789e963963dc4_
+1 reads; of these:
+  1 (100.00%) were unpaired; of these:
+    0 (0.00%) aligned 0 times
+    0 (0.00%) aligned exactly 1 time
+    1 (100.00%) aligned >1 times
+100.00% overall alignment rate
+[Thu Dec 22 17:38:38 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+trying URL 'http://cran.us.r-project.org/src/contrib/chromoMap_4.1.1.tar.gz'
+Content type 'application/x-gzip' length 1086066 bytes (1.0 MB)
+==================================================
+downloaded 1.0 MB
+
+* installing *source* package ‘chromoMap’ ...
+** package ‘chromoMap’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (chromoMap)
+
+The downloaded source packages are in
+	‘/tmp/291948814.1.beliveau-short.q/RtmpJjauTy/downloaded_packages’
+Updating HTML index of packages in '.Library'
+Making 'packages.html' ... done
+Warning message:
+package ‘htmlwidgets’ was built under R version 4.1.3 
+Warning message:
+package ‘optparse’ was built under R version 4.1.3 
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.1      ✔ stringr 1.5.0 
+✔ readr   2.1.3      ✔ forcats 0.5.2 
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.1.3 
+2: package ‘tibble’ was built under R version 4.1.3 
+3: package ‘tidyr’ was built under R version 4.1.3 
+4: package ‘readr’ was built under R version 4.1.3 
+5: package ‘purrr’ was built under R version 4.1.3 
+6: package ‘dplyr’ was built under R version 4.1.3 
+7: package ‘stringr’ was built under R version 4.1.3 
+8: package ‘forcats’ was built under R version 4.1.3 
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Warning message:
+package ‘splitstackshape’ was built under R version 4.1.3 
+[Thu Dec 22 17:38:55 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:38:57 2022]
+rule derived_beds:
+    input: pipeline_output/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_probe_alignment.txt
+    output: pipeline_output/02_intermediate_files/08_derived_beds/chrX/chrX:10524-181991_derived.bed
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/08_derived_beds/chrX/chrX:10524-181991_derived.txt
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/08_derived_beds/chrX/chrX:10524-181991_derived.txt, pipeline_output/02_intermediate_files/08_derived_beds/chrX/chrX:10524-181991_derived.bed
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948817.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:38:58 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:07 2022]
+rule map_region_coords:
+    input: pipeline_output/02_intermediate_files/06_alignment/chr4/chr4:507-110000_alignment.txt, pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/chr4/chr4:507-110000_thresh_binding.tsv, pipeline_output/02_intermediate_files/07_probe_alignment/chr4/chr4:507-110000_probe_alignment.txt, pipeline_output/03_output_files/06_chromomap/chr4/chr4:507-110000_chromomap.html
+    output: pipeline_output/03_output_files/03_probes/chr4/chr4:507-110000_probes.tsv, pipeline_output/03_output_files/04_repeat_output/chr4/chr4:507-110000_thresh_summ.tsv
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_pipeline_output/03_map_region/chr4/chr4:507-110000.txt
+    reason: Missing output files: pipeline_output/03_output_files/03_probes/chr4/chr4:507-110000_probes.tsv, pipeline_output/03_output_files/04_repeat_output/chr4/chr4:507-110000_thresh_summ.tsv, pipeline_output/benchmarks/03_pipeline_output/03_map_region/chr4/chr4:507-110000.txt
+    wildcards: sample=chr4, region=chr4:507-110000
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948819.1.beliveau-short.q
+
+[Thu Dec 22 17:39:08 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:18 2022]
+rule bedtools_intersect:
+    input: pipeline_output/02_intermediate_files/08_derived_beds/chrX/chrX:10524-181991_derived.bed, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed, pipeline_output/02_intermediate_files/09_get_repeat_bed/chrX/chrX:10524-181991.bed
+    output: pipeline_output/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_intersect.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_repeat_intersect.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_derived.txt
+    reason: Missing output files: pipeline_output/benchmarks/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_derived.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_repeat_intersect.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_intersect.txt
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948821.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:18 2022]
+rule merge_alignment_filter:
+    input: pipeline_output/03_output_files/03_probes/chr4/chr4:507-110000_probes.tsv
+    output: pipeline_output/03_output_files/01_all_probes/chr4_all_probes.tsv
+    jobid: 0
+    reason: Missing output files: pipeline_output/03_output_files/01_all_probes/chr4_all_probes.tsv
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948822.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:39:18 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+[Thu Dec 22 17:39:18 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:27 2022]
+rule get_alignments:
+    input: pipeline_output/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_intersect.txt, pipeline_output/02_intermediate_files/10_bedtools_intersect/chrX/chrX:10524-181991_repeat_intersect.txt, pipeline_output/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_probe_alignment.txt, pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed
+    output: pipeline_output/03_output_files/02_generate_probe_binding/01_genome_wide/chrX/chrX:10524-181991_alignment_binding.tsv, pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/chrX/chrX:10524-181991_thresh_binding.tsv, pipeline_output/03_output_files/02_generate_probe_binding/03_plots/chrX/chrX:10524-181991_genome_view.png
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_output_files/02_get_alignments/chrX/chrX:10524-181991_alignments.txt
+    reason: Missing output files: pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/chrX/chrX:10524-181991_thresh_binding.tsv, pipeline_output/benchmarks/03_output_files/02_get_alignments/chrX/chrX:10524-181991_alignments.txt, pipeline_output/03_output_files/02_generate_probe_binding/03_plots/chrX/chrX:10524-181991_genome_view.png, pipeline_output/03_output_files/02_generate_probe_binding/01_genome_wide/chrX/chrX:10524-181991_alignment_binding.tsv
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948823.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:27 2022]
+rule summary:
+    input: pipeline_output/03_output_files/01_all_probes/chr4_all_probes.tsv
+    output: pipeline_output/03_output_files/05_probe_summary/chr4_probe_summary.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_output_files/04_probe_summary/chr4_probe_summary.txt
+    reason: Missing output files: pipeline_output/benchmarks/03_output_files/04_probe_summary/chr4_probe_summary.txt, pipeline_output/03_output_files/05_probe_summary/chr4_probe_summary.txt
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948824.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:39:29 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+../../../../workflow/main/scripts/main/get_alignments.py:351: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("Blues"))
+  cmap.set_bad(color='w')
+[Thu Dec 22 17:39:31 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:47 2022]
+rule generate_chromomap:
+    input: data/test_chrom.sizes, pipeline_output/02_intermediate_files/09_get_repeat_bed/chrX/chrX:10524-181991.bed, pipeline_output/03_output_files/02_generate_probe_binding/03_plots/chrX/chrX:10524-181991_genome_view.png
+    output: pipeline_output/03_output_files/06_chromomap/chrX/chrX:10524-181991_chromomap.html
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_pipeline_output/06_chromomap/chrX/chrX:10524-181991_plots.txt
+    reason: Missing output files: pipeline_output/03_output_files/06_chromomap/chrX/chrX:10524-181991_chromomap.html, pipeline_output/benchmarks/03_pipeline_output/06_chromomap/chrX/chrX:10524-181991_plots.txt
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948825.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/b36a2c7187f33834683789e963963dc4_
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:39:47 2022]
+rule finish:
+    input: pipeline_output/03_output_files/05_probe_summary/chr4_probe_summary.txt
+    output: pipeline_output/finished/DONE_chr4.txt
+    jobid: 0
+    reason: Missing output files: pipeline_output/finished/DONE_chr4.txt
+    wildcards: sample=chr4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948826.1.beliveau-short.q
+
+[Thu Dec 22 17:39:47 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+trying URL 'http://cran.us.r-project.org/src/contrib/chromoMap_4.1.1.tar.gz'
+Content type 'application/x-gzip' length 1086066 bytes (1.0 MB)
+==================================================
+downloaded 1.0 MB
+
+* installing *source* package ‘chromoMap’ ...
+** package ‘chromoMap’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (chromoMap)
+
+The downloaded source packages are in
+	‘/tmp/291948825.1.beliveau-short.q/RtmpsCqe05/downloaded_packages’
+Updating HTML index of packages in '.Library'
+Making 'packages.html' ... done
+Warning message:
+package ‘htmlwidgets’ was built under R version 4.1.3 
+Warning message:
+package ‘optparse’ was built under R version 4.1.3 
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.1      ✔ stringr 1.5.0 
+✔ readr   2.1.3      ✔ forcats 0.5.2 
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.1.3 
+2: package ‘tibble’ was built under R version 4.1.3 
+3: package ‘tidyr’ was built under R version 4.1.3 
+4: package ‘readr’ was built under R version 4.1.3 
+5: package ‘purrr’ was built under R version 4.1.3 
+6: package ‘dplyr’ was built under R version 4.1.3 
+7: package ‘stringr’ was built under R version 4.1.3 
+8: package ‘forcats’ was built under R version 4.1.3 
+Warning message:
+package ‘splitstackshape’ was built under R version 4.1.3 
+[Thu Dec 22 17:40:00 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:40:17 2022]
+rule map_region_coords:
+    input: pipeline_output/02_intermediate_files/06_alignment/chrX/chrX:10524-181991_alignment.txt, pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/chrX/chrX:10524-181991_thresh_binding.tsv, pipeline_output/02_intermediate_files/07_probe_alignment/chrX/chrX:10524-181991_probe_alignment.txt, pipeline_output/03_output_files/06_chromomap/chrX/chrX:10524-181991_chromomap.html
+    output: pipeline_output/03_output_files/03_probes/chrX/chrX:10524-181991_probes.tsv, pipeline_output/03_output_files/04_repeat_output/chrX/chrX:10524-181991_thresh_summ.tsv
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_pipeline_output/03_map_region/chrX/chrX:10524-181991.txt
+    reason: Missing output files: pipeline_output/03_output_files/03_probes/chrX/chrX:10524-181991_probes.tsv, pipeline_output/benchmarks/03_pipeline_output/03_map_region/chrX/chrX:10524-181991.txt, pipeline_output/03_output_files/04_repeat_output/chrX/chrX:10524-181991_thresh_summ.tsv
+    wildcards: sample=chrX, region=chrX:10524-181991
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948828.1.beliveau-short.q
+
+[Thu Dec 22 17:40:18 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:40:27 2022]
+rule merge_alignment_filter:
+    input: pipeline_output/03_output_files/03_probes/chrX/chrX:10524-181991_probes.tsv
+    output: pipeline_output/03_output_files/01_all_probes/chrX_all_probes.tsv
+    jobid: 0
+    reason: Missing output files: pipeline_output/03_output_files/01_all_probes/chrX_all_probes.tsv
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948833.1.beliveau-short.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:40:28 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:40:37 2022]
+rule summary:
+    input: pipeline_output/03_output_files/01_all_probes/chrX_all_probes.tsv
+    output: pipeline_output/03_output_files/05_probe_summary/chrX_probe_summary.txt
+    jobid: 0
+    benchmark: pipeline_output/benchmarks/03_output_files/04_probe_summary/chrX_probe_summary.txt
+    reason: Missing output files: pipeline_output/benchmarks/03_output_files/04_probe_summary/chrX_probe_summary.txt, pipeline_output/03_output_files/05_probe_summary/chrX_probe_summary.txt
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948837.1.beliveau-long.q
+
+Activating conda environment: ../../../../shared_conda_envs/2dcb93bf607036c7eebb8b97917bd356_
+[Thu Dec 22 17:40:38 2022]
+Finished job 0.
+1 of 1 steps (100%) done
+/net/beliveau/vol1/home/eaguil/.bashrc: line 17: conda: command not found
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'zlib/latest'
+ModuleCmd_Load.c(213):ERROR:105: Unable to locate a modulefile for 'VCFtools/latest'
+Config file config.yml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Falling back to greedy scheduler because no default solver is found for pulp (you have to install either coincbc or glpk).
+Using shell: /bin/bash
+Provided cores: 2
+Rules claiming more threads will be scaled down.
+Provided resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954
+Select jobs to execute...
+
+[Thu Dec 22 17:40:47 2022]
+rule finish:
+    input: pipeline_output/03_output_files/05_probe_summary/chrX_probe_summary.txt
+    output: pipeline_output/finished/DONE_chrX.txt
+    jobid: 0
+    reason: Missing output files: pipeline_output/finished/DONE_chrX.txt
+    wildcards: sample=chrX
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=/tmp/291948838.1.beliveau-short.q
+
+[Thu Dec 22 17:40:47 2022]
+Finished job 0.
+1 of 1 steps (100%) done
