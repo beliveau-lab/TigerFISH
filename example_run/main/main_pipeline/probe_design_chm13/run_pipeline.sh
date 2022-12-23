@@ -19,8 +19,5 @@ dot -Tpdf dag.dot > pipeline_output/pipeline.pdf
 dot -Tsvg dag.dot > pipeline_output/pipeline.svg
 rm dag.dot
 
-echo -e "Generating pipeline HTML report..."
-snakemake --snakefile $SNAKE_FILE --configfile $CONFIG_FILE --report pipeline_output/report.html
-
 # success
 echo -e "\nDONE!\n"
