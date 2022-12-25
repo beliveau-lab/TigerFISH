@@ -4,9 +4,9 @@ Tigerfish User Tutorials
 
 Overview
 --------
-These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using *"Repeat Identification Mode"* and *"Probe Design Mode"* using example cases and on real data in the CHM13 V2.0 genome. Following implementation of the main pipeline, users will also walk through example and real-world cases of the *post-process pipeline*. Following this tutorial, users will have all the resources to run **Tigerfish** for their own research applications. 
+These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using *"Repeat Identification Mode"* and *"Probe Design Mode"* using example cases and real data in the CHM13 V2.0 genome. Following this tutorial, users will have all the resources to run **Tigerfish** for their own research applications. 
 
-This tutorial guide was written in mind for those who are newer to running these scripts in a command line environment. These tutorials will help users ensure that they have installed and are running **Tigerfish** properly on their own command line system. 
+This tutorial guide was written in mind for those who are newer to running these scripts in a command line environment. These tutorials will help users ensure that they have installed **Tigerfish** properly on their own command line system. 
 
 So let's get started! |:microscope:| |:tiger:|
 
@@ -29,20 +29,22 @@ Next, we will move through the *Probe Design Mode* directory which can be found 
 
 Following execution of both run-modes in the main pipeline, we will proceed with the *post-process pipeline* which exists `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test>`_. 
 
-Lastly, we will move into the real-world examples in the main pipeline with CHM13 V2.0 using *Probe Design Mode* and relevant post-process data on real oligo probes mined from the newly annotated chr9 HSAT repeat. 
+Lastly, we will move into the real-world examples in the main pipeline with CHM13 V2.0 using *Probe Design Mode* from the newly annotated chr9 HSAT repeat. 
 
 It's important to note that these directories are static meaning that the config.yml files have been organized to run Tigerfish for expected behavior in each directory. In other words, the only thing that users will need to execute to validate their results in each directory is the run_pipeline.sh scripts independently. 
 
-At UW Genome Sciences, users have access to the departmental Sun Grid Cluster Engine, which is used to deploy cluster compute jobs. Templates for how to run Tigerfish with such a file system can be found here. Even if you are not using the Sun Grid Engine, Tigerfish may be executed locally and all scripts are currently configured for generalizeable use in a command line environment.
+At UW Genome Sciences, users have access to the departmental Sun Grid Cluster Engine, which is used to deploy cluster compute jobs. Templates for how to run Tigerfish with such a file system can be found at the root directory of the Tigerfish GitHub. 
+
+Even if you are not using the Sun Grid Engine, Tigerfish may be executed locally and all scripts are currently configured for generalizeable use in a command line environment.
 
 To begin, we will describe some context for how Tigerfish is deployed by covering the config.yml file and appropriate run_pipeline.sh scripts found in each directory.
 
 Config file
 ===========
 
-**Tigerfish** is a command line workflow that is implemented using Snakemake. This `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_ file summarizes parameters that users are able to modify for their own research. However, we provide default parameters summarized in our paper for recommended use. These parameters for probe design are also described within this documentation along with definitions on our command line definitions page. 
+**Tigerfish** is a command line workflow that is implemented using Snakemake. This `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_ file summarizes parameters that users are able to modify. 
 
-For the example test files and real-world data, these config.yml files in each of these directories have already been modified for use with example and template files. The only modification required will be to list the path to the CHM13 V2.0 genome in the real-world data example, but we walk through how to do this when we get to this step :). 
+However, we provide default parameters summarized in our paper for recommended use. These parameters for probe design are also described within the command line definitions page. 
 
 Repeat Identification Mode on a Test Genome
 -------------------------------------------
@@ -262,84 +264,6 @@ It's important to understand the distinct parameters that are being changed to t
 
 Here, the key difference in behavior can be controlled based on whether `defined_coords` = "TRUE" and `repeat_discovery` = "FALSE" to drive *Probe Design Mode* and vice versa for *Repeat Discovery Mode*. Be mindful that if one of these parameters is set to TRUE, the other must be set to FALSE or else the pipeline will be exited.
 
-Post-process Pipeline
----------------------
-
-The Tigerfish post-process pipeline is intended for analysis of specific oligo probes of interest after Tigerfish has been successfully run. Here, users may take selected probes directly from the final Tigerfish probe output file and generate plots of predicted thermodynamic binding sites for each scaffold. Maps of repeat location on each target scaffold are also generated using `chromoMap <https://cran.r-project.org/web/packages/chromoMap/vignettes/chromoMap.html>`_. Output bedgraphs of normalized alignment pileup over 5 Mb bins may be useful for other genomic analyses beyond Tigerfish use. Here, collections or individual designed probes are validated to check each probe(s) predicted binding behavior.
-
-The post-process pipeline directory for execution can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test>`_.
-
-**Pipeline Inputs**
-
-- Probe file.
-- Bowtie2 indices dir (the Bowtie2 indices directory which is the same genome wide directory used in *Repeat Discovery Mode*)
-- chrom.sizes file (the same genome wide chrom.sizes file used in *Repeat Discovery Mode*)
-
-The test probe file described as **dxz4_test_probe.tsv**: 
-
-.. image:: imgs/sample_out_probe.png
-     :width: 500
-     :alt: Screenshot showing the probe design mode config.yml params to toggle. 
-
-**Pipeline Outputs**
-
-Output files can be found in their corresponding expected ouput directory `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test/expected_pipeline_output/03_output_files>`_. 
-
-- Genome wide binding summary
-- Genome wide binding plots
-- Genomic bins with binding sites above threshold
-- chromomap karyoplot
-
-**Pipeline Executable**
-
-The **config.yml** file which has preset parameters that **do not** need to be modified for proper execution:
-
-.. image:: imgs/postprocess_config.png
-     :width: 500
-     :alt: Tigerfish config.yml file for test genome to run the post-process pipeline
-     
-**Note**: It's *extremely* important to list all specific scaffolds of interest where post-process analyses will happen. In this case we are just interested in the resulting output probe derived from chrX so we list this scaffold in the config.yml only. 
-     
-The **run_pipeline.sh** script is what is used to execute the pipeline:
-
-.. image:: imgs/postprocess_run.png
-     :width: 500
-     :alt: Tigerfish run pipeline executable shell script
-
-**Let's walkthrough**
-
-1. From the Tigerfish home directory, navigate to the post-process pipeline directory by entering:
-
-.. code-block:: bash
-
-     cd example_run/postprocess/dxz4_test/
-     
-2. Next, enter the following command to execute the post-process pipeline. 
-
-.. code-block:: bash
-
-     . run_pipeline.sh
-     
-You will see the pipeline begin to start and execute as expected once the chromomap_env.yml is created. 
-
-.. image:: imgs/postprocess_step_2.png
-     :width: 500
-     :alt: Tigerfish run pipeline executable shell script
-     
-3. Once the pipeline is completed, you will be greeted with the message "DONE!" as shown.
-
-.. image:: imgs/postprocess_step_3.png
-     :width: 500
-     :alt: Tigerfish run pipeline executable shell script
-
-Congrats! Your output files now contain analyses on genome wide binding and anticipated in silico binding for this particular probe sequence.
-
-This concludes the Tigerfish pipeline tests on the mock chr4 and chrX genome.
-
-Next, we will move into generating real-data on the chr9 HSAT repeat in the CHM13 v2.0 genome.
-
-If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <https://vimeo.com/762385417>`_.    
-
 
 Probe Design Mode on chr9 HSAT in CHM13. v2.0
 ---------------------------------------------
@@ -395,56 +319,6 @@ Congrats! You've designed a real probe that will work to visualize the chr9 HSAT
 
 Now let's see what else we can learn from this repeat array by pursuing post-process analysis.
 
-Post-process on chr9 HSAT in CHM13. v2.0
-----------------------------------------
-
-1. First we will navigate to the directory where the post-process analysis will begin. Relative to the home directory, the command you should enter is:
-
-.. code-block:: bash
-
-     cd example_run/postprocess/chm13_postprocess/
-     
-2. Next, you want to modify the config.yml to have a bowtie2 index path to the chm13 v2.0 genome build that was just made to mine this probe. Once you append the path relative to this directory, the path in the config.yml file should look like this:
-
-.. image:: imgs/chm13_chr9_yaml.png
-     :width: 500
-     :alt: Overview of real world example config.yml for post-process.
-     
-3. Now you can run the pipeline by entering:
-
-.. code-block:: bash
-
-     . run_pipeline.sh
-     
-3. Once the pipeline is completed, there are a few things we can learn about this probe from the output files
-
-*Genome Wide Binding*
-
-When we navigate to this output directory, we see an overwhelming predicted binding enrichment on chr9. 
-
-.. image:: imgs/genome_wide_binding_chr9.png
-     :width: 500
-     :alt: Overview of chr9 probe genome wide binding.
-
-*Threshold binding*
-
-Upon further inspection, we see which bins were flagged to have predicting binding scores above our flagged threshold of 100. 
-
-.. image:: imgs/genome_threshold_chr9.png
-     :width: 500
-     :alt: Overview of thresholded binding.
-
-*Genome View*
-
-This plot demonstrates the general location of where signals are expected to pile up over the entirety of the genome.
-
-**Note**: For better visualization, this image should be downloaded and taken to a black background because the background was set to be transparent for easier portability between users. 
-
-.. image:: imgs/chr9_genome_view.png
-     :width: 500
-     :alt: Overview of thresholded binding.
-
-Lastly, the chromomap file presents as an .html which can easily be translated into a .PNG via file conversion. 
 
 Final thoughts
 --------------
