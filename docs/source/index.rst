@@ -25,10 +25,11 @@ Allows for de-novo repeat discovery and probe design |:microscope:|
         A pipeline that allows for repetitive probe discovery and design. Users may provide a particular region of interest for oligo probe design, or provide a genomics scaffold for repeat discovery and probe design.
 
 Provides downstream oligo probe analyses |:bar_chart:|
-        A post processing pipeline, where users may perform analysis on probes of interest to determine on and off target probe specificity in silico and generate karyoplots using ChromoMaps.
+        Intermediate pipeline steps perform analysis on final candidate probes to determine in silico on and off target probe specificity and generate karyoplots using `chromoMap <https://cran.r-project.org/web/packages/chromoMap/vignettes/chromoMap.html>`_.
 
 An upcoming web resource for model organisms |:tropical_fish:|
-        An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank, forthcoming Q1 2023).
+        An interactive web application for probe design that will include diverse model organism genomes containing information about relevant repetitive DNA probes for FISH experiments (FISHtank
+). This web database will be integrated into the UCSC Genome Browser for probe design in newly assembled genomes.
 
 **Tigerfish** is intended to serve as a resource for exploring and visualizing abundantly repetitive DNA targets in genomes using oligo technology. You can find out more about features and functionality in these pages. Happy FISHing! |:fish:|
 
@@ -38,7 +39,7 @@ Installation
 
 1. Install `conda <https://docs.conda.io/en/latest/miniconda.html>`_ as needed for your system.
 
-2. Proceed with installing Mamba to assist with snakemake installation, as recommended in the Snakemake installation tutorial.
+2. Proceed with installing Mamba to assist with Snakemake installation, as recommended in the Snakemake installation tutorial.
 
 .. code-block:: bash
 
