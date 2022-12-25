@@ -16,10 +16,6 @@ Recommended default parameters are also provided that were used for probe mining
 Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_ for main workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: imgs/tigerfish_main_overview.png
-        :width: 500
-        :alt: Tigerfish main workflow overview
-
 *Required files for getting started*
 
 **fasta_file**: *File path*. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format.
@@ -30,6 +26,11 @@ Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/m
 
    $ pip install pyfaidx \
     && faidx input.fasta -i chromsizes > sizes.genome
+    
+*Run modes* 
+
+
+*Boolean flags*
  
 **defined_coords**: *Boolean flag*. If marked as **TRUE** a BED file path must be provided for the **bed_file** parameter. If parameter is not being used, it should be toggled to **FALSE**.
 
@@ -108,30 +109,7 @@ seq2 |br|
 
 **ref_flag**: *Integer, 0 or 1*. Intermediate alignment files may be stored using this parameter if a user selects 1. Because many files during the alignment step are memory intensive, this parameter by default is set to 0 to prevent significant memory overhead. 
 
-Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/postprocess/config.yml>`_ for the Post-process workflow
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. image:: imgs/tigerfish_postprocess_overview.png
-           :width: 500
-           :alt: Tigerfish postprocess workflow overview
-
-**probe_file**: *File path*. A subset output probe file from the main workflow. This file can contain individual or pools of probes from a shared repeat. Multiple chromosomes with unique probes mapping to independent repeat regions are also allowed.
-
-**bowtie2_dir**: *File path*. The provided file path from the main workflow containing Bowtie2 indices for the queried genome of interest.
-
-**assembly**: *String*. The name of the assembly used in the main workflow. Should match the assembly in the main `config.yml` file.
-
-**samples**: *String*. Can include individual scaffolds or multiple scaffolds in bullet list. See `config.yml` fro examples.
-
-**chrom_sizes_file**: *File path*. A file path directing users to the `chrom.sizes` file that matches the appropriate reference FASTA provided.
-
 **genome_windows**: *Integer*. The size genome windows desired to be made by BEDtools.
-
-**bt2_alignments**: *Integer*. The maximum total number of alignments to be returned by Bowtie2.
-
-**seed_length**: *Integer*. `Tigerfish` implements Bowtie2 to align remaining probes to the entire queried genome to ensure that probes will not bind to unexpected binding sites. As described by Bowtie2, there is a tradeoff between speed and sensitivity/accuracy that can be adjusted by setting the seed length, which is the interval between extracted seeds.
-
-**model_temp**: *Float*. `Tigerfish` implements NUPACK to compute the predicted thermodynamic likelihood that each alignment pair will form duplexes under FISH conditions. The temperature parameter for this model can be modified as a parameter.
 
 **bin_thresh**: *Integer*. The provided threshold to note that aggregate thermodynamic binding sites are above this value on any given bin. 
 
