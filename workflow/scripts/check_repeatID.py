@@ -24,7 +24,7 @@ def read_test_run_files(chr4_t_file, chrx_t_file):
         chrX test output file organized as a pandas dataframe
     """    
     
-    colnames = ["probe_coords","repeat_coords","probe", "Tm",
+    colnames = ["probe_coords","repeat_coords","imaging_coords","probe", "Tm",
                 "r_count", "h_count", "binding_prop", "ranking",
                 "on_target","off_target","pdups_prop"]
     
