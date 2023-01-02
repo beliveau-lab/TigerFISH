@@ -127,7 +127,7 @@ if config['jf_hash_given'] == 'FALSE':
             chrom_idx = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_index.txt',
             chrom_fa = 'pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/{sample}.fa'
         shell:
-            "python ../../../workflow/scripts/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
+            "python ../../workflow/scripts/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
 
 #rule dictates behavior if user provides BED file and specifies defined_coords run mode
 if config['defined_coords'] == "TRUE":
@@ -145,7 +145,7 @@ if config['defined_coords'] == "TRUE":
         output:
             chrom_region = 'pipeline_output/02_intermediate_files/01_split_bed/{sample}_regions.bed'
         shell:
-            "python ../../../workflow/scripts/split_bed.py -b {input.bed_file} -c {params.chrom_name} -o {output.chrom_region}"
+            "python ../../workflow/scripts/split_bed.py -b {input.bed_file} -c {params.chrom_name} -o {output.chrom_region}"
 
 #rule dictates behavior if users define repeat_discovery mode
 if config['repeat_discovery'] == "TRUE":
@@ -169,7 +169,7 @@ if config['repeat_discovery'] == "TRUE":
         output:
             out_bed = "pipeline_output/02_intermediate_files/01_repeat_ID/{sample}_regions.bed",
         shell:
-            "python ../../../workflow/scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -m {params.mer} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
+            "python ../../workflow/scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -m {params.mer} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
 
 #function defines which files are to be returned to initiate probe design
 def input_for_design_probes(wildcards):
@@ -200,7 +200,7 @@ rule design_probes:
         designed_probes = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_blockParse_probe_df.bed",
         probe_fa = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_probe_regions.fa"
     shell:
-        "python ../../../workflow/scripts/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa} -l {params.min_length} -L {params.max_length} -t {params.min_temp} -T {params.max_temp}"
+        "python ../../workflow/scripts/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa} -l {params.min_length} -L {params.max_length} -t {params.min_temp} -T {params.max_temp}"
 
 #rule performs k-mer filtering on designed probes based on user defined parameters
 rule kmer_filter:
@@ -222,7 +222,7 @@ rule kmer_filter:
     output:
         "pipeline_output/02_intermediate_files/03_pre_filter/{sample}_probes_pre_filter.txt"
     shell:
-        "python ../../../workflow/scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2} -c {params.chrom_name}"
+        "python ../../workflow/scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2} -c {params.chrom_name}"
 
 #rule filters probes further and rank sorts them based on user defined parameters
 rule probe_mer_filter:
@@ -242,7 +242,7 @@ rule probe_mer_filter:
     output:
         "pipeline_output/02_intermediate_files/04_post_mer_filter/{sample}_probes_mer_filter.txt"
     shell:
-        "python ../../../workflow/scripts/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
+        "python ../../workflow/scripts/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
 
 #rule generates genomic bins using BEDtools which will be used to validate alignment and candidate probe binding specificity
 rule generate_genome_bins:
@@ -280,7 +280,7 @@ checkpoint make_chrom_dir:
         region_split = directory("pipeline_output/02_intermediate_files/05_split_regions/{sample}/")
     shell:
         """
-        python ../../../workflow/scripts/split_filter.py -f {input.probes} -o {output}
+        python ../../workflow/scripts/split_filter.py -f {input.probes} -o {output}
         """
 #rule takes each repeat region created from the checkpoint and performs alignment-based filtering analysis to isolate final candidate probes
 rule alignment_filter:
@@ -308,7 +308,7 @@ rule alignment_filter:
     output:
         "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
     shell:
-        "python ../../../workflow/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
+        "python ../../workflow/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
 
 #function will aggregate all repeat regions that complete the alignment_filter process
 def aggregate_alignment_input(wildcards):
@@ -347,7 +347,7 @@ checkpoint split_rm_alignments:
     benchmark:
         "pipeline_output/02_intermediate_files/08_split_align/{sample}.log"
     shell:
-        "python ../../../workflow/scripts/split_rm_alignments.py -f {input} -o {output}"
+        "python ../../workflow/scripts/split_rm_alignments.py -f {input} -o {output}"
 
 #rule proceeds with independent region probe alignment for all final candidate probes contained within each repeat region
 rule align_probes:
@@ -366,7 +366,7 @@ rule align_probes:
     benchmark:
         "pipeline_output/benchmarks/02_intermediate_files/09_probe_alignment/{sample}/{region}_alignment.txt"
     shell:
-        'python ../../../workflow/scripts/generate_alignments.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val} -l {params.seed_length} -t {params.model_temp}'
+        'python ../../workflow/scripts/generate_alignments.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val} -l {params.seed_length} -t {params.model_temp}'
 
 #rule taked SAM output to identify where reported alignments are located as BED regions
 rule derived_beds:
@@ -382,7 +382,7 @@ rule derived_beds:
     benchmark:
         "pipeline_output/benchmarks/02_intermediate_files/10_derived_beds/{sample}/{region}_derived.txt"
     shell:
-        "python ../../../workflow/scripts/make_derived_beds.py -f {input} -o {output}"
+        "python ../../workflow/scripts/make_derived_beds.py -f {input} -o {output}"
 
 #rule takes alignment file and creates BED file from target repeat region
 rule get_region_bed:
@@ -398,7 +398,7 @@ rule get_region_bed:
     benchmark:
         "pipeline_output/benchmarks/02_intermediate_files/11_get_repeat_bed/{sample}/{region}.txt"
     shell:
-        "python ../../../workflow/scripts/get_region_bed.py -i {input} -o {output}"
+        "python ../../workflow/scripts/get_region_bed.py -i {input} -o {output}"
 
 #rule intersects derived alignments and repeat region with genomic bins to identify where reported alignments map (within target repeat vs outside of target repeat)
 rule bedtools_intersect:
@@ -440,7 +440,7 @@ rule get_alignments:
         h_rt = "320:0:0",
         thresh = config["align_thresh"]    
     shell:
-        "python ../../../workflow/scripts/get_alignments.py -c_t {input.genome_bin} -c_o {input.alignment_intersect} -p {input.probes_alignment} -r_o {input.region_intersect} -pl {output.binding_maps} -t {params.thresh} -t_s {output.thresh_binding} -c_s {output.target_binding}"
+        "python ../../workflow/scripts/get_alignments.py -c_t {input.genome_bin} -c_o {input.alignment_intersect} -p {input.probes_alignment} -r_o {input.region_intersect} -pl {output.binding_maps} -t {params.thresh} -t_s {output.thresh_binding} -c_s {output.target_binding}"
 
 #rule creates chromoMap object based on repeat region target
 rule generate_chromomap:
@@ -458,7 +458,7 @@ rule generate_chromomap:
     benchmark:
         "pipeline_output/benchmarks/03_pipeline_output/06_chromomap/{sample}/{region}_plots.txt"
     shell:
-        "Rscript --vanilla ../../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
+        "Rscript --vanilla ../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
 
 #function will take all probes after their imaging target region has been appended to aggregate their paths
 def all_mapped_output(wildcards):
@@ -485,7 +485,7 @@ rule map_region_coords:
     benchmark:
         "pipeline_output/benchmarks/03_pipeline_output/03_map_region/{sample}/{region}.txt"
     shell:
-        "python ../../../workflow/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
+        "python ../../workflow/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
 
 #rule will merge the individually-flattened chromosome annotation files
 rule merge_mapping:
@@ -515,7 +515,7 @@ rule summary:
     benchmark:
         "pipeline_output/benchmarks/03_output_files/04_probe_summary/{sample}_probe_summary.txt"
     shell:
-        "python ../../../workflow/scripts/finish_summary.py -f {input} -o {output}"
+        "python ../../workflow/scripts/finish_summary.py -f {input} -o {output}"
 
 #rule takes output of summary to finish as final file that ends Tigerfish pipeline
 rule finish:

@@ -1,12 +1,13 @@
 <div align="center">
-    <a href="#readme"><img src="../../docs/source/imgs/tigerfish_logo.png" width="200"></a>
+    <a href="#readme"><img src="../../../docs/source/imgs/tigerfish_logo.png" width="200"></a>
 </div>
 
-## TigerFISH Pipeline Test Implementation
+## Main Internal Workflow: Repeat Identification Test
 
-# Main Internal Workflow
+Here, a genomic fasta which flanks the D4Z4 and DXZ4 repeats is provided as seperate scaffolds (chr4 and chrX) where repeats are identified by Tigerfish using the repeat identification setting. Links to files in these directories are summarized here:
 
-To run the pipeline and example files in either test case under main, please enter the appropriate directory to test each feature. Here the example workflow provided includesa demonstration using a synthetic genome designed from only small portions of the D4Z4 repeat and DXZ4 repeats from chromosomes 4 and X, respectively. This "genome" was made to simply account for easy testing and scaling with new users. By switching file paths appropriately in the config.yml file for each run implementation, users may be able to scale and apply Tigerfish to whole genomes.
-
-* [Defined Coords Test](main_pipeline/expected_pipeline_output/defined_coords_output/)
-* [Repeat Identification Test](main_pipeline/expected_pipeline_output/repeat_ID_output/)
+* [config.yml](config.yml)
+* [data containing .bed and .fa files for testing](data/)
+* [expected output files and directories to compare](expected_pipeline_output)
+* [output from pipeline run appears here](pipeline_output)
+* [shell script to run pipeline](run_pipeline.sh)
