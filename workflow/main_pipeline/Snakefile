@@ -458,7 +458,7 @@ rule generate_chromomap:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "pipeline_output/benchmarks/03_output_files/06_generate_chromomap/{sample}/{region}_plots.txt"
+        "pipeline_output/benchmarks/03_output_files/05_generate_chromomap/{sample}/{region}_plots.txt"
     shell:
         "Rscript --vanilla ../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
 
@@ -497,6 +497,8 @@ rule merge_mapping:
         'pipeline_output/03_output_files/01_all_probes/{sample}_all_probes.tsv'
     conda:
         "../../shared_conda_envs/tigerfish.yml"
+    benchmark:
+        "pipeline_output/benchmarks/03_output_files/01_all_probes/{sample}.txt"
     params:
         mfree='3G',
         h_rt='3:0:0'
