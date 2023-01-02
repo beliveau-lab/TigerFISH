@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Mar 15 14:07:16 2022
-
-@author: Robin Aguilar
-
-Purpose: To take each probe in the probe file and generate alignments.
-Should return a dataframe of the alignments as well as a summary of pooled
-probes in aggregate of binding.
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 ##############################################################################
 """
 Created on Thu Jul  1 13:13:48 2021
@@ -73,8 +61,6 @@ def read_probes(file_path,out_path,bowtie_idx,bowtie_string,
                 "off_target_sum","on_target_prop"]
 
     probe_df = pd.read_csv(file_path, delimiter = '\t', names = colnames)
-
-    print(probe_df)
 
     probe_list = probe_df['probe'].tolist()
     probe_coords = probe_df['probe_coords'].tolist()

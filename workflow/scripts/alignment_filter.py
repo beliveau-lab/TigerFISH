@@ -280,8 +280,6 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     #write final df
     keep_probes_df = pd.merge(probe_df, pdups_binding_df, on="probe_coords")
 
-    print(keep_probes_df)
-
     keep_probes_df.to_csv(o_file, header=False, index=False, sep="\t")
 
 ##############################################################################

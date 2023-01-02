@@ -38,9 +38,9 @@ if config['jf_hash_given'] == "FALSE":
             mfree="60G",
             h_rt = "20:0:0"
         benchmark:
-            'pipeline_output/benchmarks/01_reference_files/01_jf_query_file/jf_count_log.log'
+            'pipeline_output/benchmarks/01_reference_files/01_generate_jf_count/jf_count_log.log'
         output:
-            'pipeline_output/01_reference_files/01_jf_query_file/genome_query.jf'
+            'pipeline_output/01_reference_files/01_generate_jf_count/genome_query.jf'
         shell:
             "jellyfish count -s 3300M -m {params.mer} -o {output} -C {input.fasta_file}"
 
@@ -62,7 +62,7 @@ def input_for_jf_idx(wildcards):
 
 #rule used to generate bowtie2 indices if they are not already provided
 if config['bowtie2_indices_given'] == "FALSE":
-    BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
+    BOWTIE2_DIR = f'pipeline_output/01_reference_files/04_generate_bt2_indices/{ASSEMBLY}'
     rule generate_bt2_indices:
         input:
             fasta_file = config["fasta_file"]
@@ -72,7 +72,7 @@ if config['bowtie2_indices_given'] == "FALSE":
             mfree="60G",
             h_rt = "20:0:0"
         benchmark:
-            'pipeline_output/benchmarks/01_reference_files/02_bt2_idx/bt2_idx_log.log'
+            'pipeline_output/benchmarks/01_reference_files/04_generate_bt2_indices/bt2_idx_log.log'
         output:
             f'{BOWTIE2_DIR}/{ASSEMBLY}.1.bt2',
             f'{BOWTIE2_DIR}/{ASSEMBLY}.2.bt2',
@@ -121,11 +121,11 @@ if config['jf_hash_given'] == 'FALSE':
             mfree="60G",
             h_rt = "20:0:0"
         benchmark:
-            'pipeline_output/benchmarks/01_reference_files/03_jf_idx/{sample}_log.log'
+            'pipeline_output/benchmarks/01_reference_files/03_generate_jf_idx/{sample}_log.log'
         output:
-            jf_count = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_jf_temp.txt',
-            chrom_idx = 'pipeline_output/01_reference_files/03_jf_idx/{sample}_index.txt',
-            chrom_fa = 'pipeline_output/01_reference_files/03_jf_idx/repeat_fasta/{sample}.fa'
+            jf_count = 'pipeline_output/01_reference_files/03_generate_jf_idx/{sample}_jf_temp.txt',
+            chrom_idx = 'pipeline_output/01_reference_files/03_generate_jf_idx/{sample}_index.txt',
+            chrom_fa = 'pipeline_output/01_reference_files/03_generate_jf_idx/repeat_fasta/{sample}.fa'
         shell:
             "python ../../workflow/scripts/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
 
@@ -195,10 +195,10 @@ rule design_probes:
         min_temp = config["min_temp"],
         max_temp = config["max_temp"]
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/02_designed_probes/{sample}_log.log"
+        "pipeline_output/benchmarks/02_intermediate_files/02_design_probes/{sample}_log.log"
     output:
-        designed_probes = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_blockParse_probe_df.bed",
-        probe_fa = "pipeline_output/02_intermediate_files/02_designed_probes/{sample}_probe_regions.fa"
+        designed_probes = "pipeline_output/02_intermediate_files/02_design_probes/{sample}_blockParse_probe_df.bed",
+        probe_fa = "pipeline_output/02_intermediate_files/02_design_probes/{sample}_probe_regions.fa"
     shell:
         "python ../../workflow/scripts/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa} -l {params.min_length} -L {params.max_length} -t {params.min_temp} -T {params.max_temp}"
 
@@ -218,9 +218,9 @@ rule kmer_filter:
         c1 = config["c1_val"],
         c2 = config["c2_val"]
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/03_pre_filter/{sample}_log.log"
+        "pipeline_output/benchmarks/02_intermediate_files/03_kmer_filter/{sample}_log.log"
     output:
-        "pipeline_output/02_intermediate_files/03_pre_filter/{sample}_probes_pre_filter.txt"
+        "pipeline_output/02_intermediate_files/03_kmer_filter/{sample}_probes_pre_filter.txt"
     shell:
         "python ../../workflow/scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2} -c {params.chrom_name}"
 
@@ -238,9 +238,9 @@ rule probe_mer_filter:
         copy_num = config["copy_num"],
         mer_cutoff = config["mer_cutoff"]
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/04_post_mer_filter/{sample}_log.log"
+        "pipeline_output/benchmarks/02_intermediate_files/04_probe_mer_filter/{sample}_log.log"
     output:
-        "pipeline_output/02_intermediate_files/04_post_mer_filter/{sample}_probes_mer_filter.txt"
+        "pipeline_output/02_intermediate_files/04_probe_mer_filter/{sample}_probes_mer_filter.txt"
     shell:
         "python ../../workflow/scripts/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
 
@@ -249,8 +249,8 @@ rule generate_genome_bins:
     input:
         sizes = config["chrom_sizes_file"]
     output:
-        alignment_bins = "pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_alignment.bed",
-        threshold_bins = "pipeline_output/01_reference_files/01_bin_genome/genome_bins_tigerfish_threshold.bed"
+        alignment_bins = "pipeline_output/01_reference_files/02_generate_genome_bins/genome_bins_tigerfish_alignment.bed",
+        threshold_bins = "pipeline_output/01_reference_files/02_generate_genome_bins/genome_bins_tigerfish_threshold.bed"
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     params:
@@ -260,7 +260,7 @@ rule generate_genome_bins:
         window = config['genome_windows'],
         thresh_window = config['thresh_window']
     benchmark:
-        "pipeline_output/benchmarks/01_reference_files/04_bin_genome/genome_bins.txt"
+        "pipeline_output/benchmarks/01_reference_files/02_generate_genome_bins/genome_bins.txt"
     shell:
         """
         bedtools makewindows -g {input.sizes} -w {params.window} > {output.alignment_bins}
@@ -276,8 +276,10 @@ checkpoint make_chrom_dir:
     params:
         mfree="5G",
         h_rt="350:0:0"
+    benchmark:
+        "pipeline_output/benchmarks/02_intermediate_files/05_make_chrom_dir/{sample}.log"
     output:
-        region_split = directory("pipeline_output/02_intermediate_files/05_split_regions/{sample}/")
+        region_split = directory("pipeline_output/02_intermediate_files/05_make_chrom_dir/{sample}/")
     shell:
         """
         python ../../workflow/scripts/split_filter.py -f {input.probes} -o {output}
@@ -285,7 +287,7 @@ checkpoint make_chrom_dir:
 #rule takes each repeat region created from the checkpoint and performs alignment-based filtering analysis to isolate final candidate probes
 rule alignment_filter:
     input:
-        probe_files = "pipeline_output/02_intermediate_files/05_split_regions/{sample}/{region}.txt",
+        probe_files = "pipeline_output/02_intermediate_files/05_make_chrom_dir/{sample}/{region}.txt",
         genome_bins = rules.generate_genome_bins.output.alignment_bins,
         BOWTIE2_DIR = input_for_bowtie
     conda:
@@ -304,16 +306,16 @@ rule alignment_filter:
         binding_prop = config['binding_prop'],
         ref_flag = config['ref_flag']
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/06_alignment/{sample}/{region}.log"
+        "pipeline_output/benchmarks/02_intermediate_files/06_alignment_filter/{sample}/{region}.log"
     output:
-        "pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt"
+        "pipeline_output/02_intermediate_files/06_alignment_filter/{sample}/{region}_alignment.txt"
     shell:
         "python ../../workflow/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
 
 #function will aggregate all repeat regions that complete the alignment_filter process
 def aggregate_alignment_input(wildcards):
     checkpoint_output = checkpoints.make_chrom_dir.get(**wildcards).output[0]
-    return expand("pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt",
+    return expand("pipeline_output/02_intermediate_files/06_alignment_filter/{sample}/{region}_alignment.txt",
            sample=wildcards.sample,
            region=glob_wildcards(os.path.join(checkpoint_output, "{region}.txt")).region)
 
@@ -322,14 +324,14 @@ rule merge_alignment_filter:
     input:
         aggregate_alignment_input
     output:
-        'pipeline_output/02_intermediate_files/07_merged_alignments/{sample}_alignments.tsv'
+        'pipeline_output/02_intermediate_files/07_merge_alignment_filter/{sample}_alignments.tsv'
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree='3G',
         h_rt='3:0:0'
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/07_merged_alignments/{sample}.log"
+        "pipeline_output/benchmarks/02_intermediate_files/07_merge_alignment_filter/{sample}.log"
     shell:
         "cat {input} > {output}"
 
@@ -338,23 +340,23 @@ checkpoint split_rm_alignments:
     input:
         rules.merge_alignment_filter.output
     output:
-        region_split = directory("pipeline_output/02_intermediate_files/08_split_align/{sample}/")
+        region_split = directory("pipeline_output/02_intermediate_files/08_split_rm_alignments/{sample}/")
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree='3G',
         h_rt='3:0:0'
     benchmark:
-        "pipeline_output/02_intermediate_files/08_split_align/{sample}.log"
+        "pipeline_output/02_intermediate_files/08_split_rm_alignments/{sample}.log"
     shell:
         "python ../../workflow/scripts/split_rm_alignments.py -f {input} -o {output}"
 
 #rule proceeds with independent region probe alignment for all final candidate probes contained within each repeat region
 rule align_probes:
     input:
-        "pipeline_output/02_intermediate_files/08_split_align/{sample}/{region}_alignments.txt"
+        "pipeline_output/02_intermediate_files/08_split_rm_alignments/{sample}/{region}_alignments.txt"
     output:
-        "pipeline_output/02_intermediate_files/09_probe_alignment/{sample}/{region}_probe_alignment.txt"
+        "pipeline_output/02_intermediate_files/09_align_probes/{sample}/{region}_probe_alignment.txt"
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     params:
@@ -364,7 +366,7 @@ rule align_probes:
         seed_length = config["seed_length"],
         model_temp = config["model_temp"]
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/09_probe_alignment/{sample}/{region}_alignment.txt"
+        "pipeline_output/benchmarks/02_intermediate_files/09_align_probes/{sample}/{region}_alignment.txt"
     shell:
         'python ../../workflow/scripts/generate_alignments.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val} -l {params.seed_length} -t {params.model_temp}'
 
@@ -428,9 +430,9 @@ rule get_alignments:
         probes_alignment = rules.align_probes.output,
         genome_bin = rules.generate_genome_bins.output.threshold_bins
     output:
-        target_binding = "pipeline_output/03_output_files/02_generate_probe_binding/01_genome_wide/{sample}/{region}_alignment_binding.tsv",
-        thresh_binding = "pipeline_output/03_output_files/02_generate_probe_binding/02_threshold/{sample}/{region}_thresh_binding.tsv",
-        binding_maps = "pipeline_output/03_output_files/02_generate_probe_binding/03_plots/{sample}/{region}_genome_view.png"
+        target_binding = "pipeline_output/03_output_files/02_get_alignments/01_genome_wide/{sample}/{region}_alignment_binding.tsv",
+        thresh_binding = "pipeline_output/03_output_files/02_get_alignments/02_threshold/{sample}/{region}_thresh_binding.tsv",
+        binding_maps = "pipeline_output/03_output_files/02_get_alignments/03_plots/{sample}/{region}_genome_view.png"
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     benchmark:
@@ -449,14 +451,14 @@ rule generate_chromomap:
         region_bed = rules.get_region_bed.output,
         binding_maps = rules.get_alignments.output.binding_maps
     output:
-        "pipeline_output/03_output_files/06_chromomap/{sample}/{region}_chromomap.html"
+        "pipeline_output/03_output_files/06_generate_chromomap/{sample}/{region}_chromomap.html"
     conda:
         "../../shared_conda_envs/chromomap_env.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "pipeline_output/benchmarks/03_pipeline_output/06_chromomap/{sample}/{region}_plots.txt"
+        "pipeline_output/benchmarks/03_output_files/06_generate_chromomap/{sample}/{region}_plots.txt"
     shell:
         "Rscript --vanilla ../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
 
@@ -483,7 +485,7 @@ rule map_region_coords:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "pipeline_output/benchmarks/03_pipeline_output/03_map_region/{sample}/{region}.txt"
+        "pipeline_output/benchmarks/03_output_files/03_map_region/{sample}/{region}.txt"
     shell:
         "python ../../workflow/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
 

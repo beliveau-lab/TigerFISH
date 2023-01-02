@@ -46,8 +46,6 @@ renamed_regions$annot <- "tigerfish"
 renamed_regions<-renamed_regions[,c("annot","chrom","start","stop")]
 renamed_regions <- as.data.frame(renamed_regions)
 
-print(renamed_regions)
-
 #read in chrom length file
 chrom_sizes <- read.table(opt$chrom_sizes, 
                            sep = "\t",header=FALSE)
@@ -63,8 +61,6 @@ colnames(select_chrom)<-c("chrom","stop")
 select_chrom$start<-1
 
 select_chrom<-select_chrom[,c("chrom","start","stop")]
-
-print(select_chrom)
 
 #generate chromomap
 map<-chromoMap(list(select_chrom),list(renamed_regions),
