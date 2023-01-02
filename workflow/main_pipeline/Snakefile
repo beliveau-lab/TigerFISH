@@ -347,7 +347,7 @@ checkpoint split_rm_alignments:
         mfree='3G',
         h_rt='3:0:0'
     benchmark:
-        "pipeline_output/02_intermediate_files/08_split_rm_alignments/{sample}.log"
+        "pipeline_output/benchmarks/02_intermediate_files/08_split_rm_alignments/{sample}.log"
     shell:
         "python ../../workflow/scripts/split_rm_alignments.py -f {input} -o {output}"
 
