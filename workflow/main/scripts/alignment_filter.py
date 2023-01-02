@@ -280,6 +280,8 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
     #write final df
     keep_probes_df = pd.merge(probe_df, pdups_binding_df, on="probe_coords")
 
+    print(keep_probes_df)
+
     keep_probes_df.to_csv(o_file, header=False, index=False, sep="\t")
 
 ##############################################################################
@@ -874,38 +876,30 @@ def map_alignments_by_bin(chr_track,chr_overlap,repeat_overlap,pairs_pdups,thres
     start_b_list = chr_overlap['start_b'].tolist()
     stop_b_list = chr_overlap['stop_b'].tolist()
 
-    for chrom,start,start_b,stop_b in zip(chrom_list,start_list,
-                                          start_b_list,stop_b_list):
-        
+    for chrom,start,pdups in zip(derived_coords_list,starts_list,pdups_vals_list):
         coord_key = str(chrom) + "_" + str(start)
-        coord_vals = str(start_b) + "_" + str(stop_b)
-        bin_dict[coord_key] = coord_vals
+        pairs_pdups_dict[coord_key]=pdups
 
-    for chrom,start,pdup in zip(derived_coords_list,starts_list,
-                                pdups_vals_list):
-        
+    coord_key_list = []
+    for chrom,start in zip(chrom_list,start_list):
         coord_key = str(chrom) + "_" + str(start)
-        if coord_key in bin_dict:
-            bin_coords_list.append(bin_dict[coord_key])
-        else:
-            print("Genomic bin missing... Check if chrom.sizes file is made correctly...")
-            print("Missing bin coordinate: " + str(bin_dict[coord_key]))
-            exit()
+        coord_key_list.append(coord_key)
 
-    pairs_pdups['bin_label'] = bin_coords_list
+    chr_overlap['coord_key'] = coord_key_list
 
-    #split bin column into two seperate cols
-
-    pairs_pdups[['bin_start','bin_stop']] = pairs_pdups['bin_label'].str.split('_',expand=True)
+    pdups_list = []
+    for coord in coord_key_list:
+        if coord in pairs_pdups_dict:
+            pdups_list.append(pairs_pdups_dict[coord])
+    
+    chr_overlap['pdups'] = pdups_list
 
     #remove intermediate column
-    pairs_pdups = pairs_pdups.drop(['probe_ID', 'align_start', 'bin_label'], axis=1)
+    chr_overlap = chr_overlap.drop(['chrom', 'start', 'stop','coord_key'], axis=1)
 
-    pairs_pdups = pairs_pdups[["align_chr","bin_start","bin_stop","pdups"]]
+    chr_overlap.columns = ['chrom','bin_start','bin_stop','pdups']
 
-    pairs_pdups.columns = ['chrom','bin_start','bin_stop','pdups']
-
-    bin_sums = pairs_pdups.groupby(['chrom','bin_start','bin_stop'])['pdups'].sum().reset_index()
+    bin_sums = chr_overlap.groupby(['chrom','bin_start','bin_stop'])['pdups'].sum().reset_index()
 
     #subset items in chr_track not in bin sums
 

@@ -240,7 +240,7 @@ rule generate_genome_bins:
         window = config['genome_windows'],
         thresh_window = config['thresh_window']
     benchmark:
-        "pipeline_output/benchmarks/01_reference_files/01_bin_genome/genome_bins.txt"
+        "pipeline_output/benchmarks/01_reference_files/04_bin_genome/genome_bins.txt"
     shell:
         """
         bedtools makewindows -g {input.sizes} -w {params.window} > {output.alignment_bins}
@@ -270,7 +270,7 @@ rule alignment_filter:
     conda:
         "../../../shared_conda_envs/tigerfish.yml"
     params:
-        mfree="12G",
+        mfree="25G",
         h_rt="350:0:0",
         region_thresh = config['target_sum'], 
         k_val = config['bt2_alignments'],
@@ -290,17 +290,50 @@ rule alignment_filter:
         "python ../../../../workflow/main/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
 
 # aggregate paths to dynamically created files
-def aggregate_input(wildcards):
+def aggregate_alignment_input(wildcards):
     checkpoint_output = checkpoints.make_chrom_dir.get(**wildcards).output[0]
-    return expand("pipeline_output/03_output_files/03_probes/{sample}/{region}_probes.tsv",
+    return expand("pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt",
            sample=wildcards.sample,
            region=glob_wildcards(os.path.join(checkpoint_output, "{region}.txt")).region)
 
+#aggregates alignment files
+rule merge_alignment_filter:
+    input:
+        aggregate_alignment_input
+    output:
+        'pipeline_output/02_intermediate_files/07_merged_alignments/{sample}_alignments.tsv'
+    conda:
+        "../../../shared_conda_envs/tigerfish.yml"
+    params:
+        mfree='3G',
+        h_rt='3:0:0'
+    benchmark:
+        "pipeline_output/benchmarks/02_intermediate_files/07_merged_alignments/{sample}.log"
+    shell:
+        "cat {input} > {output}"
+
+#splits all regions remaining into seperate files in new directory
+checkpoint split_rm_alignments:
+    input:
+        rules.merge_alignment_filter.output
+    output:
+        region_split = directory("pipeline_output/02_intermediate_files/08_split_align/{sample}/")
+    conda:
+        "../../../shared_conda_envs/tigerfish.yml"
+    params:
+        mfree='3G',
+        h_rt='3:0:0'
+    benchmark:
+        "pipeline_output/02_intermediate_files/08_split_align/{sample}.log"
+    shell:
+        "python ../../../../workflow/main/scripts/split_rm_alignments.py -f {input} -o {output}"
+
+#proceeds with independent region probe alignment
 rule align_probes:
     input:
-        rules.alignment_filter.output
+        "pipeline_output/02_intermediate_files/08_split_align/{sample}/{region}_alignments.txt"
     output:
-        "pipeline_output/02_intermediate_files/07_probe_alignment/{sample}/{region}_probe_alignment.txt"
+        "pipeline_output/02_intermediate_files/09_probe_alignment/{sample}/{region}_probe_alignment.txt"
     conda:
         "../../../shared_conda_envs/tigerfish.yml"
     params:
@@ -310,7 +343,7 @@ rule align_probes:
         seed_length = config["seed_length"],
         model_temp = config["model_temp"]
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/07_probe_alignment/{sample}/{region}_alignment.txt"
+        "pipeline_output/benchmarks/02_intermediate_files/09_probe_alignment/{sample}/{region}_alignment.txt"
     shell:
         'python ../../../../workflow/main/scripts/generate_alignments.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val} -l {params.seed_length} -t {params.model_temp}'
 
@@ -319,14 +352,14 @@ rule derived_beds:
     input:
         rules.align_probes.output
     output:
-        "pipeline_output/02_intermediate_files/08_derived_beds/{sample}/{region}_derived.bed"
+        "pipeline_output/02_intermediate_files/10_derived_beds/{sample}/{region}_derived.bed"
     conda:
         "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/08_derived_beds/{sample}/{region}_derived.txt"
+        "pipeline_output/benchmarks/02_intermediate_files/10_derived_beds/{sample}/{region}_derived.txt"
     shell:
         "python ../../../../workflow/main/scripts/make_derived_beds.py -f {input} -o {output}"
 
@@ -334,14 +367,14 @@ rule get_region_bed:
     input:
         rules.alignment_filter.output
     output:
-        "pipeline_output/02_intermediate_files/09_get_repeat_bed/{sample}/{region}.bed"
+        "pipeline_output/02_intermediate_files/11_get_repeat_bed/{sample}/{region}.bed"
     conda:
         "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/09_get_repeat_bed/{sample}/{region}.txt"
+        "pipeline_output/benchmarks/02_intermediate_files/11_get_repeat_bed/{sample}/{region}.txt"
     shell:
         "python ../../../../workflow/main/scripts/get_region_bed.py -i {input} -o {output}"
 
@@ -351,15 +384,15 @@ rule bedtools_intersect:
         genome_bin = rules.generate_genome_bins.output.threshold_bins,
         repeat_bed = rules.get_region_bed.output
     output:
-        alignments_out = "pipeline_output/02_intermediate_files/10_bedtools_intersect/{sample}/{region}_intersect.txt",
-        repeat_out = "pipeline_output/02_intermediate_files/10_bedtools_intersect/{sample}/{region}_repeat_intersect.txt"
+        alignments_out = "pipeline_output/02_intermediate_files/12_bedtools_intersect/{sample}/{region}_intersect.txt",
+        repeat_out = "pipeline_output/02_intermediate_files/12_bedtools_intersect/{sample}/{region}_repeat_intersect.txt"
     conda:
         "../../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "320:0:0"
     benchmark:
-        "pipeline_output/benchmarks/02_intermediate_files/10_bedtools_intersect/{sample}/{region}_derived.txt"
+        "pipeline_output/benchmarks/02_intermediate_files/12_bedtools_intersect/{sample}/{region}_derived.txt"
     shell:
         "bedtools intersect -wa -wb -a {input.derived_bed} -b {input.genome_bin} > {output.alignments_out} |"
         "bedtools intersect -wa -wb -a {input.repeat_bed} -b {input.genome_bin} > {output.repeat_out}"
@@ -403,6 +436,13 @@ rule generate_chromomap:
     shell:
         "Rscript --vanilla ../../../../workflow/main/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
 
+# aggregate paths to dynamically created files
+def all_mapped_output(wildcards):
+    checkpoint_output = checkpoints.split_rm_alignments.get(**wildcards).output[0]
+    return expand("pipeline_output/03_output_files/03_probes/{sample}/{region}_probes.tsv",
+           sample=wildcards.sample,
+           region=glob_wildcards(os.path.join(checkpoint_output, "{region}_alignments.txt")).region)
+
 rule map_region_coords:
     input:
         probe_file = rules.alignment_filter.output,
@@ -421,9 +461,9 @@ rule map_region_coords:
         "python ../../../../workflow/main/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
 
 # merge the individually-flattened chromosome annotation files
-rule merge_alignment_filter:
+rule merge_mapping:
     input:
-        aggregate_input
+        all_mapped_output
     output:
         'pipeline_output/03_output_files/01_all_probes/{sample}_all_probes.tsv'
     conda:
@@ -436,7 +476,7 @@ rule merge_alignment_filter:
 
 rule summary:
     input:
-        rules.merge_alignment_filter.output
+        rules.merge_mapping.output
     output:
         "pipeline_output/03_output_files/05_probe_summary/{sample}_probe_summary.txt"
     conda:

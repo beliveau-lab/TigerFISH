@@ -71,13 +71,13 @@ def generate_dfs(chr_track_file,chr_overlap_bed,repeat_overlap_bed,
     repeat_overlap=repeat_overlap[~repeat_overlap.chrom.str.contains("M")]
 
     #label columns for data where you have the nupack data
-    colnames = ["probe_type","parent","derived",
-                "derived_coords","start","pDups"]
+    colnames = ["align_coords","parent","derived",
+                "derived_chrom","align_start","pdups"]
 
     pairs_pdups = pd.read_csv(pDups_scores, names=colnames,header=None,
                           sep='\t')
 
-    pairs_pdups=pairs_pdups[~pairs_pdups.derived_coords.str.contains("M")]
+    pairs_pdups=pairs_pdups[~pairs_pdups.derived_chrom.str.contains("M")]
 
     return chr_track,chr_overlap,repeat_overlap,pairs_pdups
 
@@ -100,9 +100,9 @@ def map_columns(pairs_pdups,chr_overlap):
 
     pairs_pdups = pairs_pdups.drop(['parent', 'derived'], axis = 1)
 
-    derived_coords_list = pairs_pdups['derived_coords'].tolist()
-    starts_list = pairs_pdups['start'].tolist() 
-    pdups_vals_list = pairs_pdups['pDups'].tolist()
+    derived_chrom_list = pairs_pdups['derived_chrom'].tolist()
+    starts_list = pairs_pdups['align_start'].tolist()
+    pdups_vals_list = pairs_pdups['pdups'].tolist()
 
     pairs_pdups_dict = {}
     bin_dict = {}
@@ -112,31 +112,30 @@ def map_columns(pairs_pdups,chr_overlap):
     start_list = chr_overlap['start'].tolist()
     start_b_list = chr_overlap['start_b'].tolist()
     stop_b_list = chr_overlap['stop_b'].tolist()
-    
-    for chrom,start,start_b,stop_b in zip(chrom_list,start_list,start_b_list,stop_b_list):
+
+    for chrom,start,pdups in zip(derived_chrom_list,starts_list,pdups_vals_list):
         coord_key = str(chrom) + "_" + str(start)
-        coord_vals = str(start_b) + "_" + str(stop_b)
-        bin_dict[coord_key] = coord_vals
+        pairs_pdups_dict[coord_key]=pdups
 
-    for chrom,start,pdup in zip(derived_coords_list,starts_list,pdups_vals_list):
+    coord_key_list = []
+    for chrom,start in zip(chrom_list,start_list):
         coord_key = str(chrom) + "_" + str(start)
-        if coord_key in bin_dict:
-            bin_coords_list.append(bin_dict[coord_key])
+        coord_key_list.append(coord_key)
 
-    pairs_pdups['bin_label'] = bin_coords_list
+    chr_overlap['coord_key'] = coord_key_list
 
-    #split bin column into two seperate cols
+    pdups_list = []
+    for coord in coord_key_list:
+        if coord in pairs_pdups_dict:
+            pdups_list.append(pairs_pdups_dict[coord])
 
-    pairs_pdups[['bin_start','bin_stop']] = pairs_pdups['bin_label'].str.split('_',expand=True)
+    chr_overlap['pdups'] = pdups_list
 
-    #remove intermediate column
-    pairs_pdups = pairs_pdups.drop(['probe_type', 'start', 'bin_label'], axis=1)
+    chr_overlap = chr_overlap.drop(['chrom', 'start', 'stop','coord_key'], axis=1)
 
-    pairs_pdups = pairs_pdups[["derived_coords","bin_start","bin_stop","pDups"]]
+    chr_overlap.columns = ['chrom','bin_start','bin_stop','pdups']
 
-    pairs_pdups.columns = ['chrom', 'bin_start','bin_stop','pDups']
-
-    bin_sums = pairs_pdups.groupby(['chrom','bin_start','bin_stop'])['pDups'].sum().reset_index()
+    bin_sums = chr_overlap.groupby(['chrom','bin_start','bin_stop'])['pdups'].sum().reset_index()
 
     return bin_sums
 
@@ -162,7 +161,7 @@ def intersect_chr_tracks(bin_sums,chr_track,repeat_overlap):
     #subset items in chr_track not in bin sums
  
     #drop pdups for now 
-    bins_w_vals = bin_sums.drop(['pDups'], axis = 1)
+    bins_w_vals = bin_sums.drop(['pdups'], axis = 1)
 
     chr_track['bin_start']=chr_track['bin_start'].astype(int)
     chr_track['bin_stop']=chr_track['bin_stop'].astype(int)
@@ -176,7 +175,7 @@ def intersect_chr_tracks(bin_sums,chr_track,repeat_overlap):
            .query("_merge == 'left_only'") \
            .drop('_merge',1)
            
-    not_overlapping['pDups'] = 0.0
+    not_overlapping['pdups'] = 0.0
     
     #now merge with nupack
     frames = [bin_sums,not_overlapping]
@@ -224,7 +223,7 @@ def generate_summary_table(merged,thresh,thresh_summ,chrom_summ):
 
     #subset the signal over particular regions of interest
 
-    signal_pileup_subset = merged.loc[merged['pDups'] >= float(thresh)]
+    signal_pileup_subset = merged.loc[merged['pdups'] >= float(thresh)]
 
     #writes row(s) to output
     signal_pileup_subset.to_csv(thresh_summ,index = False,
@@ -233,7 +232,7 @@ def generate_summary_table(merged,thresh,thresh_summ,chrom_summ):
                                sep = '\t')
 
     #summarize all signals by chromosome in table form 
-    chrom_summ_df = merged.groupby(['chrom'])['pDups'].sum().reset_index() 
+    chrom_summ_df = merged.groupby(['chrom'])['pdups'].sum().reset_index() 
 
     chrom_summ_df.to_csv(chrom_summ,index = False,
                                index_label=False,
@@ -289,11 +288,11 @@ def generate_plot(merged,out_plot):
         
     #scales the values of pdups between 0 - 255 using normalization
     min_max_scaler = preprocessing.MinMaxScaler(feature_range=(0, 255))
-    y_transformed = min_max_scaler.fit_transform(merged[['pDups']])
+    y_transformed = min_max_scaler.fit_transform(merged[['pdups']])
     y_transformed_list = y_transformed.ravel()
     merged['nupack_trans'] = list(y_transformed_list)
     
-    merged = merged.drop(['pDups'], axis=1)
+    merged = merged.drop(['pdups'], axis=1)
     
     #generate linked lists for the chrom bins
     bins_ll=[]
