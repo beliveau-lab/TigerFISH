@@ -1,9 +1,13 @@
+#import libraries
+
 import os
 from os import path
 import glob
 
+#specify config.yml file
 configfile: "config.yml"
 
+#define config parameter names as variables
 SAMPLES = config["samples"]
 ASSEMBLY = config["assembly"]
 BOWTIE2_DIR = config["bowtie2_dir"]
@@ -12,14 +16,17 @@ JF_COUNT = config['jf_count_dir']
 CHROM_IDX = config['chrom_idx_dir']
 CHROM_FASTA = config['chrom_fasta_dir']
 
+#final output files after pipeline has completed execution
 rule all:
     input:
         expand("pipeline_output/finished/DONE_{sample}.txt",sample=SAMPLES)
 
+#should user specify TRUE or FALSE for both run settings, pipeline exits() and produces message to re-define deployment mode
 if (config['defined_coords'] == "TRUE" and config['repeat_discovery'] == "TRUE") or (config['defined_coords'] == "FALSE" and config['repeat_discovery'] == "FALSE"):
     print("Repeat_Discovery Mode and Probe_Design Mode can only be run independently. Please select TRUE for desired workflow and FALSE for the other process. Exiting ...")
     exit()
 
+#If jellyfish hash table is not given, as specified in config file, Tigerfish will generate a genome wide jellyfish hash table
 if config['jf_hash_given'] == "FALSE":
     rule generate_jf_count:
         input:
@@ -37,6 +44,7 @@ if config['jf_hash_given'] == "FALSE":
         shell:
             "jellyfish count -s 3300M -m {params.mer} -o {output} -C {input.fasta_file}"
 
+#function provides output if bowtie2 indices are given or if they need to be produced
 def input_for_bowtie(wildcards):
     # requires a config containing switches for the whole workflow
     if config["bowtie2_indices_given"]=="TRUE":
@@ -44,6 +52,7 @@ def input_for_bowtie(wildcards):
     elif config["bowtie2_indices_given"]=="FALSE":
         return rules.generate_bt2_indices.output
 
+#function provides output if jellyfish indices need to be produced or are already provided with a directory
 def input_for_jf_idx(wildcards):
     #requires a config containing switches for the workflow
     if config['jf_hash_given'] == "TRUE":
@@ -51,8 +60,8 @@ def input_for_jf_idx(wildcards):
     elif config['jf_hash_given'] == "FALSE":
         return rules.generate_jf_count.output
 
+#rule used to generate bowtie2 indices if they are not already provided
 if config['bowtie2_indices_given'] == "FALSE":
-
     BOWTIE2_DIR = f'pipeline_output/01_reference_files/02_bt2_idx/{ASSEMBLY}'
     rule generate_bt2_indices:
         input:
@@ -74,6 +83,7 @@ if config['bowtie2_indices_given'] == "FALSE":
         shell:
             'bowtie2-build --threads 4 {input} {BOWTIE2_DIR}/{ASSEMBLY}'
 
+#function provides output if jellyfish count files need to be produced or if path is given
 def input_for_jf_count_file(wildcards):
     #requires config containing switches for the workflow
     if config['jf_count_given'] == "TRUE":
@@ -81,6 +91,7 @@ def input_for_jf_count_file(wildcards):
     elif config['jf_count_given'] == "FALSE":
         return rules.generate_jf_idx.output.jf_count
 
+#function provides output if scaffold indices need to be produced or if path is given
 def input_for_chrom_idx_file(wildcards):
     #requires config containing switches for the workflow
     if config['chrom_idx_given']  == "TRUE":
@@ -88,6 +99,7 @@ def input_for_chrom_idx_file(wildcards):
     elif config['chrom_idx_given'] == "FALSE":
         return rules.generate_jf_idx.output.chrom_idx
 
+#function provides output if scaffold FASTA files are given in dir or if they need to be created
 def input_for_chrom_fasta_file(wildcards):
     #requires config containing switches for the workflow
     if config['chrom_fasta_given']  == "TRUE":
@@ -95,6 +107,7 @@ def input_for_chrom_fasta_file(wildcards):
     elif config['chrom_fasta_given'] == "FALSE":
         return rules.generate_jf_idx.output.chrom_fa
 
+#rule directs if jellyfish count, scaffold index, and scaffold FASTA files need to be produced if no jellyfish hash was generated previously
 if config['jf_hash_given'] == 'FALSE':
     rule generate_jf_idx:
         input:
@@ -116,6 +129,7 @@ if config['jf_hash_given'] == 'FALSE':
         shell:
             "python ../../../workflow/scripts/generate_jf_idx.py -f {input.fasta_file} -j {input.jf} -c {params.chrom_name} -m {params.mer} -f_o {output.chrom_fa} -j_o {output.jf_count} -i {output.chrom_idx}"
 
+#rule dictates behavior if user provides BED file and specifies defined_coords run mode
 if config['defined_coords'] == "TRUE":
     rule split_bed:
         input:
@@ -133,6 +147,7 @@ if config['defined_coords'] == "TRUE":
         shell:
             "python ../../../workflow/scripts/split_bed.py -b {input.bed_file} -c {params.chrom_name} -o {output.chrom_region}"
 
+#rule dictates behavior if users define repeat_discovery mode
 if config['repeat_discovery'] == "TRUE":
     rule repeat_ID:
         input:
@@ -156,6 +171,7 @@ if config['repeat_discovery'] == "TRUE":
         shell:
             "python ../../../workflow/scripts/repeat_ID.py -j {input.jf_count} -i {input.chrom_index} -m {params.mer} -w {params.window} -t {params.threshold} -c {params.composition} -chr {params.chrom_name} -st {params.file_start} -o_b {output.out_bed}"
 
+#function defines which files are to be returned to initiate probe design
 def input_for_design_probes(wildcards):
     # requires a config containing switches for the whole workflow
     if config["defined_coords"]=='TRUE':
@@ -163,6 +179,7 @@ def input_for_design_probes(wildcards):
     elif config["repeat_discovery"]=='TRUE':
         return 'pipeline_output/02_intermediate_files/01_repeat_ID/{sample}_regions.bed'
 
+#rule takes output created from input_for_design_probes and designs probes against those BED regions
 rule design_probes:
     input:
         region_bed = input_for_design_probes,
@@ -185,6 +202,7 @@ rule design_probes:
     shell:
         "python ../../../workflow/scripts/design_probes.py -b {input.region_bed} -c {params.chrom_name} -g {input.chr_path} -p_o {output.designed_probes} -r_o {output.probe_fa} -l {params.min_length} -L {params.max_length} -t {params.min_temp} -T {params.max_temp}"
 
+#rule performs k-mer filtering on designed probes based on user defined parameters
 rule kmer_filter:
     input:
         jf = input_for_jf_count_file,
@@ -206,6 +224,7 @@ rule kmer_filter:
     shell:
         "python ../../../workflow/scripts/kmer_filter.py -p {input.probes} -o {output} -j {input.jf} -f {input.region_fa} -m {params.mer} -c1 {params.c1} -c2 {params.c2} -c {params.chrom_name}"
 
+#rule filters probes further and rank sorts them based on user defined parameters
 rule probe_mer_filter:
     input:
         probes = rules.kmer_filter.output
@@ -225,6 +244,7 @@ rule probe_mer_filter:
     shell:
         "python ../../../workflow/scripts/probe_mer_filter.py -f {input.probes} -o {output} -e {params.enrich} -cn {params.copy_num} -m {params.mer_cutoff} -k {params.mer}"
 
+#rule generates genomic bins using BEDtools which will be used to validate alignment and candidate probe binding specificity
 rule generate_genome_bins:
     input:
         sizes = config["chrom_sizes_file"]
@@ -247,6 +267,7 @@ rule generate_genome_bins:
         bedtools makewindows -g {input.sizes} -w {params.thresh_window} > {output.threshold_bins}
         """
 
+#rule is used to split all repeat regions found within one scaffold into independent repeat region specific files that will undergo alignment
 checkpoint make_chrom_dir:
     input:
        probes = rules.probe_mer_filter.output
@@ -261,7 +282,7 @@ checkpoint make_chrom_dir:
         """
         python ../../../workflow/scripts/split_filter.py -f {input.probes} -o {output}
         """
-
+#rule takes each repeat region created from the checkpoint and performs alignment-based filtering analysis to isolate final candidate probes
 rule alignment_filter:
     input:
         probe_files = "pipeline_output/02_intermediate_files/05_split_regions/{sample}/{region}.txt",
@@ -289,14 +310,14 @@ rule alignment_filter:
     shell:
         "python ../../../workflow/scripts/alignment_filter.py -f {input.probe_files} -b {BOWTIE2_DIR}/{ASSEMBLY} -o {output} -r {params.region_thresh} -p {params.binding_prop} -k {params.k_val} -pb {params.max_pdups_binding} -l {params.seed_length} -t {params.model_temp} -moT {params.min_on_target} -Mr {params.max_probe_return} -gb {input.genome_bins} -th {params.off_bin_thresh} -rf {params.ref_flag}"
 
-# aggregate paths to dynamically created files
+#function will aggregate all repeat regions that complete the alignment_filter process
 def aggregate_alignment_input(wildcards):
     checkpoint_output = checkpoints.make_chrom_dir.get(**wildcards).output[0]
     return expand("pipeline_output/02_intermediate_files/06_alignment/{sample}/{region}_alignment.txt",
            sample=wildcards.sample,
            region=glob_wildcards(os.path.join(checkpoint_output, "{region}.txt")).region)
 
-#aggregates alignment files
+#function aggregates all file paths collected by function to merge back into a single scaffold
 rule merge_alignment_filter:
     input:
         aggregate_alignment_input
@@ -312,7 +333,7 @@ rule merge_alignment_filter:
     shell:
         "cat {input} > {output}"
 
-#splits all regions remaining into seperate files in new directory
+#checkpoint then splits all regions remaining into seperate files in new directory
 checkpoint split_rm_alignments:
     input:
         rules.merge_alignment_filter.output
@@ -328,7 +349,7 @@ checkpoint split_rm_alignments:
     shell:
         "python ../../../workflow/scripts/split_rm_alignments.py -f {input} -o {output}"
 
-#proceeds with independent region probe alignment
+#rule proceeds with independent region probe alignment for all final candidate probes contained within each repeat region
 rule align_probes:
     input:
         "pipeline_output/02_intermediate_files/08_split_align/{sample}/{region}_alignments.txt"
@@ -347,7 +368,7 @@ rule align_probes:
     shell:
         'python ../../../workflow/scripts/generate_alignments.py -f {input} -o {output} -b {BOWTIE2_DIR}/{ASSEMBLY} -k {params.k_val} -l {params.seed_length} -t {params.model_temp}'
 
-#rule to make probe alignments into bed regions
+#rule taked SAM output to identify where reported alignments are located as BED regions
 rule derived_beds:
     input:
         rules.align_probes.output
@@ -363,6 +384,7 @@ rule derived_beds:
     shell:
         "python ../../../workflow/scripts/make_derived_beds.py -f {input} -o {output}"
 
+#rule takes alignment file and creates BED file from target repeat region
 rule get_region_bed:
     input:
         rules.alignment_filter.output
@@ -378,6 +400,7 @@ rule get_region_bed:
     shell:
         "python ../../../workflow/scripts/get_region_bed.py -i {input} -o {output}"
 
+#rule intersects derived alignments and repeat region with genomic bins to identify where reported alignments map (within target repeat vs outside of target repeat)
 rule bedtools_intersect:
     input:
         derived_bed = rules.derived_beds.output,
@@ -397,7 +420,7 @@ rule bedtools_intersect:
         "bedtools intersect -wa -wb -a {input.derived_bed} -b {input.genome_bin} > {output.alignments_out} |"
         "bedtools intersect -wa -wb -a {input.repeat_bed} -b {input.genome_bin} > {output.repeat_out}"
 
-#rule to accept bins, alignments and map target/off-target (checks if any bin > 100) to cull probe
+#rule to report where repeat region probes bind in the genome, provides thresholded binding based on user parameters to isolate imaging target
 rule get_alignments:
     input:
         alignment_intersect = rules.bedtools_intersect.output.alignments_out,
@@ -419,6 +442,7 @@ rule get_alignments:
     shell:
         "python ../../../workflow/scripts/get_alignments.py -c_t {input.genome_bin} -c_o {input.alignment_intersect} -p {input.probes_alignment} -r_o {input.region_intersect} -pl {output.binding_maps} -t {params.thresh} -t_s {output.thresh_binding} -c_s {output.target_binding}"
 
+#rule creates chromoMap object based on repeat region target
 rule generate_chromomap:
     input:
         chrom_sizes = config["chrom_sizes_file"],
@@ -436,13 +460,14 @@ rule generate_chromomap:
     shell:
         "Rscript --vanilla ../../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
 
-# aggregate paths to dynamically created files
+#function will take all probes after their imaging target region has been appended to aggregate their paths
 def all_mapped_output(wildcards):
     checkpoint_output = checkpoints.split_rm_alignments.get(**wildcards).output[0]
     return expand("pipeline_output/03_output_files/03_probes/{sample}/{region}_probes.tsv",
            sample=wildcards.sample,
            region=glob_wildcards(os.path.join(checkpoint_output, "{region}_alignments.txt")).region)
 
+#rule append imaging target regions and summarize binding information and probe quantity within each target repeat
 rule map_region_coords:
     input:
         probe_file = rules.alignment_filter.output,
@@ -462,7 +487,7 @@ rule map_region_coords:
     shell:
         "python ../../../workflow/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
 
-# merge the individually-flattened chromosome annotation files
+#rule will merge the individually-flattened chromosome annotation files
 rule merge_mapping:
     input:
         all_mapped_output
@@ -476,6 +501,7 @@ rule merge_mapping:
     shell:
         "cat {input} > {output}"
 
+#ruke performs a scaffold wide summary of total repeat regions, probes in each region, and on-target binding specificity
 rule summary:
     input:
         rules.merge_mapping.output
@@ -491,6 +517,7 @@ rule summary:
     shell:
         "python ../../../workflow/scripts/finish_summary.py -f {input} -o {output}"
 
+#rule takes output of summary to finish as final file that ends Tigerfish pipeline
 rule finish:
     input:
         rules.summary.output
