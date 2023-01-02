@@ -1,10 +1,12 @@
 <div align="center">
-    <a href="#readme"><img src="../docs/source/imgs/tigerfish_logo.png" width="200"></a>
+    <a href="#readme"><img src="../../docs/source/imgs/tigerfish_logo.png" width="200"></a>
 </div>
 
-## TigerFISH Pipeline Documentation
+## TigerFISH Pipeline Test Implementation
 
-Both directories lead to example tutorials to test the main and postprocessing workflows for Tigerfish.
+# Main Internal Workflow
 
-* [Main workflow test](main/main_pipeline/)
-* [Postprocessing workflow test](postprocess/)
+To run the pipeline and example files in either test case under main, please enter the appropriate directory to test each feature. Here the example workflow provided includesa demonstration using a synthetic genome designed from only small portions of the D4Z4 repeat and DXZ4 repeats from chromosomes 4 and X, respectively. This "genome" was made to simply account for easy testing and scaling with new users. By switching file paths appropriately in the config.yml file for each run implementation, users may be able to scale and apply Tigerfish to whole genomes.
+
+* [Defined Coords Test](main_pipeline/expected_pipeline_output/defined_coords_output/)
+* [Repeat Identification Test](main_pipeline/expected_pipeline_output/repeat_ID_output/)

@@ -33,7 +33,7 @@ function run_pipeline() {
 
         # run pipeline
         snakemake --snakefile  $SNAKE_FILE --configfile $CONFIG_FILE \
-          --conda-prefix $CONDA_ENVS --use-conda \
+          --conda-prefix $CONDA_ENVS --use-conda --conda-frontend mamba \
           --jobs $NUM_JOBS --latency-wait $LATENCY_WAIT --restart-times $RESTART_ATTEMPTS \
           --cluster "qsub -cwd -l mfree={params.mfree} -l h_rt={params.h_rt} -l centos=7 -R y -e ./pipeline_output/00_logs/stderr.log -o ./pipeline_output/00_logs/stdout.log"
 

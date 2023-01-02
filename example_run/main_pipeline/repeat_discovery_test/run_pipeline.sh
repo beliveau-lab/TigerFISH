@@ -1,8 +1,8 @@
 
 # configure file paths
 CONFIG_FILE='config.yml'
-SNAKE_FILE='../../../../workflow/main/main_pipeline/Snakefile'
-CONDA_ENVS='../../../../shared_conda_envs'
+SNAKE_FILE='../../../workflow/main_pipeline/Snakefile'
+CONDA_ENVS='../../../shared_conda_envs'
 
 # activate conda environment
 source activate snakemake_env                
