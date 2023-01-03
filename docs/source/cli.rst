@@ -40,7 +40,7 @@ If one is unsure of whether they have the correct `chrom.sizes` file for a given
 2. **repeat_discovery**: *string Boolean flag*. If marked as **"TRUE"**, **Tigerfish** will be implemented to search for repeat specific chromosomes along select scaffolds or the entire geome as long as scaffold names are listed in the **samples** parameter. If **defined_coords** is being used instead, toggle **repeat_discovery** = **"FALSE"**. 
 
 
-*Ways to direct **Tigerfish** behavior with provided files*
+*Ways to direct Tigerfish behavior with provided files*
  
 **bowtie2_indices_given**: *string Boolean flag*. If marked **"TRUE"** users must provide a valid file path to a correctly derived Bowtie2 index. If marked **False** a Bowtie2 index for the queried genome of interest will be made de novo. Examples of how Bowtie file paths are provided are further described in our documentation and tutorials.
 
