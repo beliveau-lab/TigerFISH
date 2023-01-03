@@ -37,7 +37,7 @@ If one is unsure of whether they have the correct `chrom.sizes` file for a given
 Run modes
 ---------
 
-1. **defined_coords**: *string Boolean flag*. If marked as **"TRUE"** a BED file path must be provided for the **bed_file** parameter. If parameter is not being used, it should be toggled to **FALSE**.
+1. **defined_coords**: *string Boolean flag*. If marked as **"TRUE"** a BED file path must be provided for the **bed_file** parameter. If parameter is not being used, it should be toggled to **"FALSE"**.
 
 2. **repeat_discovery**: *string Boolean flag*. If marked as **"TRUE"**, **Tigerfish** will be implemented to search for repeat specific chromosomes along select scaffolds or the entire geome as long as scaffold names are listed in the **samples** parameter. If **defined_coords** is being used instead, toggle **repeat_discovery** = **"FALSE"**. 
 
