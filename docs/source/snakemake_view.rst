@@ -340,7 +340,7 @@ Output: A summary file of total candidates found within each repeat region.
 
 
 
-`split_rm_alignments<https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/scripts/split_rm_alignments.py>`_
+`split_rm_alignments <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/scripts/split_rm_alignments.py>`_
 -------------------
 
 Purpose: Splits all repeat regions into remaining probe files to undergo downstream alignment.
