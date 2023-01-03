@@ -12,3 +12,7 @@ Here, a genomic fasta which flanks the D4Z4 and DXZ4 repeats is provided as sepe
 
 3. **probe_design_chm13**: Here, probes are designed against a full HSAT repeat on chr9 in the CHM13 genome. 
 
+All necessary files to run test cases 1 and 2 are found within each contained directory. To test Tigerfish, users just need to run the shell scripts in each respective directory. 
+
+For test case 3 which requires the CHM13 genome FASTA reference (v2.0), tutorials are provided on the Tigerfish ReadtheDocs to download necessary resources to deploy this example. 
+
