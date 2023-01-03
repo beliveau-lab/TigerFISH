@@ -29,25 +29,25 @@ We also share that these parameters may *not* equally map across genome size. Fo
      - 0
    * - min_length
      - 25
-     - 36
+     - 25
    * - max_length
      - 50
-     - 41
+     - 50
    * - min_temp
      - 42
      - 42
    * - max_temp
      - 52
-     - 47
+     - 52
    * - mer_val
      - 18
      - 18
    * - enrich_score
      - 0.80
-     - 0.50
+     - 0.7
    * - copy_num
      - 100
-     - 10
+     - 40
    * - c1_val
      - 1
      - 1
@@ -86,47 +86,5 @@ We also share that these parameters may *not* equally map across genome size. Fo
      - 25
    * - max_probe_return
      - 25
-     - 40
-
-
-Table of default parameters for post process workflow
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. list-table:: Default parameters used within the test genome containing the DXZ4 and D4Z4 repeat
-   :header-rows: 1
-
-   * - Parameter
-     - DXZ4 and D4Z4 provided test case
-   * - genome_windows
-     - 50
-   * - bt2_alignments
-     - 500000
-   * - seed_length
-     - 15
-   * - model_temp
-     - 69.5
-   * - bin_thresh
-     - 5
+     - 20
      
-
-For larger genomes, specifically for use in CHM13, we recommend the folling parameters instead. You must also change the `bowtie2_dir` parameter to map to the entire derived Bowtie2 alignment indices for the selected genome as well as the full genome's chrom.sizes file in the `chrom_sizes_file` parameter.
-    
-.. list-table:: Default parameters used within the CHM13 genome
-   :header-rows: 1
-
-   * - Parameter
-     - CHM13
-   * - genome_windows
-     - 5000000
-   * - bt2_alignments
-     - 500000
-   * - seed_length
-     - 15
-   * - model_temp
-     - 69.5
-   * - bin_thresh
-     - 100
-     
-    
-
-
