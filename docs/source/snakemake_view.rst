@@ -586,10 +586,14 @@ Output: A summary file of total candidates found within each repeat region.
 * OUT_FILE
 
 
-Below is an example image of a DAG that is produced by Tigerfish following **Probe Design Mode**:
 
 
+Below is an example image of a DAG that is produced by Tigerfish following **Probe Design Mode** on the DXZ4 repeat:
 
+
+.. image:: imgs/DAG.jpg
+   :width: 500
+   :alt: A picture of DAG of Tigerfish on teh DXZ4 repeat. 
 
 
 **config.yml parameters**
