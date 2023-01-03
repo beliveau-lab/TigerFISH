@@ -15,29 +15,23 @@ Background
 
 The following tutorial is used to cover **Tigerfish** functionality on a toy genome composed of the chr4 D4Z4 and chrX DXZ4 repeats which is derived from the latest version (v.2.0) of the `CHM13 human <https://github.com/marbl/CHM13>`_ genome. 
 
-This reference file can be found within the project's Github repo `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/repeat_discovery_test/data/example.fa>`_. 
+This reference file can be found within the project's Github repo `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test/data/example.fa>`_. 
 
 Users will download the full CHM13 V2.0 reference file later in this tutorial, to work on real-world data. 
 
-.. image:: imgs/tutorials_summary.png
-     :width: 500
-     :alt: Tigerfish tutorials overview
+For the test genome cases, there are three directories that exist which will be referenced in this tutorial. 
 
-For the test genome cases, there are two static directories that exist which will be referenced in this tutorial. First, we will walk through *Repeat Identification Mode* on a Test Genome and this directory is located `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/repeat_discovery_test>`_. 
+1. First, we will walk through *Repeat Identification Mode* on a Test Genome and this directory is located `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test>`_. 
 
-Next, we will move through the *Probe Design Mode* directory which can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/probe_design_test>`_. 
+2. Next, we will move through the *Probe Design Mode* directory which can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_test>`_. 
 
-Following execution of both run-modes in the main pipeline, we will proceed with the *post-process pipeline* which exists `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/postprocess/dxz4_test>`_. 
+3. Lastly, we will move into the real-world examples in the main pipeline with CHM13 V2.0 using *Probe Design Mode* from the newly annotated chr9 HSAT repeat which is found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_chm13>`_.  
 
-Lastly, we will move into the real-world examples in the main pipeline with CHM13 V2.0 using *Probe Design Mode* from the newly annotated chr9 HSAT repeat. 
+It's important to note that the first two test directories are static meaning that the config.yml files have been organized to run **Tigerfish** for expected behavior in each directory. Therefore, users only need to execute the run_pipeline.sh script contained in each directory. 
 
-It's important to note that these directories are static meaning that the config.yml files have been organized to run Tigerfish for expected behavior in each directory. In other words, the only thing that users will need to execute to validate their results in each directory is the run_pipeline.sh scripts independently. 
+At UW Genome Sciences, users have access to the departmental Sun Grid Cluster Engine, which is used to deploy cluster compute jobs. Templates for how to run **Tigerfish** with such a file system can be found at the root directory of the **Tigerfish** GitHub `here <https://github.com/beliveau-lab/TigerFISH/tree/master/sun_grid_run_template>`_. This is intended to be a generalizable template that may be used to run **Tigerfish** jobs in independent directories to run in any command line environment. 
 
-At UW Genome Sciences, users have access to the departmental Sun Grid Cluster Engine, which is used to deploy cluster compute jobs. Templates for how to run Tigerfish with such a file system can be found at the root directory of the Tigerfish GitHub. 
-
-Even if you are not using the Sun Grid Engine, Tigerfish may be executed locally and all scripts are currently configured for generalizeable use in a command line environment.
-
-To begin, we will describe some context for how Tigerfish is deployed by covering the config.yml file and appropriate run_pipeline.sh scripts found in each directory.
+To begin, we will describe some context for how **Tigerfish** is deployed by covering the config.yml file and appropriate run_pipeline.sh scripts found in each directory.
 
 Config file
 ===========
