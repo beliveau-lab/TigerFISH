@@ -17,6 +17,7 @@ Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/m
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *Required files for getting started*
+------------------------------------
 
 **fasta_file**: *File path*. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format.
 
@@ -34,6 +35,7 @@ If one is unsure of whether they have the correct `chrom.sizes` file for a given
 
 
 *Run modes* 
+-----------
 
 1. **defined_coords**: *string Boolean flag*. If marked as **"TRUE"** a BED file path must be provided for the **bed_file** parameter. If parameter is not being used, it should be toggled to **FALSE**.
 
@@ -41,29 +43,31 @@ If one is unsure of whether they have the correct `chrom.sizes` file for a given
 
 
 *Ways to direct Tigerfish behavior with provided files*
- 
+-------------------------------------------------------
+
 **bowtie2_indices_given**: *string Boolean flag*. If marked **"TRUE"** users must provide a valid file path to a correctly derived Bowtie2 index. If marked **False** a Bowtie2 index for the queried genome of interest will be made de novo. Examples of how Bowtie file paths are provided are further described in our documentation and tutorials.
 
 **bowtie2_dir**: *File path*. The provided file path to a valid Bowtie2 index. If **bowtie2_indices_given** is labeled **FALSE**, leave this directory path as empty "".  
 
 **jf_hash_given**: *string Boolean flag*. If a Jellyfish hash query has been created for a desired genome of interest prior to implementing **Tigerfish**, this may be specified here as **"TRUE"**. If not, a hash query will be created for the entire genome of interest de-novo. 
 
-**jf_hash_dir**: *File path*. If **jf_hash_given**: "TRUE", a file path must be provided to where this file is located.
+**jf_hash_dir**: *File path*. If **jf_hash_given**: "TRUE", a file path must be provided to where this file is located. If no directory is provided, leave this string empty as "".
 
 **jf_count_given**: *string Boolean flag*. If a Jellyfish *k*-mer count has been conducted for a desired genome of interest across all scaffolds prior to implementing **Tigerfish**, this may be specified here as **"TRUE"**. If not, **Tigerfish** will create Jellyfish count files for all scaffolds de-novo. 
 
-**jf_count_dir**: *File path*. If **jf_count_given**: "TRUE", a directory must be provided where the Jellyfish count files may be found.
+**jf_count_dir**: *File path*. If **jf_count_given**: "TRUE", a directory must be provided where the Jellyfish count files may be found. If no directory is provided, leave this string empty as "".
 
 **chrom_idx_given**: *string Boolean flag*. If **Tigerfish** has been implemented on a desired genome de-novo using **repeat_discovery** mode, it has created scaffold index files for mapping repeat regions. Should one choose to re-run **Tigerfish** with differing downstream parameters, but one wishes to avoid regenerating these files de-novo, one can toggle that a directory path exists for these files.
 
-**chrom_idx_dir**: *File path*. If **chrom_idx_given**: "TRUE", a directory must be provided where the scaffold index files may be found. 
+**chrom_idx_dir**: *File path*. If **chrom_idx_given**: "TRUE", a directory must be provided where the scaffold index files may be found. If no directory is provided, leave this string empty as "".
 
 **chrom_fasta_given**: *string Boolean flag*. If **Tigerfish** has been implemented on a desired genome de-novo using **repeat_discovery** mode, it has split all scaffolds into independent FASTA files for mapping repeat regions. Should one choose to re-run **Tigerfish** with differing downstream parameters, but one wishes to avoid regenerating these files de-novo, one can toggle that a directory path exists for these files.
 
-**chrom_fasta_dir**: *File path*. If **chrom_fasta_given**: "TRUE", a directory must be provided where the scaffold FASTA files may be found. 
+**chrom_fasta_dir**: *File path*. If **chrom_fasta_given**: "TRUE", a directory must be provided where the scaffold FASTA files may be found. If no directory is provided, leave this string empty as "".
 
 
 *Additional parameters*
+-----------------------
 
 **assembly**: *String*. The name of the genome assembly being used.
 
