@@ -586,6 +586,11 @@ Output: A summary file of total candidates found within each repeat region.
 * OUT_FILE
 
 
+Below is an example image of a DAG that is produced by Tigerfish following **Probe Design Mode**:
+
+
+
+
 
 **config.yml parameters**
 
