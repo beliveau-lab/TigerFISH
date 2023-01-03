@@ -4,7 +4,7 @@ Tigerfish User Tutorials
 
 Overview
 --------
-These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using *"Repeat Identification Mode"* and *"Probe Design Mode"* using example cases and real data in the CHM13 V2.0 genome. Following this tutorial, users will have all the resources to run **Tigerfish** for their own research applications. 
+These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using *"Repeat Identification Mode"* and *"Probe Design Mode"* using example cases and real data in the CHM13 v2.0 genome. Following this tutorial, users will have all the resources to run **Tigerfish** for their own research applications. 
 
 This tutorial guide was written in mind for those who are newer to running these scripts in a command line environment. These tutorials will help users ensure that they have installed **Tigerfish** properly on their own command line system. 
 
@@ -13,11 +13,11 @@ So let's get started! |:microscope:| |:tiger:|
 Background
 ==========
 
-The following tutorial is used to cover **Tigerfish** functionality on a toy genome composed of the chr4 D4Z4 and chrX DXZ4 repeats which is derived from the latest version (v.2.0) of the `CHM13 human <https://github.com/marbl/CHM13>`_ genome. 
+The following tutorial is used to cover **Tigerfish** functionality on a toy genome composed of the chr4 D4Z4 and chrX DXZ4 repeats which is derived from the latest version (v2.0) of the `CHM13 human <https://github.com/marbl/CHM13>`_ genome. 
 
 This reference file can be found within the project's Github repo `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test/data/example.fa>`_. 
 
-Users will download the full CHM13 V2.0 reference file later in this tutorial, to work on real-world data. 
+Users will download the full CHM13 v2.0 reference file later in this tutorial, to work on real-world data. 
 
 For the test genome cases, there are three directories that exist which will be referenced in this tutorial. 
 
@@ -25,7 +25,7 @@ For the test genome cases, there are three directories that exist which will be 
 
 2. Next, we will move through the *Probe Design Mode* directory which can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_test>`_. 
 
-3. Lastly, we will move into the real-world examples in the main pipeline with CHM13 V2.0 using *Probe Design Mode* from the newly annotated chr9 HSAT repeat which is found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_chm13>`_.  
+3. Lastly, we will move into the real-world examples in the main pipeline with CHM13 v2.0 using *Probe Design Mode* from the newly annotated chr9 HSAT repeat which is found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_chm13>`_.  
 
 It's important to note that the first two test directories are static meaning that the config.yml files have been organized to run **Tigerfish** for expected behavior in each directory. Therefore, users only need to execute the run_pipeline.sh script contained in each directory. 
 
@@ -36,7 +36,7 @@ To begin, we will describe some context for how **Tigerfish** is deployed by cov
 Config file
 ===========
 
-**Tigerfish** is a command line workflow that is implemented using Snakemake. This `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_ file summarizes parameters that users are able to modify. 
+**Tigerfish** is a command line workflow that is implemented using Snakemake. This `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/probe_design_chm13/config.yml>`_ file summarizes parameters that users are able to modify. 
 
 However, we provide default parameters summarized in our paper for recommended use. These parameters for probe design are also described within the command line definitions page. 
 
@@ -75,7 +75,7 @@ The Bowtie2 directories for this test genome reference which are found in the pa
 
 **Pipeline output**
 
-All expected output files can be found within `this directory <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/repeat_discovery_test/repeat_ID_output>`_. 
+All expected output files can be found within `this directory <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test/expected_output>`_. 
 
 Here, a collection of probes for both repeats found on each scaffold are provided in independent directories.
 
@@ -87,6 +87,100 @@ The **config.yml** file which has preset parameters that **do not** need to be m
      :width: 500
      :alt: Tigerfish config.yml file for test genome
      
+.. code-block:: bash
+
+     
+    #path to genome fasta
+    fasta_file: "data/example.fa"
+
+    #path to file containing primary chromosome sizes
+    chrom_sizes_file: "data/test_chrom.sizes"
+
+    #if coordinates are provided for probe design, file goes here
+    bed_file: "data/dxz4_synthetic.bed"
+
+    #option for probe design that directs pipeline implementation
+    defined_coords: "FALSE"
+    repeat_discovery: "TRUE"
+    bowtie2_indices_given: "TRUE"
+    jf_hash_given: "FALSE"
+    jf_count_given: "FALSE"
+    chrom_idx_given: "FALSE"
+    chrom_fasta_given: "FALSE"
+
+    assembly: "chm13"
+    bowtie2_dir: "data/bt2/"
+    jf_hash_dir: ""
+    jf_count_dir: ""
+    chrom_idx_dir: ""
+    chrom_fasta_dir: ""
+
+    #all chromosomes present in bed file or required for probe discovery are listed here
+    samples:
+        - "chr4"
+        - "chrX"
+
+    #parameters for repeat_ID step
+    window: 4000
+
+    threshold: 5
+
+    composition: 0.25
+
+    file_start: 0
+
+    #parameters for probe_design step
+    min_length: 36
+
+    max_length: 41
+
+    min_temp: 42
+ 
+    max_temp: 47
+
+    #parameters for kmer_filter script
+    mer_val: 18
+
+    c1_val: 1
+
+    c2_val: 5
+
+
+    #parameters used for probe_mer_filter script
+    enrich_score: 0.50
+
+    copy_num: 10
+
+
+    #parameters used in alignment_filter script
+    genome_windows: 5000000
+
+    thresh_window: 100000
+
+    binding_prop: 0.70
+
+    target_sum: 5000
+
+    off_bin_thresh: 100 
+
+    mer_cutoff: 0.95
+
+    bt2_alignments: 500000
+
+    max_pdups_binding: 0.90
+
+    seed_length: 15
+
+    model_temp: 69.5
+
+    min_on_target: 25
+
+    max_probe_return: 40
+
+    align_thresh: 10
+
+    ref_flag: 0
+          
 **Note**: It's *extremely* important to list all specific scaffolds of interest where repeat discovery will happen. In this case since we are interested in designing probes against this entire test genome, we list both chromosomes as their names are found within the genome FASTA file. Here, you can see that "chr4" and "chrX" are listed appropriately. If one wanted to perform repeat discovery on just one of these scaffolds, the others need not be listed.
      
 The **run_pipeline.sh** script is what is used to execute the pipeline:
