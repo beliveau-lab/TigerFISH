@@ -591,7 +591,7 @@ Output: A summary file of total candidates found within each repeat region.
 Below is an example image of a DAG that is produced by Tigerfish following **Probe Design Mode** on the DXZ4 repeat:
 
 
-.. image:: imgs/DAG.jpg
+.. image:: imgs/DAG.pdf
    :width: 500
    :alt: A picture of DAG of Tigerfish on teh DXZ4 repeat. 
 
