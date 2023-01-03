@@ -4,7 +4,7 @@ Snakemake Overview
 `Main workflow <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/main_pipeline/Snakefile>`_
 ^^^^^^^^^^^^^
 
-The scripts below are presented in the order that they are executed by the `Tigerfish` workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, which files are generated at each snakemake step, and where config parameters are called. 
+The scripts below are presented in the order that they are executed by the **Tigerfish** workflow via Snakemake. Here, all scripts and their function are documented to better understand the workflow, which files are generated at each snakemake step, and where config parameters are called. 
 
 generate_jf_count
 -----------------
