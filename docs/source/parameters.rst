@@ -46,7 +46,7 @@ We also share that these parameters may *not* equally map across genome size. Fo
      - 18
    * - enrich_score
      - 0.80
-     - 0.7
+     - 0.70
    * - copy_num
      - 100
      - 40
