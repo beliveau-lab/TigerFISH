@@ -479,7 +479,7 @@ Output: An annotated probe file summarizing all true on and off target alignment
 
    usage: get_alignments.py [-h] -c_t CHROM_TRACK -c_o CHROM_OVERLAPS -r_o
                          REPEAT_OVERLAP -p PAIRWISE_PDUPS -pl OUT_PLOT -t
-                         THRESH -t_s THRESH_SUMM -c_s CHROM_SUMM -
+                         THRESH -t_s THRESH_SUMM -c_s CHROM_SUMM
 
 **config.yml parameters**
 
