@@ -1,3 +1,3 @@
-# Pipeline Output
+# Expected Pipeline Output
 
-Pipeline output will appear here after it is run.
+Here, users may find the primary directories and their intermediate directories and output files. The final probe datasets may be found within the final output file directory. 
