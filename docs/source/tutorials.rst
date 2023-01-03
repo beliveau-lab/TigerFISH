@@ -82,10 +82,6 @@ Here, a collection of probes for both repeats found on each scaffold are provide
 **Pipeline executables**
 
 The **config.yml** file which has preset parameters that **do not** need to be modified for proper execution:
-
-.. image:: imgs/repeat_discovery_config.png
-     :width: 500
-     :alt: Tigerfish config.yml file for test genome
      
 .. code-block:: bash
 
@@ -211,7 +207,7 @@ To check if the expected output files match to what is generated after you run t
 
 .. code-block:: bash
 
-     cd example_run/main/main_pipeline/repeat_discovery_test/
+     cd example_run/repeat_discovery_test/
 
 4. Within the `repeat_discovery_test` directory, you should be met with the following sub-directories and files once this command is executed:
 
@@ -219,7 +215,7 @@ To check if the expected output files match to what is generated after you run t
      :width: 500
      :alt: Screenshot demonstrating that the correct repeat discovery directory has been entered
 
-5. Now all that is needed is to execute the run_pipelin.sh. This may be done by entering the following command:
+5. Now all that is needed is to execute the run_pipeline.sh. This may be done by entering the following command:
 
 .. code-block:: bash
 
@@ -267,11 +263,11 @@ Probe Design Mode on a Test Genome
 - Bowtie2 indices (optional)
 - BED file of repeat region coordinates
 
-To implement this run mode, users must also provide a BED file as the **only** additional input to what is described in the *Repeat Identification Mode* tutorial. Here, this BED file can be viewed in this directory. In this exercise, probes will only be designed against the selected DXZ4 repeat section.
+To implement this run mode, users must also provide a BED file as the **only** additional input to what is described in the *Repeat Identification Mode* tutorial. Here, this BED file can be viewed in `this directory <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/probe_design_test/data/dxz4_synthetic.bed>`_.. In this exercise, probes will only be designed against the selected DXZ4 repeat section.
 
 **Pipeline Output**
 
-All expected output files can be found within `this directory <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/main/main_pipeline/probe_design_test/defined_coords_output>`_. 
+All expected output files can be found within `this directory <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_test/expected_output>`_. 
 
 Here, a collection of probes for the desired repeat region is provided in its own directory.
 
@@ -279,9 +275,98 @@ Here, a collection of probes for the desired repeat region is provided in its ow
 
 The **config.yml** file which has preset parameters that **do not** need to be modified for proper execution:
 
-.. image:: imgs/probe_design_config.png
-     :width: 500
-     :alt: Tigerfish config.yml file for test genome using probe design mode
+.. code-block:: bash
+
+     
+    #path to genome fasta
+    fasta_file: "data/example.fa"
+
+    #path to file containing primary chromosome sizes
+    chrom_sizes_file: "data/test_chrom.sizes"
+
+    #if coordinates are provided for probe design, file goes here
+    bed_file: "data/dxz4_synthetic.bed"
+
+    #option for probe design that directs pipeline implementation
+    defined_coords: "TRUE"
+    repeat_discovery: "FALSE"
+    bowtie2_indices_given: "TRUE"
+    jf_hash_given: "FALSE"
+    jf_count_given: "FALSE"
+    chrom_idx_given: "FALSE"
+    chrom_fasta_given: "FALSE"
+
+    assembly: "chm13"
+    bowtie2_dir: "data/bt2/"
+    jf_hash_dir: ""
+    jf_count_dir: ""
+    chrom_idx_dir: ""
+    chrom_fasta_dir: ""
+
+    #all chromosomes present in bed file or required for probe discovery are listed here
+    samples:
+        - "chrX"
+
+    #parameters for repeat_ID step
+    window: 4000
+
+    threshold: 5
+
+    composition: 0.25
+
+    file_start: 0
+
+    #parameters for probe_design step
+    min_length: 36
+
+    max_length: 41
+
+    min_temp: 42
+ 
+    max_temp: 47
+
+    #parameters for kmer_filter script
+    mer_val: 18
+
+    c1_val: 1
+
+    c2_val: 5
+
+
+    #parameters used for probe_mer_filter script
+    enrich_score: 0.50
+
+    copy_num: 10
+
+
+    #parameters used in alignment_filter script
+    genome_windows: 5000000
+
+    thresh_window: 100000
+
+    binding_prop: 0.70
+
+    target_sum: 5000
+
+    off_bin_thresh: 100 
+
+    mer_cutoff: 0.95
+
+    bt2_alignments: 500000
+
+    max_pdups_binding: 0.90
+
+    seed_length: 15
+
+    model_temp: 69.5
+
+    min_on_target: 25
+
+    max_probe_return: 40
+
+    align_thresh: 10
+
+    ref_flag: 0
 
 **Note**: It's *extremely* important to list all specific scaffolds of interest where probe design will happen. In this case since we are interested in designing probes against chrX, we list this chromosome only as "chrX" as shown in the config.yml file. 
 
@@ -289,11 +374,11 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
 
 **Let's walkthrough**
 
-1. Return to the main home directory in the Tigerfish directory structure to enter the probe design mode test directory using the following command:
+1. Return to the main home directory in the **Tigerfish** directory structure to enter the probe design mode test directory using the following command:
 
 .. code-block:: bash
 
-     cd example_run/main/main_pipeline/probe_design_test/
+     cd example_run/probe_design_test/
 
 .. image:: imgs/step_1_probe_design.png
      :width: 500
@@ -328,7 +413,7 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
      :width: 500
      :alt: Screenshot showing that probe design test matched expected behavior. 
 
-5. Great work! Congrats on running *Probe Design Mode*! This means that both run modes of Tigerfish have passed! |:tada:| |:sparkles:|
+5. Great work! Congrats on running *Probe Design Mode*! This means that both run modes of **Tigerfish** have passed! |:tada:| |:sparkles:|
 
 If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <https://vimeo.com/762385186>`_.
    
@@ -340,20 +425,70 @@ It's important to understand the distinct parameters that are being changed to t
 
 *Repeat Discovery Mode*
 
-.. image:: imgs/rd_params.png
-     :width: 500
-     :alt: Screenshot showing the repeat discovery mode config.yml params to toggle. 
+.. code-block:: bash
+
+     
+    #path to genome fasta
+    fasta_file: "data/example.fa"
+
+    #path to file containing primary chromosome sizes
+    chrom_sizes_file: "data/test_chrom.sizes"
+
+    #if coordinates are provided for probe design, file goes here
+    bed_file: "data/dxz4_synthetic.bed"
+
+    #option for probe design that directs pipeline implementation
+    defined_coords: "FALSE"
+    repeat_discovery: "TRUE"
+    bowtie2_indices_given: "TRUE"
+    jf_hash_given: "FALSE"
+    jf_count_given: "FALSE"
+    chrom_idx_given: "FALSE"
+    chrom_fasta_given: "FALSE"
+
+    assembly: "chm13"
+    bowtie2_dir: "data/bt2/"
+    jf_hash_dir: ""
+    jf_count_dir: ""
+    chrom_idx_dir: ""
+    chrom_fasta_dir: ""
+
 
 *Probe Design Mode*
 
-.. image:: imgs/pd_params.png
-     :width: 500
-     :alt: Screenshot showing the probe design mode config.yml params to toggle. 
+.. code-block:: bash
+
+     
+    #path to genome fasta
+    fasta_file: "data/example.fa"
+
+    #path to file containing primary chromosome sizes
+    chrom_sizes_file: "data/test_chrom.sizes"
+
+    #if coordinates are provided for probe design, file goes here
+    bed_file: "data/dxz4_synthetic.bed"
+
+    #option for probe design that directs pipeline implementation
+    defined_coords: "TRUE"
+    repeat_discovery: "FALSE"
+    bowtie2_indices_given: "TRUE"
+    jf_hash_given: "FALSE"
+    jf_count_given: "FALSE"
+    chrom_idx_given: "FALSE"
+    chrom_fasta_given: "FALSE"
+
+    assembly: "chm13"
+    bowtie2_dir: "data/bt2/"
+    jf_hash_dir: ""
+    jf_count_dir: ""
+    chrom_idx_dir: ""
+    chrom_fasta_dir: ""
+
 
 Here, the key difference in behavior can be controlled based on whether `defined_coords` = "TRUE" and `repeat_discovery` = "FALSE" to drive *Probe Design Mode* and vice versa for *Repeat Discovery Mode*. Be mindful that if one of these parameters is set to TRUE, the other must be set to FALSE or else the pipeline will be exited.
 
 
-Probe Design Mode on chr9 HSAT in CHM13. v2.0
+Probe Design Mode on chr9 HSAT in CHM13 v2.0
 ---------------------------------------------
 
 For this portion of the tutorial, we will be implementing probe design mode on real-world data using the CHM13 v2.0 genome to mine probes from the newly annotated chr9 human satellite (HSAT) repeat. Since we've already done a walkthrough of probe design mode on our test files, we will just begin with a walkthrough of how to begin running this process and what files need to me modified for this exercise.
@@ -372,7 +507,7 @@ For reference, we will be working in this directory shown here:
 
 .. code-block:: bash
 
-     cd example_run/main/main_pipeline/probe_design_chm13/data
+     cd example_run/probe_design_chm13/data
      
      
 2. Next, we will download the CHM13 v2.0 genome into this directory. This genome build is found `here <https://github.com/marbl/CHM13>`_. Under assembly releases, be sure to get the link for the file chm13v2.0.fa.gz. You can download the file using the following command. This may take a few moments. 
@@ -389,10 +524,98 @@ For reference, we will be working in this directory shown here:
      
 3. Now you need to update the path in the config.yml to execute the pipeline with the proper genome build path. So return out one directory to the config.yml file and include the path to the chm13 genome. This will look like the following: 
 
+.. code-block:: bash
 
-.. image:: imgs/chm13_yaml.png
-     :width: 500
-     :alt: Overview of real world example config.yml. 
+
+    #path to CHM13 genome fasta
+    fasta_file: ""
+
+    #path to file containing primary chromosome sizes
+    chrom_sizes_file: "data/chm13.chrom.sizes"
+
+    #if coordinates are provided for probe design, file goes here
+    bed_file: "data/chm13_chr9_hsat_array.bed"
+
+    #option for probe design that directs pipeline implementation
+    defined_coords: "TRUE"
+    repeat_discovery: "FALSE"
+    bowtie2_indices_given: "FALSE"
+    jf_hash_given: "FALSE"
+    jf_count_given: "FALSE"
+    chrom_idx_given: "FALSE"
+    chrom_fasta_given: "FALSE"
+
+    assembly: "chm13"
+    jf_hash_dir: ""
+    jf_count_dir: ""
+    chrom_idx_dir: ""
+    chrom_fasta_dir: ""
+    bowtie2_dir: ""
+
+    #all chromosomes present in bed file or required for probe discovery are listed here
+    samples:
+        - "chr9"
+
+    #parameters for repeat_ID step
+    window: 4000
+
+    threshold: 5
+
+    composition: 0.25
+
+    file_start: 0
+
+    #parameters for probe_design step
+    min_length: 25
+
+    max_length: 50
+
+    min_temp: 42
+
+    max_temp: 52
+
+    #parameters for kmer_filter script
+    mer_val: 18
+
+    c1_val: 1
+
+    c2_val: 5
+
+
+    #parameters used for probe_mer_filter script
+    enrich_score: 0.70
+
+    copy_num: 40
+
+
+    #parameters used in alignment_filter script
+    genome_windows: 5000000
+
+    thresh_window: 100000
+
+    binding_prop: 0.70
+
+    off_bin_thresh: 100
+
+    target_sum: 20000
+
+    mer_cutoff: 0.95
+
+    bt2_alignments: 500000
+
+    max_pdups_binding: 0.90
+
+    seed_length: 15
+
+    model_temp: 69.5
+
+    min_on_target: 25
+
+    max_probe_return: 20
+
+    align_thresh: 10
+
+    ref_flag: 0
      
 4. Now you are ready to run this process! For Sun Grid users, it is recommended that you submit this as a cluster job. Templates of how to do this to your shell script to make it executable for cluster job submissions in provided in the Tigerfish home directory. 
 
@@ -404,9 +627,6 @@ For reference, we will be working in this directory shown here:
      
      
 Congrats! You've designed a real probe that will work to visualize the chr9 HSAT array uniquely! 
-
-Now let's see what else we can learn from this repeat array by pursuing post-process analysis.
-
 
 Final thoughts
 --------------
