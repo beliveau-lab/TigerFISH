@@ -63,7 +63,7 @@ This pipeline is implemented using `Snakemake <https://snakemake.readthedocs.io/
 Need help?
 ##########
 
-Do you still have questions after reading the documentation on this site? The best way to get help is to reach out via the Tigerfish discussion board. 
+Do you still have questions after reading the documentation on this site? The best way to get help is to reach out on our GitHub page. 
 
 .. toctree::
    :hidden:
