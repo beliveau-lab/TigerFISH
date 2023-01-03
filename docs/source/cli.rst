@@ -16,8 +16,8 @@ Recommended default parameters are also provided that were used for probe mining
 Named Arguments in `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/main/main_pipeline/config.yml>`_ for main workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*Required files for getting started*
-------------------------------------
+Required files for getting started
+----------------------------------
 
 **fasta_file**: *File path*. The genomic reference file used for probe design. Should includes all scaffolds of interest in the provided genome in proper FASTA format.
 
@@ -34,16 +34,16 @@ If one is unsure of whether they have the correct `chrom.sizes` file for a given
 **bed_file**: Optional file path if set to "TRUE" for **defined_coords**. This BED file should contain tab seperated positional information (chrom, start, stop) for a target repeat region of interest.
 
 
-*Run modes* 
------------
+Run modes
+---------
 
 1. **defined_coords**: *string Boolean flag*. If marked as **"TRUE"** a BED file path must be provided for the **bed_file** parameter. If parameter is not being used, it should be toggled to **FALSE**.
 
 2. **repeat_discovery**: *string Boolean flag*. If marked as **"TRUE"**, **Tigerfish** will be implemented to search for repeat specific chromosomes along select scaffolds or the entire geome as long as scaffold names are listed in the **samples** parameter. If **defined_coords** is being used instead, toggle **repeat_discovery** = **"FALSE"**. 
 
 
-*Ways to direct Tigerfish behavior with provided files*
--------------------------------------------------------
+Ways to direct Tigerfish behavior with provided files
+-----------------------------------------------------
 
 **bowtie2_indices_given**: *string Boolean flag*. If marked **"TRUE"** users must provide a valid file path to a correctly derived Bowtie2 index. If marked **False** a Bowtie2 index for the queried genome of interest will be made de novo. Examples of how Bowtie file paths are provided are further described in our documentation and tutorials.
 
@@ -66,8 +66,8 @@ If one is unsure of whether they have the correct `chrom.sizes` file for a given
 **chrom_fasta_dir**: *File path*. If **chrom_fasta_given**: "TRUE", a directory must be provided where the scaffold FASTA files may be found. If no directory is provided, leave this string empty as "".
 
 
-*Additional parameters*
------------------------
+Additional parameters
+---------------------
 
 **assembly**: *String*. The name of the genome assembly being used.
 
