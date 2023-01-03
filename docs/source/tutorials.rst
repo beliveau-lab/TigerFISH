@@ -263,7 +263,7 @@ Probe Design Mode on a Test Genome
 - Bowtie2 indices (optional)
 - BED file of repeat region coordinates
 
-To implement this run mode, users must also provide a BED file as the **only** additional input to what is described in the *Repeat Identification Mode* tutorial. Here, this BED file can be viewed in `this directory <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/probe_design_test/data/dxz4_synthetic.bed>`_.. In this exercise, probes will only be designed against the selected DXZ4 repeat section.
+To implement this run mode, users must also provide a BED file as the **only** additional input to what is described in the *Repeat Identification Mode* tutorial. Here, this BED file can be viewed in `this directory <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/probe_design_test/data/dxz4_synthetic.bed>`_. In this exercise, probes will only be designed against the selected DXZ4 repeat section.
 
 **Pipeline Output**
 
