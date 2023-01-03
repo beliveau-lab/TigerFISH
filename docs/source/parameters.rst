@@ -4,7 +4,9 @@ Parameters
 Table of default parameters for main workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The following table summarizes parameters used to design and search for repeat specific probes in the fully assembled CHM13 human genome assembly. We would recommend these settings as default parameters depending on the use case. The first column presents a more strict high copy repeat probe search that primarily focuses on searching for large rpeetitive probe arrays that predominantly map to alpha satellite and human satellite repeats. The other two columns present more flexible parameters that will provide many diverse repeat target types including some smaller repeat families such as LINES/SINES, LTRs, etc including larger satellite DNA arrays. 
+The following table summarizes parameters used to design and search for repeat specific probes in the fully assembled CHM13 human genome assembly. We would recommend these settings as default parameters for this particular human genome build and results of these parameters are thoroughly described in the **Tigerfish** manuscript. 
+
+The first column presents a more strict high copy repeat probe search that primarily focuses on searching for large repetitive probe arrays that predominantly map to alpha satellite and human satellite repeats. The other two columns present more flexible parameters that will provide many diverse repeat target types including some smaller repeat families such as LINES/SINES, LTRs, etc including larger satellite DNA arrays. 
 
 We also share that these parameters may *not* equally map across genome size. For smaller genomes (mouse, fly, etc.) we recommend decreasing window size to ensure that the window is smaller than that of the smallest scaffold present in the genome assembly if performing repeat identification. Further resources on repeat probe design in model organism genomes is in development. 
 
