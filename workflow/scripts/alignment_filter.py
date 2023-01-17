@@ -255,8 +255,8 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                             #if true they are added to the skipped list
                             skip_probe_names_list.append(cand)
                         else:
-                            pdups_forward = pdups_forward(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
-                            if pdups_forward >= 0.50:
+                            pdups_forward_val = pdups_forward(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
+                            if pdups_forward_val >= 0.50:
                                 probe_list.remove(cand)
                                 skip_probe_names_list.append(cand)
 
