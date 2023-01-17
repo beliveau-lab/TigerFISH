@@ -445,22 +445,23 @@ rule get_alignments:
         "python ../../workflow/scripts/get_alignments.py -c_t {input.genome_bin} -c_o {input.alignment_intersect} -p {input.probes_alignment} -r_o {input.region_intersect} -pl {output.binding_maps} -t {params.thresh} -t_s {output.thresh_binding} -c_s {output.target_binding}"
 
 #rule creates chromoMap object based on repeat region target
-rule generate_chromomap:
-    input:
-        chrom_sizes = config["chrom_sizes_file"],
-        region_bed = rules.get_region_bed.output,
-        binding_maps = rules.get_alignments.output.binding_maps
-    output:
-        "pipeline_output/03_output_files/06_generate_chromomap/{sample}/{region}_chromomap.html"
-    conda:
-        "../../shared_conda_envs/chromomap_env.yml"
-    params:
-        mfree="20G",
-        h_rt = "10:0:0"
-    benchmark:
-        "pipeline_output/benchmarks/03_output_files/05_generate_chromomap/{sample}/{region}_plots.txt"
-    shell:
-        "Rscript --vanilla ../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
+if config['chromomap_option'] == 1:
+    rule generate_chromomap:
+        input:
+            chrom_sizes = config["chrom_sizes_file"],
+            region_bed = rules.get_region_bed.output,
+            binding_maps = rules.get_alignments.output.binding_maps
+        output:
+            "pipeline_output/03_output_files/06_generate_chromomap/{sample}/{region}_chromomap.html"
+        conda:
+            "../../shared_conda_envs/chromomap_env.yml"
+        params:
+            mfree="20G",
+            h_rt = "10:0:0"
+        benchmark:
+            "pipeline_output/benchmarks/03_output_files/05_generate_chromomap/{sample}/{region}_plots.txt"
+        shell:
+            "Rscript --vanilla ../../workflow/scripts/make_chromomap.R -c {input.chrom_sizes} -r {input.region_bed} -o {output}"
 
 #function will take all probes after their imaging target region has been appended to aggregate their paths
 def all_mapped_output(wildcards):
@@ -474,8 +475,7 @@ rule map_region_coords:
     input:
         probe_file = rules.alignment_filter.output,
         thresh_file = rules.get_alignments.output.thresh_binding,
-        alignment_file = rules.align_probes.output,
-        maps = rules.generate_chromomap.output
+        alignment_file = rules.align_probes.output
     output:
         mod_probe_file = 'pipeline_output/03_output_files/03_probes/{sample}/{region}_probes.tsv',
         repeat_binding_summ = 'pipeline_output/03_output_files/04_repeat_output/{sample}/{region}_thresh_summ.tsv'

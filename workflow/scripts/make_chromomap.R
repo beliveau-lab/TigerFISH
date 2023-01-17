@@ -46,9 +46,17 @@ renamed_regions$annot <- "tigerfish"
 renamed_regions<-renamed_regions[,c("annot","chrom","start","stop")]
 renamed_regions <- as.data.frame(renamed_regions)
 
+print(renamed_regions)
+
+renamed_regions$start[renamed_regions$start == 0] <- 1
+
+print(renamed_regions)
+
 #read in chrom length file
 chrom_sizes <- read.table(opt$chrom_sizes, 
                            sep = "\t",header=FALSE)
+
+print(chrom_sizes)
 
 #subset where chrom in regions is row in chrom_sizes
 

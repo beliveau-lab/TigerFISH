@@ -50,6 +50,9 @@ def collapse_repeat(probe_df):
         #keep row with largest sum
         collapsed_df=collapsed_df[collapsed_df.score == collapsed_df.score.max()]
 
+    print(collapsed_df)
+    print(probe_df)
+
     #then append chrom
     chrom_val = (probe_df['chrom'].tolist())[0]
     

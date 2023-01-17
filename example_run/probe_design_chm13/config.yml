@@ -88,3 +88,6 @@ max_probe_return: 20
 align_thresh: 10
 
 ref_flag: 0
+
+chromomap_option: 0
+

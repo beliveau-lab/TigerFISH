@@ -125,6 +125,12 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
     keep_off_target_list = []
     keep_probe_prop_list = []
     keep_probe_seq = []
+    skip_probe_names_list = []
+    fail_probe_names_list = []
+    all_run_probes_names_list = []
+    probe_times = []
+
+    loop_count = 0
 
     #initiate groupby
     grouped_region=probe_df.groupby('region',sort=False)
@@ -150,6 +156,8 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                len(keep_probe_names_list) < int(max_probe_return) and 
                len(probe_list) >= 1):
 
+            t0 = time.time()
+
             #make the call for the top probe to get the pairwise df
             top_probe_al = generate_pairwise_df(probe_list[0],
                                                       probe_coords_list[0],
@@ -172,6 +180,7 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                                                                   top_probe_al,
                                                                   thresh,ref_flag)
 
+            loop_count += 1
 
             #checks the items in the proportion dictionary
             #and this is the first item  to be added into the empty list
@@ -212,7 +221,6 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                         pdups_track_list.append(pdups_compare)
 
                     if max(pdups_track_list) <= float(max_pdups_binding):
-
                         #if so, then add the probe and it's relevant
                         #information into the keep lists
                         keep_probe_names_list.append(key)
@@ -221,22 +229,64 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
                         keep_probe_prop_list.append(prop_dict[key])
                         keep_probe_seq.append(probe_list[0])
                         threshold_count += on_target_dict[key]
+                    else:
+                        fail_probe_names_list.append(probe_coords_list[0])
+                else:
+
+                    top_probe_list = []
+                    pdups_val_list = []
+
+                    #stores the probe that failed into the failed list                    
+                    fail_probe_names_list.append(probe_coords_list[0])
+
+                    #takes the length of the probe list to populate it with failed cand
+                    for i in range(len(probe_list)-1):
+                        top_probe_list.append(probe_list[0])
+
+                    #computes pdups between failed cand and all other probes following it
+                    for top,cand in zip(top_probe_list,probe_list[1:]):
+                        pdups_val = pdups(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
+                        pdups_val_list.append(pdups_val)
+
+                        #removes any following probe cands with pdups of this value or higher
+                        if pdups_val >= 0.50:
+                            #if true they are removed from the list to survey
+                            probe_list.remove(cand)
+                            #if true they are added to the skipped list
+                            skip_probe_names_list.append(cand)
+                        else:
+                            pdups_forward = pdups_forward(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
+                            if pdups_forward >= 0.50:
+                                probe_list.remove(cand)
+                                skip_probe_names_list.append(cand)
+
+
+
+            t1 = time.time()
+            all_run_probes_names_list.append(probe_coords_list[0])
 
             #pop the head probe being compared from the top of the list
             probe_list.pop(0)
             probe_coords_list.pop(0)
 
+            #records the total run-time for probe in loop
+            total_n = t1-t0
+            probe_times.append(total_n)
+
     #make dictionaries of the on target, off target, prop
     on_target_dict = dict(zip(keep_probe_names_list,keep_on_target_list))
     off_target_dict = dict(zip(keep_probe_names_list,keep_off_target_list))
     prop_target_dict = dict(zip(keep_probe_names_list,keep_probe_prop_list))
+    probe_run_times_dict = dict(zip(all_run_probes_names_list,probe_times))
 
-    return on_target_dict,off_target_dict,prop_target_dict
+    return on_target_dict,off_target_dict,prop_target_dict,probe_run_times_dict,loop_count,keep_probe_names_list,skip_probe_names_list,fail_probe_names_list
 
 ##############################################################################
 
 def generate_final_df(probe_df,on_target_dict,off_target_dict,
-                      prop_target_dict,o_file):
+                      prop_target_dict,probe_run_times_dict,
+                      loop_count,keep_probe_names_list,skip_probe_names_list,
+                      fail_probe_names_list,o_file,ref_flag):
     """
     Function will make the dictionaries into pandas dataframes where the 
     cols are read as probe, on target, off target, on target pdups prop
@@ -270,6 +320,42 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
                                   columns=['probe_coords',
                                            'on_target_prop'])
 
+    probe_coords_list = probe_df['probe_coords'].tolist()
+    probe_list = probe_df['probe'].tolist()
+
+    coords_probe_dict = dict(zip(probe_coords_list,probe_list))
+
+    skip_coords_list = []
+    for key,val in coords_probe_dict.items():
+        if val in skip_probe_names_list:
+            skip_coords_list.append(key)
+
+    #label each type of probe
+    label_list = [] 
+    for probe in probe_coords_list:
+        if probe in keep_probe_names_list:
+            label_list.append("Run,kept")
+        elif probe in fail_probe_names_list:
+            label_list.append("Run,failed")
+        elif probe in skip_coords_list:        
+            label_list.append("Skipped")
+        else:
+            label_list.append("Not run")
+
+    for coords in probe_coords_list:
+        if coords not in probe_run_times_dict:
+            probe_run_times_dict[coords] = 0
+
+    #total loop_count
+    total_loop_count = []
+    for i in range(len(probe_list)):
+        total_loop_count.append(loop_count)
+
+    #create a dict to get the 
+    probe_run_times_df = pd.DataFrame(probe_run_times_dict.items(),
+                                  columns=['probe_coords',
+                                           'run_time'])        
+
     #then merge the dicts into the main probe df (lengths should match)
     on_off_merged = pd.merge(on_target_df, off_target_df,
                              on="probe_coords")
@@ -279,8 +365,22 @@ def generate_final_df(probe_df,on_target_dict,off_target_dict,
 
     #write final df
     keep_probes_df = pd.merge(probe_df, pdups_binding_df, on="probe_coords")
-
     keep_probes_df.to_csv(o_file, header=False, index=False, sep="\t")
+
+    #write reference file
+    repeat_name = probe_df['region'].iloc[0]
+
+    if int(ref_flag) == 1:
+
+        ref_file_dir = "pipeline_output/02_intermediate_files/06_alignment_filter/log/"
+        create_dir(ref_file_dir)
+        ref_file_name = ref_file_dir + str(repeat_name) + ".txt"
+        log_probes_df = pd.merge(probe_df,probe_run_times_df, on="probe_coords")
+        log_probes_df['label'] = label_list
+        log_probes_df['loop_count'] = total_loop_count
+
+        log_probes_df.to_csv(ref_file_name, header=False, index=False, sep="\t")
+
 
 ##############################################################################
 
@@ -313,12 +413,7 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
 
         #make temporary file name if ref_flag != 1 to save memory
         #intermediate files saved to demonstrate test functionality
-        if int(ref_flag) == 1: 
-            fastq_dir = "pipeline_output/02_intermediate_files/05_alignment_files/fastq/"
-            create_dir(fastq_dir)
-            fastq_filename = fastq_dir + str(probe_coords) + ".fastq"
-        else:
-            fastq_filename = tmpdir + '/region.fastq'
+        fastq_filename = tmpdir + '/region.fastq'
 
         #reads the file to start writing
         fastq = open(fastq_filename,'w')
@@ -336,12 +431,7 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
         sam_file = bt2_call(fastq_filename,sam_file,bt2_k_val,
                             bowtie_idx,bowtie_string,seed_length)
 
-        if int(ref_flag) == 1:
-            bam_dir = "pipeline_output/02_intermediate_files/05_alignment_files/bam/"
-            create_dir(bam_dir)
-            bam_file = bam_dir + str(probe_coords) + ".bam" 
-        else:
-            bam_file = tmpdir + '/derived.bam'
+        bam_file = tmpdir + '/derived.bam'
 
         bam_file = samtools_call(sam_file,bam_file)
 
@@ -394,12 +484,6 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
             all_pdups_list.append(probe_pdups_dict[all_dict_key])
 
         pairwise_df['pdups'] = all_pdups_list
-
-        if int(ref_flag) == 1:
-            pairwise_df_dir = "pipeline_output/02_intermediate_files/05_alignment_files/pairwise_df_out/"
-            create_dir(pairwise_df_dir)
-            pairwise_df_file = pairwise_df_dir + str(probe_coords) + ".tsv"
-            pairwise_df.to_csv(pairwise_df_file, header=False, index=False, sep="\t")
 
         return pairwise_df
 
@@ -583,6 +667,38 @@ def pdups(seq1,seq2,strand_conc_a,strand_conc_b,NUPACK_MODEL):
 
 ##############################################################################
 
+def pdups_forward(seq1,seq2,strand_conc_a,strand_conc_b,NUPACK_MODEL):
+    """
+    Function implements NUPACK by invoking the NUPACK model and computing
+    pdups over two sequences of interest, taking the RC of seq2
+    Parameters
+    ----------
+    seq1 : string
+        sequence string 1 (parent probe)
+    seq2 : string
+        sequence string 2 (derived alignment)
+    Returns
+    -------
+    pdups_score : float
+        the computed pdups score by nupack
+    """
+
+    a = nupack.Strand(seq1, name='a')
+    b = nupack.Strand(seq2, name='b')
+    t = nupack.Tube({a: strand_conc_a, b: strand_conc_b},
+                    complexes=nupack.SetSpec(max_size=2), name='t')
+
+    # calculate partition function and resulting concentrations
+    tube_result = nupack.tube_analysis(tubes=[t], model=NUPACK_MODEL)
+
+    # calculate duplex probability
+    conc = tube_result.tubes[t].complex_concentrations[nupack.Complex([a, b])]
+    pdups_score = conc / strand_conc_b
+
+    return pdups_score
+
+##############################################################################
+
 def nupack_sum(pairwise_df,probe_region_dict):
     """
     Function computes the sum of nupack scores that correspond to on target
@@ -705,27 +821,10 @@ def get_bedtools_map(probe_region,probe_coords,genome_bin_file,top_probe_al,thre
 
     with tempfile.TemporaryDirectory() as tmpdir:
 
-        if int(ref_flag) == 1:
-            #makes intermediate file for the repeat region
-            repeat_dir = "pipeline_output/02_intermediate_files/05_alignment_files/region_bed/"
-            create_dir(repeat_dir) 
-            repeat_filename = repeat_dir + str(probe_region) + ".bed"
-            
-            #creates a bed file for all of the reported alignment overlaps with repeat region
-            repeat_overlap_dir = "pipeline_output/02_intermediate_files/05_alignment_files/region_overlap/"
-            create_dir(repeat_overlap_dir)
-            repeat_overlap_out = repeat_overlap_dir + str(probe_region) + "_overlap.bed"
-
-            #creates a bed of probe overlaps
-            probe_overlap_dir = "pipeline_output/02_intermediate_files/05_alignment_files/probe_overlap/"
-            create_dir(probe_overlap_dir)
-            probe_overlap_out = probe_overlap_dir + str(probe_coords) + "_overlap.bed"
-
-        else:
-            #the file for the bed file overlap
-            repeat_filename = tmpdir + '/region.bed'
-            repeat_overlap_out = tmpdir + '/overlap_out.bed'
-            probe_overlap_out = tmpdir + '/probe_overlap_out.bed'
+        #the file for the bed file overlap
+        repeat_filename = tmpdir + '/region.bed'
+        repeat_overlap_out = tmpdir + '/overlap_out.bed'
+        probe_overlap_out = tmpdir + '/probe_overlap_out.bed'
 
 
         #write the repeat contents as a bed file
@@ -796,21 +895,6 @@ def get_bedtools_map(probe_region,probe_coords,genome_bin_file,top_probe_al,thre
                                                                    top_probe_al_map,thresh)
 
         
-        #output sums binned sum locations and scores
-        if int(ref_flag) == 1:
-            signal_pileup_dir = "pipeline_output/02_intermediate_files/05_alignment_files/signal_pileup_subset/"
-            create_dir(signal_pileup_dir)
-
-            chrom_summ_dir = "pipeline_output/02_intermediate_files/05_alignment_files/chrom_summ_df/"
-            create_dir(chrom_summ_dir)
-
-            signal_pileup_file = signal_pileup_dir + str(probe_coords) + ".tsv"
-            signal_pileup_subset.to_csv(signal_pileup_file, header=False, index=False, sep="\t")
-
-
-            chrom_summ_file = chrom_summ_dir + str(probe_coords) + ".tsv"
-            chrom_summ_df.to_csv(chrom_summ_file, header=False, index=False, sep="\t")
-
         return signal_pileup_subset,chrom_summ_df
 
 ##############################################################################
@@ -1058,7 +1142,7 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    on_target_d,off_target_d,prop_target_d = filter_thresh(probe_df,
+    on_target_d,off_target_d,prop_target_d,probe_run_times_dict,loop_count,keep_probe_names_list,skip_probe_names_list,fail_probe_names_list = filter_thresh(probe_df,
                                                                strand_conc_a,
                                                                strand_conc_b,
                                                                bowtie_idx,
@@ -1075,7 +1159,7 @@ def main():
 
     print("---%s seconds ---"%(time.time()-start_time))
 
-    generate_final_df(probe_df,on_target_d,off_target_d,prop_target_d,o_file)
+    generate_final_df(probe_df,on_target_d,off_target_d,prop_target_d,probe_run_times_dict,loop_count,keep_probe_names_list,skip_probe_names_list,fail_probe_names_list,o_file,ref_flag)
 
     print("---%s seconds ---"%(time.time()-start_time))
 
