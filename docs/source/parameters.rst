@@ -89,4 +89,10 @@ We also share that these parameters may *not* equally map across genome size. Fo
    * - max_probe_return
      - 25
      - 20
+   * - align_thresh
+     - 10
+     - 10
+   * - chromomap_option
+     - 0
+     - 0
      
