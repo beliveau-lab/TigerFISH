@@ -140,6 +140,8 @@ seq2 |br|
 
 **bin_thresh**: *Integer*. The provided threshold to note that aggregate thermodynamic binding sites are above this value on any given bin. 
 
+**chromomap_option**: *Integer, 0 or 1*. If flagged as 1, chromoMap will be activated to generate a visualization of target repeat regions. 
+
 
 **config.yml parameters**
 
