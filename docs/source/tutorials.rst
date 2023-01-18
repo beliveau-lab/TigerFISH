@@ -176,6 +176,8 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     align_thresh: 10
 
     ref_flag: 0
+    
+    chromomap_option: 0
           
 **Note**: It's *extremely* important to list all specific scaffolds of interest where repeat discovery will happen. In this case since we are interested in designing probes against this entire test genome, we list both chromosomes as their names are found within the genome FASTA file. Here, you can see that "chr4" and "chrX" are listed appropriately. If one wanted to perform repeat discovery on just one of these scaffolds, the others need not be listed.
      
@@ -367,6 +369,8 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     align_thresh: 10
 
     ref_flag: 0
+    
+    chromomap_option: 0
 
 **Note**: It's *extremely* important to list all specific scaffolds of interest where probe design will happen. In this case since we are interested in designing probes against chrX, we list this chromosome only as "chrX" as shown in the config.yml file. 
 
@@ -616,6 +620,8 @@ For reference, we will be working in this directory shown here:
     align_thresh: 10
 
     ref_flag: 0
+    
+    chromomap_option: 0
      
 4. Now you are ready to run this process! For Sun Grid users, it is recommended that you submit this as a cluster job. Templates of how to do this to your shell script to make it executable for cluster job submissions in provided in the Tigerfish home directory. 
 
