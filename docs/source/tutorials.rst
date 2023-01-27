@@ -98,6 +98,8 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     #option for probe design that directs pipeline implementation
     defined_coords: "FALSE"
     repeat_discovery: "TRUE"
+    probe_cand_binding: "FALSE"
+    
     bowtie2_indices_given: "TRUE"
     jf_hash_given: "FALSE"
     jf_count_given: "FALSE"
@@ -110,6 +112,7 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     jf_count_dir: ""
     chrom_idx_dir: ""
     chrom_fasta_dir: ""
+    probe_binding_file: ""
 
     #all chromosomes present in bed file or required for probe discovery are listed here
     samples:
@@ -176,9 +179,7 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     align_thresh: 10
 
     ref_flag: 0
-    
-    chromomap_option: 0
-          
+              
 **Note**: It's *extremely* important to list all specific scaffolds of interest where repeat discovery will happen. In this case since we are interested in designing probes against this entire test genome, we list both chromosomes as their names are found within the genome FASTA file. Here, you can see that "chr4" and "chrX" are listed appropriately. If one wanted to perform repeat discovery on just one of these scaffolds, the others need not be listed.
      
 The **run_pipeline.sh** script is what is used to execute the pipeline:
@@ -292,6 +293,8 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     #option for probe design that directs pipeline implementation
     defined_coords: "TRUE"
     repeat_discovery: "FALSE"
+    probe_cand_binding: "FALSE"
+    
     bowtie2_indices_given: "TRUE"
     jf_hash_given: "FALSE"
     jf_count_given: "FALSE"
@@ -304,6 +307,7 @@ The **config.yml** file which has preset parameters that **do not** need to be m
     jf_count_dir: ""
     chrom_idx_dir: ""
     chrom_fasta_dir: ""
+    probe_cand_file: ""
 
     #all chromosomes present in bed file or required for probe discovery are listed here
     samples:
@@ -370,8 +374,6 @@ The **config.yml** file which has preset parameters that **do not** need to be m
 
     ref_flag: 0
     
-    chromomap_option: 0
-
 **Note**: It's *extremely* important to list all specific scaffolds of interest where probe design will happen. In this case since we are interested in designing probes against chrX, we list this chromosome only as "chrX" as shown in the config.yml file. 
 
 Here, the provided organization of this directory where the *Probe Design Mode* tutorial takes place also contains a `run_pipeline.sh` script and `run_check_defined_coords.sh`. This structure mirrors the organization of the *Repeat Discovery Mode* test tutorial making this walkthrough fairly similar in behavior.
@@ -417,10 +419,31 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
      :width: 500
      :alt: Screenshot showing that probe design test matched expected behavior. 
 
-5. Great work! Congrats on running *Probe Design Mode*! This means that both run modes of **Tigerfish** have passed! |:tada:| |:sparkles:|
+5. Great work! Congrats on running *Probe Design Mode*! |:tada:| |:sparkles:|
 
 If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <https://vimeo.com/762385186>`_.
-   
+
+Probe Binding Mode on a Test Genome
+----------------------------------
+
+1. Return to the main home directory in the **Tigerfish** directory structure to enter the probe design mode test directory using the following command:
+
+.. code-block:: bash
+
+     cd example_run/probe_candidate_binding_test/
+     
+2. Enter the following command to execute the pipeline. 
+
+.. code-block:: bash
+
+     . run_pipeline.sh
+     
+     
+3. Now you will see that this pipeline has completed execution and you will receive a message declaring "DONE"!
+    
+
+4. Nice! Congrats on running *Probe Binding Mode*! This means that all run modes of **Tigerfish** have passed in the test genome! |:tada:| |:sparkles:|
+
 
 Comparing config.yml files between *Repeat Discovery Mode* and *Probe Design Mode*
 ----------------------------------------------------------------------------------
@@ -444,6 +467,8 @@ It's important to understand the distinct parameters that are being changed to t
     #option for probe design that directs pipeline implementation
     defined_coords: "FALSE"
     repeat_discovery: "TRUE"
+    probe_cand_binding: "FALSE"
+    
     bowtie2_indices_given: "TRUE"
     jf_hash_given: "FALSE"
     jf_count_given: "FALSE"
@@ -456,6 +481,7 @@ It's important to understand the distinct parameters that are being changed to t
     jf_count_dir: ""
     chrom_idx_dir: ""
     chrom_fasta_dir: ""
+    probe_cand_file: ""
 
 
 *Probe Design Mode*
@@ -475,6 +501,8 @@ It's important to understand the distinct parameters that are being changed to t
     #option for probe design that directs pipeline implementation
     defined_coords: "TRUE"
     repeat_discovery: "FALSE"
+    probe_cand_binding: "FALSE"
+    
     bowtie2_indices_given: "TRUE"
     jf_hash_given: "FALSE"
     jf_count_given: "FALSE"
@@ -487,6 +515,7 @@ It's important to understand the distinct parameters that are being changed to t
     jf_count_dir: ""
     chrom_idx_dir: ""
     chrom_fasta_dir: ""
+    probe_cand_file: ""
 
 
 Here, the key difference in behavior can be controlled based on whether `defined_coords` = "TRUE" and `repeat_discovery` = "FALSE" to drive *Probe Design Mode* and vice versa for *Repeat Discovery Mode*. Be mindful that if one of these parameters is set to TRUE, the other must be set to FALSE or else the pipeline will be exited.
@@ -543,6 +572,8 @@ For reference, we will be working in this directory shown here:
     #option for probe design that directs pipeline implementation
     defined_coords: "TRUE"
     repeat_discovery: "FALSE"
+    probe_cand_binding: "FALSE"
+    
     bowtie2_indices_given: "FALSE"
     jf_hash_given: "FALSE"
     jf_count_given: "FALSE"
@@ -555,7 +586,8 @@ For reference, we will be working in this directory shown here:
     chrom_idx_dir: ""
     chrom_fasta_dir: ""
     bowtie2_dir: ""
-
+    probe_cand_file: ""
+    
     #all chromosomes present in bed file or required for probe discovery are listed here
     samples:
         - "chr9"
@@ -620,9 +652,7 @@ For reference, we will be working in this directory shown here:
     align_thresh: 10
 
     ref_flag: 0
-    
-    chromomap_option: 0
-     
+         
 4. Now you are ready to run this process! For Sun Grid users, it is recommended that you submit this as a cluster job. Templates of how to do this to your shell script to make it executable for cluster job submissions in provided in the Tigerfish home directory. 
 
 5. Once completed, you can check this job process based on expected output. Here only the probe file was kept from the full expected output to minimize memory use. To check if the output matches what is in the expected output directory, simply run the following command:
