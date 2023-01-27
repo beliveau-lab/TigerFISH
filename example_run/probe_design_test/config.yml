@@ -11,6 +11,8 @@ bed_file: "data/dxz4_synthetic.bed"
 #option for probe design that directs pipeline implementation
 defined_coords: "TRUE"
 repeat_discovery: "FALSE"
+probe_cand_binding: "FALSE"
+
 bowtie2_indices_given: "TRUE"
 jf_hash_given: "FALSE"
 jf_count_given: "FALSE"
@@ -23,6 +25,7 @@ jf_hash_dir: ""
 jf_count_dir: ""
 chrom_idx_dir: ""
 chrom_fasta_dir: ""
+probe_cand_file: ""
 
 
 #all chromosomes present in bed file or required for probe discovery are listed here
@@ -89,6 +92,3 @@ max_probe_return: 40
 align_thresh: 10
 
 ref_flag: 0
-
-chromomap_option: 1
-

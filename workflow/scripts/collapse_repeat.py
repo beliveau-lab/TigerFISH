@@ -24,7 +24,9 @@ def read_align_file(align_path,file_path):
 
     align_df = pd.read_csv(align_path,delimiter = '\t', names = colnames)
 
-    repeat_name = file_path.split('/')[-1]
+    #repeat_name = file_path.split('/')[-1]
+
+    repeat_name = align_df['region'].iloc[0]
 
     return align_df,repeat_name
 
@@ -162,7 +164,12 @@ def main():
     region_out_path = args.region_out_path
     align_path = args.align_path
 
-    repeat_name = file_path.split('/')[-1]
+
+    colnames = ['region','probe','align','chrom','start','pdup']
+    align_df = pd.read_csv(align_path,delimiter = '\t', names = colnames)
+
+    repeat_name = align_df['region'].iloc[0]
+
     repeat_name_list = re.split('/|:|-|_', repeat_name)
     chrom_val = repeat_name_list[0]
     start_val = repeat_name_list[1]
