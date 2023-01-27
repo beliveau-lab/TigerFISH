@@ -41,6 +41,8 @@ Run modes
 
 2. **repeat_discovery**: *string Boolean flag*. If marked as **"TRUE"**, **Tigerfish** will be implemented to search for repeat specific chromosomes along select scaffolds or the entire geome as long as scaffold names are listed in the **samples** parameter. If **defined_coords** is being used instead, toggle **repeat_discovery** = **"FALSE"**. 
 
+3. **probe_cand_binding**: *string Boolean flag*. If marked as **"TRUE"**, **Tigerfish** will be implemented to take probe candidates that have undergone alignment_filter to generate genome wide binding information and chromoMaps of repeat targets. All other run modes should be toggled to  **"FALSE"** for expected behavior. 
+
 
 Ways to direct Tigerfish behavior with provided files
 -----------------------------------------------------
@@ -64,6 +66,8 @@ Ways to direct Tigerfish behavior with provided files
 **chrom_fasta_given**: *string Boolean flag*. If **Tigerfish** has been implemented on a desired genome de-novo using **repeat_discovery** mode, it has split all scaffolds into independent FASTA files for mapping repeat regions. Should one choose to re-run **Tigerfish** with differing downstream parameters, but one wishes to avoid regenerating these files de-novo, one can toggle that a directory path exists for these files.
 
 **chrom_fasta_dir**: *File path*. If **chrom_fasta_given**: "TRUE", a directory must be provided where the scaffold FASTA files may be found. If no directory is provided, leave this string empty as "".
+
+**probe_cand_binding**: *File path*. If **probe_cand_binding**: "TRUE", then a file path containing probes as the direct output from alignment_filter must be provided. If this mode is not being run, the string may be left empty as "". 
 
 
 Additional parameters
@@ -134,13 +138,11 @@ seq2 |br|
 
 **max_probe_return**: *Integer*. The maximum total number of probes to be returned (if found) that satisfied final pipeline filtering and parameters. 
 
-**ref_flag**: *Integer, 0 or 1*. Intermediate alignment files may be stored using this parameter if a user selects 1. Because many files during the alignment step are memory intensive, this parameter by default is set to 0 to prevent significant memory overhead. 
-
 **align_thresh**: *Integer*. The minimum number of aggregate thermodynamic binding sites used to flag a **thresh_window** as significant to determine the imaging target length. 
 
 **bin_thresh**: *Integer*. The provided threshold to note that aggregate thermodynamic binding sites are above this value on any given bin. 
 
-**chromomap_option**: *Integer, 0 or 1*. If flagged as 1, chromoMap will be activated to generate a visualization of target repeat regions. 
+**ref_flag**: *Integer, 0 or 1*. Intermediate alignment files indicating which probes were discarded may be stored using this parameter if a user selects 1. 
 
 
 **config.yml parameters**
