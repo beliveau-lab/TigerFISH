@@ -500,6 +500,8 @@ Output: An annotated probe file summarizing all true on and off target alignment
 `generate_chromomap <https://github.com/beliveau-lab/TigerFISH/blob/master/workflow/scripts/make_chromomap.R>`_
 ------------------
 
+*Note*: This step is only implemented if probe_cand_binding mode is activated.
+
 Purpose: Implements an R library, chromoMap, to plot where target probes are anticipated to make FISH signal. These are especially helpful to validate binding sites based on morphology if validating probes via metaphase FISH assay.
 
 Input: Generated repeat region probe BED coordinates.
