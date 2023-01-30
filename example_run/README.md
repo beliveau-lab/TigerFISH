@@ -10,7 +10,9 @@ Here, a genomic fasta which flanks the D4Z4 and DXZ4 repeats is provided as sepe
 
 2. **repeat_discovery_test**: Here, probes are designed against both the D4Z4 and DXZ4 repeats. 
 
-3. **probe_design_chm13**: Here, probes are designed against a full HSAT repeat on chr9 in the CHM13 genome. 
+3. **probe_binding_mode**: Once candidate probes satisfy alignment, one could take the output of the alignment_filter step and pursue specific downstream analysis to generate in silico binding predictions about single or pooled probes against a repeat region target. 
+
+4. **probe_design_chm13**: Here, probes are designed against a full HSAT repeat on chr9 in the CHM13 genome. 
 
 All necessary files to run test cases 1 and 2 are found within each contained directory. To test Tigerfish, users just need to run the shell scripts in each respective directory. 
 
