@@ -19,7 +19,7 @@ CHROM_FASTA = config['chrom_fasta_dir']
 #final output files after pipeline has completed execution
 rule all:
     input:
-        expand("pipeline_output/finished/DONE_{sample}.txt",sample=SAMPLES)
+        "pipeline_output/finished/DONE.txt"
 
 #should user specify TRUE or FALSE for both run settings, pipeline exits() and produces message to re-define deployment mode
 if (config['defined_coords'] == "TRUE" and config['repeat_discovery'] == "TRUE" and config['probe_cand_binding'] == "TRUE") or (config['defined_coords'] == "FALSE" and config['repeat_discovery'] == "FALSE" and config['probe_cand_binding'] == "FALSE"):
@@ -431,13 +431,13 @@ rule get_alignments:
         probes_alignment = rules.align_probes.output,
         genome_bin = rules.generate_genome_bins.output.threshold_bins
     output:
-        target_binding = "pipeline_output/03_output_files/02_supplementary_output/01_genome_wide_binding/{sample}/{region}_alignment_binding.txt",
-        thresh_binding = "pipeline_output/03_output_files/02_supplementary_output/02_threshold_binding/{sample}/{region}_thresh_binding.txt",
-        binding_maps = "pipeline_output/03_output_files/02_supplementary_output/03_genome_wide_binding_plots/{sample}/{region}_genome_view.png"
+        target_binding = "pipeline_output/04_supplementary_output/01_genome_wide_binding/{sample}/{region}_alignment_binding.txt",
+        thresh_binding = "pipeline_output/04_supplementary_output/02_threshold_binding/{sample}/{region}_thresh_binding.txt",
+        binding_maps = "pipeline_output/04_supplementary_output/03_genome_wide_binding_plots/{sample}/{region}_genome_view.png"
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     benchmark:
-        "pipeline_output/benchmarks/03_output_files/02_supplementary_output/02_get_alignments/{sample}/{region}_alignments.txt"
+        "pipeline_output/benchmarks/04_supplementary_output/02_get_alignments/{sample}/{region}_alignments.txt"
     params:
         mfree="20G",
         h_rt = "320:0:0",
@@ -448,7 +448,7 @@ rule get_alignments:
 #function will take all probes after their imaging target region has been appended to aggregate their paths
 def all_mapped_output(wildcards):
     checkpoint_output = checkpoints.split_rm_alignments.get(**wildcards).output[0]
-    return expand("pipeline_output/03_output_files/02_supplementary_output/04_region_probes/{sample}/{region}_probes.txt",
+    return expand("pipeline_output/04_supplementary_output/04_region_probes/{sample}/{region}_probes.txt",
            sample=wildcards.sample,
            region=glob_wildcards(os.path.join(checkpoint_output, "{region}_alignments.txt")).region)
 
@@ -459,15 +459,15 @@ rule map_region_coords:
         thresh_file = rules.get_alignments.output.thresh_binding,
         alignment_file = rules.align_probes.output
     output:
-        mod_probe_file = 'pipeline_output/03_output_files/02_supplementary_output/04_region_probes/{sample}/{region}_probes.txt',
-        repeat_binding_summ = 'pipeline_output/03_output_files/02_supplementary_output/05_region_binding_summaries/{sample}/{region}_binding_summ.txt'
+        mod_probe_file = 'pipeline_output/04_supplementary_output/04_region_probes/{sample}/{region}_probes.txt',
+        repeat_binding_summ = 'pipeline_output/04_supplementary_output/05_region_binding_summaries/{sample}/{region}_binding_summ.txt'
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="20G",
         h_rt = "10:0:0"
     benchmark:
-        "pipeline_output/benchmarks/03_output_files/02_supplementary_output/03_map_region/{sample}/{region}.txt"
+        "pipeline_output/benchmarks/04_supplementary_output/03_map_region/{sample}/{region}.txt"
     shell:
         "python ../../workflow/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
 
@@ -476,30 +476,41 @@ rule merge_mapping:
     input:
         all_mapped_output
     output:
-        'pipeline_output/03_output_files/01_core_output/01_all_probes/{sample}_all_probes.txt'
+        'pipeline_output/04_supplementary_output/06_chrom_candidate_probes/{sample}_final_probes.txt'
     conda:
         "../../shared_conda_envs/tigerfish.yml"
-    benchmark:
-        "pipeline_output/benchmarks/03_output_files/01_core_output/01_all_probes/{sample}.txt"
     params:
         mfree='3G',
         h_rt='3:0:0'
     shell:
         "cat {input} > {output}"
 
+rule merge_chrom_mapping:
+    input:
+        expand("pipeline_output/04_supplementary_output/06_chrom_candidate_probes/{sample}_final_probes.txt", sample=SAMPLES)
+    output:
+        f'pipeline_output/03_core_output/{config["assembly"]}_final_probes.txt'
+    conda:
+        "../../shared_conda_envs/tigerfish.yml"
+    params:
+        mfree='3G',
+        h_rt='3:0:0'
+    shell:
+        """
+        cat {input} | sort -k1,1 -V -s > {output}
+        """
+
 #ruke performs a scaffold wide summary of total repeat regions, probes in each region, and on-target binding specificity
 rule summary:
     input:
-        rules.merge_mapping.output
+        rules.merge_chrom_mapping.output
     output:
-        "pipeline_output/03_output_files/01_core_output/02_probe_binding_summaries/{sample}_probe_summary.txt"
+        f'pipeline_output/03_core_output/{config["assembly"]}_final_probe_summary.txt'
     conda:
         "../../shared_conda_envs/tigerfish.yml"
     params:
         mfree="3G",
         h_rt="200:0:0"
-    benchmark:
-        "pipeline_output/benchmarks/03_output_files/01_core_output/04_probe_summary/{sample}_probe_summary.txt"
     shell:
         "python ../../workflow/scripts/finish_summary.py -f {input} -o {output}"
 
@@ -511,7 +522,7 @@ if config['probe_cand_binding'] != "TRUE":
         input:
             rules.summary.output
         output:
-            'pipeline_output/finished/DONE_{sample}.txt'
+            'pipeline_output/finished/DONE.txt'
         params:
             mfree = '3G',
             h_rt = '3:0:0'
@@ -612,13 +623,13 @@ if config['probe_cand_binding'] == "TRUE":
             probes_alignment = rules.align_cand_probes.output,
             genome_bin = rules.generate_genome_bins.output.threshold_bins
         output:
-            target_binding = "pipeline_output/03_output_files/02_supplementary_output/01_genome_wide_binding/{sample}_alignment_binding.txt",
-            thresh_binding = "pipeline_output/03_output_files/02_supplementary_output/02_threshold_binding/{sample}_thresh_binding.txt",
-            binding_maps = "pipeline_output/03_output_files/02_supplementary_output/03_genome_wide_binding_plots/{sample}_genome_view.png"
+            target_binding = "pipeline_output/04_supplementary_output/01_genome_wide_binding/{sample}_alignment_binding.txt",
+            thresh_binding = "pipeline_output/04_supplementary_output/02_threshold_binding/{sample}_thresh_binding.txt",
+            binding_maps = "pipeline_output/04_supplementary_output/03_genome_wide_binding_plots/{sample}_genome_view.png"
         conda:
             "../../shared_conda_envs/tigerfish.yml"
         benchmark:
-            "pipeline_output/benchmarks/03_output_files/02_supplementary_output/02_get_alignments/{sample}_alignments.txt"
+            "pipeline_output/benchmarks/04_supplementary_output/02_get_alignments/{sample}_alignments.txt"
         params:
             mfree="20G",
             h_rt = "320:0:0",
@@ -632,7 +643,7 @@ if config['probe_cand_binding'] == "TRUE":
             region_bed = rules.get_cand_region_bed.output,
             binding_maps = rules.get_cand_alignments.output.binding_maps
         output:
-            "pipeline_output/03_output_files/02_supplementary_output/06_generate_chromomap/{sample}_chromomap.html"
+            "pipeline_output/04_supplementary_output/06_generate_chromomap/{sample}_chromomap.html"
         conda:
             "../../shared_conda_envs/chromomap_env.yml"
         params:
@@ -647,17 +658,18 @@ if config['probe_cand_binding'] == "TRUE":
         input:
             probe_file = rules.gather_repeat_regions.output,
             thresh_file = rules.get_cand_alignments.output.thresh_binding,
-            alignment_file = rules.align_cand_probes.output
+            alignment_file = rules.align_cand_probes.output,
+            chromomap = rules.generate_cand_chromomap.output
         output:
-            mod_probe_file = 'pipeline_output/03_output_files/02_supplementary_output/04_region_probes/{sample}_probes.txt',
-            repeat_binding_summ = 'pipeline_output/03_output_files/02_supplementary_output/05_repeat_binding_summaries/{sample}_thresh_summ.txt'
+            mod_probe_file = 'pipeline_output/04_supplementary_output/04_region_probes/{sample}_probes.txt',
+            repeat_binding_summ = 'pipeline_output/04_supplementary_output/05_repeat_binding_summaries/{sample}_thresh_summ.txt'
         conda:
             "../../shared_conda_envs/tigerfish.yml"
         params:
             mfree="20G",
             h_rt = "10:0:0"
         benchmark:
-            "pipeline_output/benchmarks/03_output_files/02_supplementary_output/03_map_region/{sample}.txt"
+            "pipeline_output/benchmarks/04_supplementary_output/03_map_region/{sample}.txt"
         shell:
             "python ../../workflow/scripts/collapse_repeat.py -f {input.thresh_file} -a {input.alignment_file} -p {input.probe_file} -po {output.mod_probe_file} -ro {output.repeat_binding_summ}"
 
@@ -665,30 +677,42 @@ if config['probe_cand_binding'] == "TRUE":
         input:
             rules.map_cand_region_coords.output.mod_probe_file
         output:
-            'pipeline_output/03_output_files/01_core_output/01_all_probes/{sample}_all_probes.txt'
+            'pipeline_output/04_supplementary_output/06_chrom_candidate_probes/{sample}_final_probes.txt'
         conda:
             "../../shared_conda_envs/tigerfish.yml"
         benchmark:
-            "pipeline_output/benchmarks/03_output_files/01_core_output/01_all_probes/{sample}.txt"
+            "pipeline_output/benchmarks/03_core_output/{sample}_probes.txt"
         params:
             mfree='3G',
             h_rt='3:0:0'
         shell:
             "cat {input} > {output}"
 
+    rule merge_cand_chrom_mapping:
+        input:
+            expand("pipeline_output/04_supplementary_output/06_chrom_candidate_probes/{sample}_final_probes.txt", sample=SAMPLES)
+        output:
+            f'pipeline_output/03_core_output/{config["assembly"]}_final_probes.txt'
+        conda:
+            "../../shared_conda_envs/tigerfish.yml"
+        params:
+            mfree='3G',
+            h_rt='3:0:0'
+        shell:
+            """
+            cat {input} | sort -k1,1 -V -s > {output}
+            """
+
     rule summary_cand_analysis:
         input:
-            mapping_out = rules.merge_cand_mapping.output,
-            chromomap = rules.generate_cand_chromomap.output
+            mapping_out = rules.merge_cand_chrom_mapping.output
         output:
-            "pipeline_output/03_output_files/01_core_output/02_probe_summary/{sample}_probe_summary.txt"
+            f'pipeline_output/03_core_output/{config["assembly"]}_final_probe_summary.txt'
         conda:
             "../../shared_conda_envs/tigerfish.yml"
         params:
             mfree="3G",
             h_rt="200:0:0"
-        benchmark:
-            "pipeline_output/benchmarks/03_output_files/01_core_output/02_probe_summary/{sample}_probe_summary.txt"
         shell:
             "python ../../workflow/scripts/finish_summary.py -f {input.mapping_out} -o {output}"
 
@@ -696,7 +720,7 @@ if config['probe_cand_binding'] == "TRUE":
         input:
             rules.summary_cand_analysis.output
         output:
-            'pipeline_output/finished/DONE_{sample}.txt'
+            'pipeline_output/finished/DONE.txt'
         params:
             mfree = '3G',
             h_rt = '3:0:0'
