@@ -53,6 +53,32 @@ Installation
     && mamba env create -f snakemake_env.yml \
     && conda activate snakemake_env
 
+Expected Input and Outputs
+--------------------------
+
+**Inputs**
+
+To run **Tigerfish**, users only need to provide the full sequence of a genome assembly in FASTA format and an accompanying chrom.sizes file that details the scaffolds present in the genome assembly and their lengths in bp. 
+
+Optionally, an addtional BED-formatted file that specifies genomic coordinates for interval(s) to perform probe design may be supplied.
+
+All input files must be specified in the **Tigerfish** config.yml file for expected behavior. 
+
+**Outputs**
+
+The **Tigerfish** pipeline generates core output files and supplementary output files.
+
+Within the core output files, two key files summarize:
+
+1. All candidte probes designed against target interval(s) if valid sequences exist in a tab separated text file.
+
+The format of the candidate probe output file is described as follows:
+
+
+2. A summary file that describes the aggregate number of probes designed against each interval and their aggregate on-target binding scores in a tab separated text file.
+
+Within the supplementary output files a set of auxiliary files that provide more detailed information about predicted binding profiles.
+
 Further tutorials on usage
 --------------------------
 
