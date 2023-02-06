@@ -74,32 +74,53 @@ Within the core output files, two key files summarize:
 
 The format of the candidate probe output file is described as follows:
 
-.. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
+.. list-table:: Summary of candidate probe output file columns (.TXT)
    :header-rows: 1
 
    * - Col
      - Description
+   * - 1
+     - Probe coordinates
    * - 2
-     - 4000
+     - Interval coordinates
    * - 3
-     - 0.25
+     - Imaging target coordinates
    * - 4
-     - 0
+     - Probe Sequence
    * - 5
-     - 25
+     - Tm
    * - 6
-     - 50
+     - Aggregate probe k-mer sum in target interval
    * - 7
-     - 42
+     - Aggregate probe k-mer sum in target genome
    * - 8
-     - 52
+     - Interval probe rank
    * - 9
-     - 18
+     - On-target probe binding score
    * - 10
-     - 0.80
+     - Off-target probe binding score
+   * - 11
+     - On-target probe binding proportion
+   * - 12
+     - Scaffold
 
 
 2. A summary file that describes the aggregate number of probes designed against each interval and their aggregate on-target binding scores in a tab separated text file.
+
+.. list-table:: Summary of candidate probe output file columns (.TXT)
+   :header-rows: 1
+
+   * - Col
+     - Description
+   * - 1
+     - Interval coordinates
+   * - 2
+     - Total probes designed within interval
+   * - 3
+     - Aggregate on-target binding for all probes within interval
+   * - 4
+     - Aggregate off-target binding for all probes within interval
+     
 
 Within the supplementary output files a set of auxiliary files that provide more detailed information about predicted binding profiles.
 
