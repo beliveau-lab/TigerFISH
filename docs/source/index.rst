@@ -79,7 +79,6 @@ The format of the candidate probe output file is described as follows:
 
    * - Column
      - Conservative
-     - Permissive  
    * - Description
      - 5
      - 5
