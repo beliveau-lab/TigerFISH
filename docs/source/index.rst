@@ -74,7 +74,7 @@ Within the core output files, two key files summarize:
 
 The format of the candidate probe output file is described as follows:
 
-.. list-table:: Summary of candidate probe output file columns (.TXT)
+.. list-table:: Descriptions of candidate probe output file columns (.TXT)
    :header-rows: 1
 
    * - Col
@@ -107,7 +107,7 @@ The format of the candidate probe output file is described as follows:
 
 2. A summary file that describes the aggregate number of probes designed against each interval and their aggregate on-target binding scores in a tab separated text file.
 
-.. list-table:: Summary of candidate probe output file columns (.TXT)
+.. list-table:: Description of interval summary output file columns (.TXT)
    :header-rows: 1
 
    * - Col
