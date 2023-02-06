@@ -34,11 +34,82 @@ At UW Genome Sciences, users have access to the departmental Sun Grid Cluster En
 To begin, we will describe some context for how **Tigerfish** is deployed by covering the config.yml file and appropriate run_pipeline.sh scripts found in each directory.
 
 Config file
-===========
 
 **Tigerfish** is a command line workflow that is implemented using Snakemake. This `config.yml <https://github.com/beliveau-lab/TigerFISH/blob/master/example_run/probe_design_chm13/config.yml>`_ file summarizes parameters that users are able to modify. 
 
 However, we provide default parameters summarized in our paper for recommended use. These parameters for probe design are also described within the command line definitions page. 
+
+Expected Input and Outputs
+==========================
+
+**Inputs**
+
+To run **Tigerfish**, users only need to provide the full sequence of a genome assembly in FASTA format and an accompanying chrom.sizes file that details the scaffolds present in the genome assembly and their lengths in bp. 
+
+Optionally, an addtional BED-formatted file that specifies genomic coordinates for interval(s) to perform probe design may be supplied.
+
+All input files must be specified in the **Tigerfish** config.yml file for expected behavior. 
+
+**Outputs**
+
+The **Tigerfish** pipeline generates core output files and supplementary output files.
+
+Within the core output files, two key files summarize:
+
+1. All candidte probes designed against target interval(s) if valid sequences exist in a tab separated text file.
+
+The format of the candidate probe output file is described as follows:
+
+.. list-table:: Descriptions of candidate probe output file columns (.TXT)
+   :header-rows: 1
+
+   * - Col
+     - Description
+   * - 1
+     - Probe coordinates
+   * - 2
+     - Interval coordinates
+   * - 3
+     - Imaging target coordinates
+   * - 4
+     - Probe Sequence
+   * - 5
+     - Tm
+   * - 6
+     - Aggregate probe k-mer sum in target interval
+   * - 7
+     - Aggregate probe k-mer sum in target genome
+   * - 8
+     - Interval probe rank
+   * - 9
+     - On-target probe binding score
+   * - 10
+     - Off-target probe binding score
+   * - 11
+     - On-target probe binding proportion
+   * - 12
+     - Scaffold
+
+
+2. A summary file that describes the aggregate number of probes designed against each interval and their aggregate on-target binding scores in a tab separated text file.
+
+.. list-table:: Description of interval summary output file columns (.TXT)
+   :header-rows: 1
+
+   * - Col
+     - Description
+   * - 1
+     - Interval coordinates
+   * - 2
+     - Total probes designed within interval
+   * - 3
+     - Aggregate on-target binding for all probes within interval
+   * - 4
+     - Aggregate off-target binding for all probes within interval
+     
+
+Within the supplementary output files a set of auxiliary files that provide more detailed information about predicted binding profiles.
+
 
 Repeat Identification Mode on a Test Genome
 -------------------------------------------
