@@ -77,8 +77,8 @@ The format of the candidate probe output file is described as follows:
 .. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
    :header-rows: 1
 
-   * - 1
-     - 5
+   * - Col
+     - Description
    * - 2
      - 4000
    * - 3
