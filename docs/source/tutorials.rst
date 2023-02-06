@@ -80,14 +80,16 @@ The format of the candidate probe output file is described as follows:
    * - 7
      - Aggregate probe k-mer sum in target genome
    * - 8
-     - Interval probe rank
+     - k-mer binding score (cols 6/ cols 7)
    * - 9
-     - On-target probe binding score
+     - Interval probe rank
    * - 10
-     - Off-target probe binding score
+     - On-target probe binding score
    * - 11
-     - On-target probe binding proportion
+     - Off-target probe binding score
    * - 12
+     - On-target probe binding proportion
+   * - 13
      - Scaffold
 
 
