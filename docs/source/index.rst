@@ -77,83 +77,26 @@ The format of the candidate probe output file is described as follows:
 .. list-table:: Default parameters used to mine repeat specific oligo probes in the CHM13 human genome assembly
    :header-rows: 1
 
-   * - Column
-     - Conservative
-   * - Description
+   * - 1
      - 5
-     - 5
-   * - window
+   * - 2
      - 4000
-     - 4000
-   * - composition
+   * - 3
      - 0.25
-     - 0.25
-   * - file_start
+   * - 4
      - 0
-     - 0
-   * - min_length
+   * - 5
      - 25
-     - 25
-   * - max_length
+   * - 6
      - 50
-     - 50
-   * - min_temp
+   * - 7
      - 42
-     - 42
-   * - max_temp
+   * - 8
      - 52
-     - 52
-   * - mer_val
+   * - 9
      - 18
-     - 18
-   * - enrich_score
+   * - 10
      - 0.80
-     - 0.70
-   * - copy_num
-     - 100
-     - 40
-   * - c1_val
-     - 1
-     - 1
-   * - c2_val
-     - 5
-     - 5
-   * - genome_windows
-     - 5000000
-     - 5000000
-   * - target_sum
-     - 20000
-     - 20000
-   * - off_bin_thresh
-     - 100
-     - 100
-   * - binding_prop
-     - 0.70
-     - 0.70
-   * - mer_cutoff
-     - 0.95
-     - 0.95
-   * - bt2_alignment
-     - 500000
-     - 500000
-   * - max_pdups_binding
-     - 0.90
-     - 0.90
-   * - seed_length
-     - 15
-     - 15
-   * - model_temp
-     - 69.5
-     - 69.5
-   * - min_on_target
-     - 500
-     - 25
-   * - max_probe_return
-     - 25
-     - 20
-   * - align_thresh
-     - 10
-     - 10
 
 
 2. A summary file that describes the aggregate number of probes designed against each interval and their aggregate on-target binding scores in a tab separated text file.
