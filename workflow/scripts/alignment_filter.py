@@ -133,145 +133,112 @@ def filter_thresh(probe_df,strand_conc_a,strand_conc_b,
     loop_count = 0
 
     #initiate groupby
-    grouped_region=probe_df.groupby('region',sort=False)
 
-    for name,group in grouped_region:
+    #this takes into account single instances of probe in repeat
+    probe_list = probe_df['probe'].tolist()
+    probe_coords_list = probe_df['probe_coords'].tolist()
 
-        #this takes into account single instances of probe in repeat
-        probe_list = group['probe'].tolist()
-        probe_coords_list = group['probe_coords'].tolist()
+    #make a list of the repeat regions
+    probe_regions_list = probe_df['region'].tolist()
 
-        #make a list of the repeat regions
-        probe_regions_list = group['region'].tolist()
+    #sets probe coords per region as a dictionary
+    region_dict = dict(zip(probe_coords_list,probe_regions_list))
 
-        #sets probe coords per region as a dictionary
-        region_dict = dict(zip(probe_coords_list,probe_regions_list))
+    #keeps track of the on target threshold sum for the region
+    threshold_count = 0
 
-        #keeps track of the on target threshold sum for the region
-        threshold_count = 0
+    #while the threshold count is below the param requested and 
+    #the length of the probe list is greater than 1
+    while (threshold_count <= r_thresh and 
+           len(keep_probe_names_list) < int(max_probe_return) and 
+           len(probe_list) >= 1):
 
-        #while the threshold count is below the param requested and 
-        #the length of the probe list is greater than 1
-        while (threshold_count <= r_thresh and 
-               len(keep_probe_names_list) < int(max_probe_return) and 
-               len(probe_list) >= 1):
+        t0 = time.time()
 
-            t0 = time.time()
+        #make the call for the top probe to get the pairwise df
+        top_probe_al = generate_pairwise_df(probe_list[0],
+                                                  probe_coords_list[0],
+                                                  bowtie_idx,
+                                                  bowtie_string,
+                                                  strand_conc_a,
+                                                  strand_conc_b,
+                                                  NUPACK_MODEL,
+                                                  bt2_k_val,seed_length,ref_flag)
 
-            #make the call for the top probe to get the pairwise df
-            top_probe_al = generate_pairwise_df(probe_list[0],
-                                                      probe_coords_list[0],
-                                                      bowtie_idx,
-                                                      bowtie_string,
-                                                      strand_conc_a,
-                                                      strand_conc_b,
-                                                      NUPACK_MODEL,
-                                                      bt2_k_val,seed_length,ref_flag)
+        #compute the on target sum for the top probe
+        prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
+                                                                  region_dict,ref_flag)
 
-            #compute the on target sum for the top probe
-            prop_dict,on_target_dict,off_target_dict = nupack_sum(top_probe_al,
-                                                                  region_dict)
-
-            #function that makes a temp .bed of alignments and gets overlap
-            #embedded function that takes both overlap inputs to return pileup
-            #returns: agg by chrom, and pileup subset if pileup ok, then proceed
-            signal_pileup_subset,chrom_summ_df = get_bedtools_map(name,probe_coords_list[0],
+        #function that makes a temp .bed of alignments and gets overlap
+        #embedded function that takes both overlap inputs to return pileup
+        #returns: agg by chrom, and pileup subset if pileup ok, then proceed
+        signal_pileup_subset,chrom_summ_df = get_bedtools_map(probe_regions_list[0],probe_coords_list[0],
                                                                   genomic_bins,
                                                                   top_probe_al,
                                                                   thresh,ref_flag)
+        loop_count += 1
 
-            loop_count += 1
+        #checks the items in the proportion dictionary
+        #and this is the first item  to be added into the empty list
+        #evals if any bins are off target
+        for key,val in prop_dict.items():
+            if (val >= float(pdups_p) and ((signal_pileup_subset['bin_type'] == 1).all() == True) and
+                (on_target_dict[key] >= int(min_on_target))):
 
-            #checks the items in the proportion dictionary
-            #and this is the first item  to be added into the empty list
-            #evals if any bins are off target
-            for key,val in prop_dict.items():
-                if (val >= float(pdups_p) and (signal_pileup_subset['bin_type'] == 1).all() == True and
-                    on_target_dict[key] >= int(min_on_target) and
-                    len(keep_probe_names_list) == 0):
+                #append probe and it's relevant on target and off
+                #target information
+                keep_probe_names_list.append(key)
+                keep_on_target_list.append(on_target_dict[key])
+                keep_off_target_list.append(off_target_dict[key])
+                keep_probe_prop_list.append(prop_dict[key])
+                keep_probe_seq.append(probe_list[0])
 
-                    #append probe and it's relevant on target and off
-                    #target information
-                    keep_probe_names_list.append(key)
-                    keep_on_target_list.append(on_target_dict[key])
-                    keep_off_target_list.append(off_target_dict[key])
-                    keep_probe_prop_list.append(prop_dict[key])
-                    keep_probe_seq.append(probe_list[0])
+                #add the on target aggregate pdups sum to update 
+                #the threshold count
+                threshold_count += on_target_dict[key]
 
-                    #add the on target aggregate pdups sum to update 
-                    #the threshold count
-                    threshold_count += on_target_dict[key]
+            else:
 
-                #now if there are new items being added to the keep list
+                top_probe_list = []
+                pdups_val_list = []
 
-                if (val >= float(pdups_p) and (signal_pileup_subset['bin_type'] == 1).all() == True and
-                    on_target_dict[key] >= int(min_on_target) and
-                    len(keep_probe_names_list) >= 1) :
+                #stores the probe that failed into the failed list                    
+                fail_probe_names_list.append(probe_coords_list[0])
 
-                    #invoke the pdups function to compare if the cand
-                    #probe satisfies the threshold requirements for pdups
-                    pdups_track_list = []
+                #takes the length of the probe list to populate it with failed cand
+                for i in range(len(probe_list)-1):
+                    top_probe_list.append(probe_list[0])
 
-                    for probe in keep_probe_seq:
+                #computes pdups between failed cand and all other probes following it
+                for top,cand,coord in zip(top_probe_list,probe_list[1:],probe_coords_list[1:]):
+                    pdups_val = pdups(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
+                    pdups_val_list.append(pdups_val)
 
-                        pdups_compare = pdups(probe_list[0],probe,
-                                              strand_conc_a,strand_conc_b,
-                                              NUPACK_MODEL)
-
-                        pdups_track_list.append(pdups_compare)
-
-                    if max(pdups_track_list) <= float(max_pdups_binding):
-                        #if so, then add the probe and it's relevant
-                        #information into the keep lists
-                        keep_probe_names_list.append(key)
-                        keep_on_target_list.append(on_target_dict[key])
-                        keep_off_target_list.append(off_target_dict[key])
-                        keep_probe_prop_list.append(prop_dict[key])
-                        keep_probe_seq.append(probe_list[0])
-                        threshold_count += on_target_dict[key]
+                    #removes any following probe cands with pdups of this value or higher
+                    if pdups_val >= 0.50:
+                        #if true they are removed from the list to survey
+                        probe_list.remove(cand)
+                        #if true they are added to the skipped list
+                        skip_probe_names_list.append(cand)
+                        probe_coords_list.remove(coord)
                     else:
-                        fail_probe_names_list.append(probe_coords_list[0])
-                else:
-
-                    top_probe_list = []
-                    pdups_val_list = []
-
-                    #stores the probe that failed into the failed list                    
-                    fail_probe_names_list.append(probe_coords_list[0])
-
-                    #takes the length of the probe list to populate it with failed cand
-                    for i in range(len(probe_list)-1):
-                        top_probe_list.append(probe_list[0])
-
-                    #computes pdups between failed cand and all other probes following it
-                    for top,cand in zip(top_probe_list,probe_list[1:]):
-                        pdups_val = pdups(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
-                        pdups_val_list.append(pdups_val)
-
-                        #removes any following probe cands with pdups of this value or higher
-                        if pdups_val >= 0.50:
-                            #if true they are removed from the list to survey
+                        pdups_forward_val = pdups_forward(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
+                        if pdups_forward_val >= 0.50:
                             probe_list.remove(cand)
-                            #if true they are added to the skipped list
                             skip_probe_names_list.append(cand)
-                        else:
-                            pdups_forward_val = pdups_forward(top,cand,strand_conc_a,strand_conc_b,NUPACK_MODEL)
-                            if pdups_forward_val >= 0.50:
-                                probe_list.remove(cand)
-                                skip_probe_names_list.append(cand)
+                            probe_coords_list.remove(coord)
 
 
+        t1 = time.time()
+        all_run_probes_names_list.append(probe_coords_list[0])
 
-            t1 = time.time()
-            all_run_probes_names_list.append(probe_coords_list[0])
+        #pop the head probe being compared from the top of the list
+        probe_list.pop(0)
+        probe_coords_list.pop(0)
 
-            #pop the head probe being compared from the top of the list
-            probe_list.pop(0)
-            probe_coords_list.pop(0)
-
-            #records the total run-time for probe in loop
-            total_n = t1-t0
-            probe_times.append(total_n)
+        #records the total run-time for probe in loop
+        total_n = t1-t0
+        probe_times.append(total_n)
 
     #make dictionaries of the on target, off target, prop
     on_target_dict = dict(zip(keep_probe_names_list,keep_on_target_list))
@@ -431,7 +398,12 @@ def generate_pairwise_df(probe_seq,probe_coords,bowtie_idx,bowtie_string,
         sam_file = bt2_call(fastq_filename,sam_file,bt2_k_val,
                             bowtie_idx,bowtie_string,seed_length)
 
-        bam_file = tmpdir + '/derived.bam'
+        if int(ref_flag) == 1:
+            bam_dir = "pipeline_output/02_intermediate_files/06_alignment_filter/bam/"
+            create_dir(bam_dir)
+            bam_file = bam_dir + str(probe_coords) + ".bam" 
+        else:
+            bam_file = tmpdir + '/derived.bam'
 
         bam_file = samtools_call(sam_file,bam_file)
 
@@ -699,7 +671,7 @@ def pdups_forward(seq1,seq2,strand_conc_a,strand_conc_b,NUPACK_MODEL):
 
 ##############################################################################
 
-def nupack_sum(pairwise_df,probe_region_dict):
+def nupack_sum(pairwise_df,probe_region_dict,ref_flag):
     """
     Function computes the sum of nupack scores that correspond to on target
     and off target binding
@@ -767,51 +739,53 @@ def nupack_sum(pairwise_df,probe_region_dict):
     on_target_dict = {}
     off_target_dict = {}
 
-    #perform a group by intersection on the coords
-    grouped_region=pairwise_df.groupby('probe_ID',sort=False)
+    on_total = 0
+    off_total = 0
 
-    for key,item in grouped_region:
+    probe_chrom = probe_coords_list[0].split(":")[0]
 
-        on_total = 0
-        off_total = 0
+    #probe list
+    derived_chrom_list = pairwise_df['align_chr'].tolist()
+    parent_chrom_list=[probe_chrom for i in range(len(derived_chrom_list))]
 
-        probe_chrom = key.split(":")[0]
+    #repeat coords list
+    repeat_start_list = pairwise_df['r_start'].tolist()
+    repeat_end_list = pairwise_df['r_end'].tolist()
 
-        #probe list
-        derived_chrom_list = item['align_chr'].tolist()
-        parent_chrom_list=[probe_chrom for i in range(len(derived_chrom_list))]
+    #derived probe starts and ends
+    derived_start_list = pairwise_df['align_start'].tolist()
+    derived_end_list = pairwise_df['align_end'].tolist()
 
-        #repeat coords list
-        repeat_start_list = item['r_start'].tolist()
-        repeat_end_list = item['r_end'].tolist()
+    #pdups list
+    pdups_list = pairwise_df['pdups'].tolist()
 
-        #derived probe starts and ends
-        derived_start_list = item['align_start'].tolist()
-        derived_end_list = item['align_end'].tolist()
+    #run the relevant probe chrom, derived chrom, and starts and stops
+    #for the probe region and the derived alignment
+    for pc,dc,ds,de,rs,re,pdups in zip(parent_chrom_list,
+                                       derived_chrom_list,
+                                       derived_start_list,
+                                       derived_end_list,
+                                       repeat_start_list,
+                                       repeat_end_list,pdups_list):
 
-        #pdups list
-        pdups_list = item['pdups'].tolist()
+        #checks if the derived alignment coordinates fall within the 
+        #region of the repeat coordinates
+        if pc == dc and int(ds) >= int(rs) and int(de) <= int(re):
+            on_total += pdups
+        else:
+            off_total += pdups
 
-        #run the relevant probe chrom, derived chrom, and starts and stops
-        #for the probe region and the derived alignment
-        for pc,dc,ds,de,rs,re,pdups in zip(parent_chrom_list,
-                                           derived_chrom_list,
-                                           derived_start_list,
-                                           derived_end_list,
-                                           repeat_start_list,
-                                           repeat_end_list,pdups_list):
+    #instead of a list this should be a dictionary
+    prop_dict[probe_coords_list[0]] = (on_total)/(on_total+off_total)
+    on_target_dict[probe_coords_list[0]] = on_total
+    off_target_dict[probe_coords_list[0]] = off_total
 
-            #checks if the derived alignment coordinates fall within the 
-            #region of the repeat coordinates
-            if pc == dc and int(ds) >= int(rs) and int(de) <= int(re):
-                on_total += pdups
-            else:
-                off_total += pdups
-
-        #instead of a list this should be a dictionary
-        prop_dict[key] = (on_total)/(on_total+off_total)
-        on_target_dict[key] = on_total
-        off_target_dict[key] = off_total
+    if int(ref_flag) == 1:
+        bam_dir = "pipeline_output/02_intermediate_files/06_alignment_filter/bam_pdups/"
+        create_dir(bam_dir)
+        bam_file = bam_dir + str(probe_coords_list[0]) + ".txt"
+        save_pairwise_df = pairwise_df.drop(columns=['parent_chrom','align_end','region','repeat_coords','r_start','r_end'])
+        save_pairwise_df.to_csv(bam_file, header=False, index=False, sep="\t")
 
     return prop_dict,on_target_dict,off_target_dict
 
