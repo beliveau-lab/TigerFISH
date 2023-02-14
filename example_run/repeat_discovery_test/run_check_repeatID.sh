@@ -1,3 +1,3 @@
 
 
-python ../../workflow/scripts/check_repeatID.py -ft pipeline_output/03_output_files/01_core_output/01_all_probes/chr4_all_probes.tsv -xt pipeline_output/03_output_files/01_core_output/01_all_probes/chrX_all_probes.tsv -fe expected_output/03_output_files/01_core_output/01_all_probes/chr4_all_probes.tsv -xe expected_output/03_output_files/01_core_output/01_all_probes/chrX_all_probes.tsv
+python ../../workflow/scripts/check_repeatID.py -ft pipeline_output/03_core_output/chm13_final_probes.txt -xt pipeline_output/03_core_output/chm13_final_probes.txt -fe expected_output/03_core_output/chm13_final_probes.txt -xe expected_output/03_core_output/chm13_final_probes.txt

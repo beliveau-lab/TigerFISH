@@ -13,24 +13,18 @@ def read_thresh_file(file_path):
     #read as a dataframe
     probe_df = pd.read_csv(file_path, delimiter = '\t',
                            names = colnames)
-
-    print(probe_df)
             
     return probe_df
 
 ##############################################################################
 
-def read_align_file(align_path,file_path):
+def read_align_file(align_path):
 
     colnames = ['probe_coords','probe','align','chrom','start','pdup']
 
     align_df = pd.read_csv(align_path,delimiter = '\t', names = colnames)
 
-    repeat_name = file_path.split('/')[-1].split('_')[0]
-
-    print(align_df)
-
-    return align_df,repeat_name
+    return align_df
 
 ##############################################################################
 
@@ -163,8 +157,13 @@ def main():
     region_out_path = args.region_out_path
     align_path = args.align_path
 
+    probe_cols = ["probe_coords","region_coords", "probe","Tm","r_count","h_count",
+                 "probe_binding","rank","on_target","off_target","ont_binding"]
+    
+    #the summary df
+    summ_df = pd.read_csv(probe_file_path,sep='\t',names=probe_cols)
 
-    repeat_name = align_path.split('/')[-1].split('_')[0]
+    repeat_name = summ_df['region_coords'].tolist()[0]
     
     repeat_name_list = re.split('/|:|-|_', repeat_name)
     chrom_val = repeat_name_list[0]
@@ -189,7 +188,7 @@ def main():
 
     elif repeat_length <= 150000:
 
-        align_df, repeat_name = read_align_file(align_path,file_path)
+        align_df = read_align_file(align_path)
 
         print("---%s seconds ---"%(time.time()-start_time))
     
