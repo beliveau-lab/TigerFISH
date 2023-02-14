@@ -4,7 +4,7 @@ Tigerfish User Tutorials
 
 Overview
 --------
-These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using *"Repeat Identification Mode"* and *"Probe Design Mode"* using example cases and real data in the CHM13 v2.0 genome. Following this tutorial, users will have all the resources to run **Tigerfish** for their own research applications. 
+These tutorials for **Tigerfish** are intended to provide users with an overview of the tool's features and functionality. Here, users will learn how to run **Tigerfish** using *"Repeat Identification Mode"*, *"Probe Design Mode"*, and *Probe Analysis Mode* using example cases and real data in the CHM13 v2.0 genome. 
 
 This tutorial guide was written in mind for those who are newer to running these scripts in a command line environment. These tutorials will help users ensure that they have installed **Tigerfish** properly on their own command line system. 
 
@@ -21,13 +21,15 @@ Users will download the full CHM13 v2.0 reference file later in this tutorial, t
 
 For the test genome cases, there are three directories that exist which will be referenced in this tutorial. 
 
-1. First, we will walk through *Repeat Identification Mode* on a Test Genome and this directory is located `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test>`_. 
+1. First, we will walk through *Repeat Identification Mode* on a test genome and this directory is located `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test>`_. 
 
 2. Next, we will move through the *Probe Design Mode* directory which can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_test>`_. 
 
+3. Following this, we will work through *Probe Analysis Mode* using the same test genome which can be found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_candidate_binding_test>`_. 
+
 3. Lastly, we will move into the real-world examples in the main pipeline with CHM13 v2.0 using *Probe Design Mode* from the newly annotated chr9 HSAT repeat which is found `here <https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_chm13>`_.  
 
-It's important to note that the first two test directories are static meaning that the config.yml files have been organized to run **Tigerfish** for expected behavior in each directory. Therefore, users only need to execute the run_pipeline.sh script contained in each directory. 
+It's important to note that the first three test directories are static meaning that the config.yml files have been organized to run **Tigerfish** for expected behavior in each directory. Therefore, users only need to execute the run_pipeline.sh script contained in each directory. 
 
 At UW Genome Sciences, users have access to the departmental Sun Grid Cluster Engine, which is used to deploy cluster compute jobs. Templates for how to run **Tigerfish** with such a file system can be found at the root directory of the **Tigerfish** GitHub `here <https://github.com/beliveau-lab/TigerFISH/tree/master/sun_grid_run_template>`_. This is intended to be a generalizable template that may be used to run **Tigerfish** jobs in independent directories to run in any command line environment. 
 
@@ -110,7 +112,7 @@ The format of the candidate probe output file is described as follows:
      - Aggregate off-target binding for all probes within interval
      
 
-Within the supplementary output files a set of auxiliary files that provide more detailed information about predicted binding profiles.
+Within the supplementary output files a set of auxiliary files that provide more detailed information about predicted binding profiles. To see test examples of whether Tigerfish was executed properly on sample files, each directory contains a supplementary shell script that may be run and will check the pipeline_output to the expected_output directories once the test directories have been executed.
 
 
 Repeat Identification Mode on a Test Genome
@@ -496,7 +498,7 @@ Here, the provided organization of this directory where the *Probe Design Mode* 
 
 If you happen to want to see a video of this happening as a real-time demo, you can watch this example `here <https://vimeo.com/762385186>`_.
 
-Probe Binding Mode on a Test Genome
+Probe Analysis Mode on a Test Genome
 ----------------------------------
 
 1. Return to the main home directory in the **Tigerfish** directory structure to enter the probe design mode test directory using the following command:
