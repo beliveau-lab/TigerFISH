@@ -13,6 +13,8 @@ def read_thresh_file(file_path):
     #read as a dataframe
     probe_df = pd.read_csv(file_path, delimiter = '\t',
                            names = colnames)
+
+    print(probe_df)
             
     return probe_df
 
@@ -20,13 +22,13 @@ def read_thresh_file(file_path):
 
 def read_align_file(align_path,file_path):
 
-    colnames = ['region','probe','align','chrom','start','pdup']
+    colnames = ['probe_coords','probe','align','chrom','start','pdup']
 
     align_df = pd.read_csv(align_path,delimiter = '\t', names = colnames)
 
-    #repeat_name = file_path.split('/')[-1]
+    repeat_name = file_path.split('/')[-1].split('_')[0]
 
-    repeat_name = align_df['region'].iloc[0]
+    print(align_df)
 
     return align_df,repeat_name
 
@@ -51,9 +53,6 @@ def collapse_repeat(probe_df):
         
         #keep row with largest sum
         collapsed_df=collapsed_df[collapsed_df.score == collapsed_df.score.max()]
-
-    print(collapsed_df)
-    print(probe_df)
 
     #then append chrom
     chrom_val = (probe_df['chrom'].tolist())[0]
@@ -86,7 +85,7 @@ def chart_alignment(align_df,repeat_name):
     align_df = align_df.loc[align_df['chrom'] == chrom_val]
     align_df = align_df.loc[align_df['start'] >= int(start_val)]
     align_df = align_df.loc[align_df['start'] < int(stop_val)]
-            
+ 
     start_list = align_df['start'].tolist()
     
     true_start = (sorted(start_list)[0])
@@ -106,7 +105,7 @@ def append_repeat(region_coords,probe_file,probe_out_path,region_out_path):
 
     probe_df = pd.read_csv(probe_file, delimiter = '\t',
                            names = colnames)
-    
+ 
     #get length of master file containing probes
     region_coords_list = [region_coords for i in range(len(probe_df))]
     
@@ -165,11 +164,8 @@ def main():
     align_path = args.align_path
 
 
-    colnames = ['region','probe','align','chrom','start','pdup']
-    align_df = pd.read_csv(align_path,delimiter = '\t', names = colnames)
-
-    repeat_name = align_df['region'].iloc[0]
-
+    repeat_name = align_path.split('/')[-1].split('_')[0]
+    
     repeat_name_list = re.split('/|:|-|_', repeat_name)
     chrom_val = repeat_name_list[0]
     start_val = repeat_name_list[1]
