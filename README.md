@@ -46,12 +46,12 @@ Typical install time on a desktop computer including environments solving takes 
 
 ## Demos and Tutorials
 
-Our comprehensive [Read the Docs page](https://beliveau-lab-tigerfish.readthedocs-hosted.com/en/latest/) contains step-by-step instructions for deploying the test demons on three small datasets that summarize each of the core run modes in Tigerfish (Repeat Discovery Mode, Probe Design Mode, and Probe Analysis Mode) and seperately, a larger real dataset to design oligo probes against the chr9 HSAT repeat in the CHM13 genome. Approximate expected run times for each of these demos to complete are described as follows:
+Our comprehensive [Read the Docs page](https://beliveau-lab-tigerfish.readthedocs-hosted.com/en/latest/) contains step-by-step instructions for deploying the test demons on three small datasets that summarize each of the core run modes in Tigerfish (Repeat Discovery Mode, Probe Design Mode, and Probe Analysis Mode) and seperately, a larger real dataset to design oligo probes against the chr9 HSAT repeat in the CHM13 genome. Approximate expected run times and their correspomding expected output directories for each of these demos to complete are described as follows:
 
-- Repeat Discovery Mode: 110 seconds
-- Probe Design Mode: 83 seconds
-- Probe Analysis Mode: 116 seconds
-- CHM13 Probe Design Mode, chr9 HSAT: 4 hours (due to generating large CHM13 genome reference files and Bowtie2 indices)
+- [Repeat Discovery Mode](https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/repeat_discovery_test/expected_output): 110 seconds
+- [Probe Design Mode](https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_test/expected_output): 83 seconds
+- [Probe Analysis Mode](https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_candidate_binding_test/expected_output): 116 seconds
+- [CHM13 Probe Design Mode, chr9 HSAT](https://github.com/beliveau-lab/TigerFISH/tree/master/example_run/probe_design_chm13/expected_output): 4 hours (due to generating large CHM13 genome reference files and Bowtie2 indices)
 
 ## Documentation
 
