@@ -14,7 +14,8 @@ Citing
 If you use Tigerfish in your work, please cite:
 
 .. epigraph::
-   Coming soon to biorxiv!
+
+Aguilar, Robin, et al. "Tigerfish designs oligonucleotide-based in situ hybridization probes targeting intervals of highly repetitive DNA at the scale of genomes." bioRxiv (2023): 2023-03.
 
 Introduction
 ------------
