@@ -44,6 +44,8 @@ $ git clone https://github.com/beliveau-lab/TigerFISH.git \
 To clone this directory onto a desktop computer, the time to solve this takes approximately 38 seconds.
 Typical install time on a desktop computer including environments solving takes approximately 72 secs. 
 
+4. Tigerfish depends on Nupack 4. In order to use Nupack under its new license model, users must [register for an account](https://nupack.org/subscribe). Once registering, users will be able to download the Nupack 4 Python package. For help installing that package into the tigerfish conda enviroments, please contact the Nupack developers.
+
 ## Demos and Tutorials
 
 Our comprehensive [Read the Docs page](https://beliveau-lab-tigerfish.readthedocs-hosted.com/en/latest/) contains step-by-step instructions for deploying the test demons on three small datasets that summarize each of the core run modes in Tigerfish (Repeat Discovery Mode, Probe Design Mode, and Probe Analysis Mode) and seperately, a larger real dataset to design oligo probes against the chr9 HSAT repeat in the CHM13 genome. Approximate expected run times and their corresponding expected output directories for each of these demos to complete are described as follows:
