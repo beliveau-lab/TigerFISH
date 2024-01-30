@@ -1,3 +1,5 @@
+#path to Nupack package folder
+nupack_folder_path:
 
 #path to genome fasta
 fasta_file: "data/example.fa"
