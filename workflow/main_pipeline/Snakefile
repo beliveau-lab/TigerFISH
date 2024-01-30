@@ -7,16 +7,6 @@ import glob
 #specify config.yml file
 configfile: "config.yml"
 
-#specify NUPACK folder path
-os.environ["NUPACK_FOLDER_PATH"] = os.environ["NUPACK_FOLDER_PATH"] if "NUPACK_FOLDER_PATH" in os.environ.keys() else config["nupack_folder_path"] if config["nupack_folder_path"] else ""
-if not os.environ["NUPACK_FOLDER_PATH"]:
-
-    print("A valid Nupack 4 package path is required. Please specify a valid path and try again. Exiting ...")
-    exit()
-
-envvars:
-    "NUPACK_FOLDER_PATH"
-
 #define config parameter names as variables
 SAMPLES = config["samples"]
 ASSEMBLY = config["assembly"]

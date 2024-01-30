@@ -1,5 +1,3 @@
-#path to Nupack package folder
-nupack_folder_path:
 
 #path to CHM13 genome fasta
 fasta_file: ""
@@ -47,10 +45,12 @@ c1_val: 1
 
 c2_val: 5
 
+
 #parameters used for probe_mer_filter script
 enrich_score: 0.70
 
 copy_num: 40
+
 
 #parameters used in alignment_filter script
 genome_windows: 5000000
