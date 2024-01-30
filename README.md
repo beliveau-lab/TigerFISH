@@ -44,7 +44,7 @@ $ git clone https://github.com/beliveau-lab/TigerFISH.git \
 To clone this directory onto a desktop computer, the time to solve this takes approximately 38 seconds.
 Typical install time on a desktop computer including environments solving takes approximately 72 secs. 
 
-4. Tigerfish depends on Nupack 4. In order to use Nupack under its new license model, users must [register for an account](https://nupack.org/subscribe). Once registering, users will be able to download the Nupack 4 Python package. For help installing that package into the tigerfish conda enviroments, please contact the Nupack developers.
+4. Tigerfish depends on Nupack 4. In order to use Nupack under its new license model, users must [register for an account](https://nupack.org/subscribe). Once registered, users will be able to download the Nupack 4 Python package. A `NUPACK_FOLDER_PATH` environment variable or `nupack_folder_path` field in the `config.yml` file must be set with the Nupack package folder path. For help installing that package into the tigerfish conda enviroments, please contact the Nupack developers.
 
 ## Demos and Tutorials
 
