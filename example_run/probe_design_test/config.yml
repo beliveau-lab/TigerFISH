@@ -1,3 +1,5 @@
+#path to Nupack package folder
+nupack_folder_path:
 
 #path to genome fasta
 fasta_file: "data/example.fa"
@@ -26,7 +28,6 @@ jf_count_dir: ""
 chrom_idx_dir: ""
 chrom_fasta_dir: ""
 probe_cand_file: ""
-
 
 #all chromosomes present in bed file or required for probe discovery are listed here
 samples:
@@ -57,12 +58,10 @@ c1_val: 1
 
 c2_val: 5
 
-
 #parameters used for probe_mer_filter script
 enrich_score: 0.50
 
 copy_num: 10
-
 
 #parameters used in alignment_filter script
 genome_windows: 5000000
@@ -73,7 +72,7 @@ binding_prop: 0.70
 
 target_sum: 5000
 
-off_bin_thresh: 100 
+off_bin_thresh: 100
 
 mer_cutoff: 0.95
 
